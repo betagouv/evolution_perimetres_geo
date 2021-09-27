@@ -23,7 +23,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "csv-parser": "^3.0.0",
-    "db-migrate": "^0.11.12",
+    "db-migrate": "^1.0.0-beta.16",
     "db-migrate-pg": "^1.2.2",
     "extract-zip": "^2.0.1",
     "mapshaper": "^0.5.41",
