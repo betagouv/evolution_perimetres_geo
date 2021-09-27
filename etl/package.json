@@ -2,7 +2,7 @@
   "name": "etl_perimetres_geo",
   "version": "1.0.0",
   "description": "Programme d'etl pour importer les données necessaires pour suivre l'évolution des pèrimètres géographique français depuis 2019",
-  "main": "src/index.ts",
+  "main": "src/downloads/index.ts",
   "author": "Beta Gouv <contact@covoiturage.beta.gouv.fr>",
   "contributors": [
     "Nicolas Mérigot <nicolas.merigot@beta.gouv.fr>",
@@ -10,8 +10,9 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "start": "ts-node -r dotenv/config ./src/index.ts",
-    "dev": "nodemon -L -r dotenv/config --watch src --exec ts-node --files ./src/index.ts",
+    "start": "npm run etl:download && npm run etl:transform",
+    "etl:download": "ts-node -r dotenv/config ./src/downloads/index.ts",
+    "etl:transform": "ts-node -r dotenv/config ./src/transform/index.ts",
     "migrate:up": "db-migrate -m './src/db/migrations' up",
     "migrate:down": "db-migrate -m './src/db/migrations' down",
     "migrate:create": "db-migrate -m './src/db/migrations' create $1",
@@ -21,7 +22,7 @@
     "@": "src"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "csv-parser": "^3.0.0",
     "db-migrate": "^1.0.0-beta.16",
     "db-migrate-pg": "^1.2.2",
@@ -34,7 +35,7 @@
     "zlib": "^1.0.5"
   },
   "devDependencies": {
-    "@types/node": "^14.14.35",
+    "@types/node": "^14.17.19",
     "@types/node-7z": "^2.1.0",
     "@types/pg": "^7.14.11",
     "@typescript-eslint/eslint-plugin": "^4.18.0",

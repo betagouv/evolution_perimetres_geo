@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es2020",
+    "target": "esnext",
     "strict": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "sourceMap": true,
-    "lib": ["es2020"],
+    "lib": ["esnext"],
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
