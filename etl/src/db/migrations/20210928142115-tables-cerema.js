@@ -3,11 +3,9 @@
 var { createMigration } = require('../helpers/createMigration');
 var { setup, up, down } = createMigration(
   [
-    'territory/000_create_schema_territory',
-    'insee/000_create_schema_insee',
-    'ign/000_create_schema_ign',
-    'cerema/000_create_schema_cerema',
-    'eurostat/000_create_schema_eurostat'
+    'cerema/001_create_table_aom_2019',
+    'cerema/002_create_table_aom_2020',
+    'cerema/003_create_table_aom_2021',
   ],
   __dirname,
 );

@@ -13,9 +13,13 @@
     "start": "npm run etl:download && npm run etl:transform",
     "etl:download": "ts-node -r dotenv/config ./src/downloads/index.ts",
     "etl:transform": "ts-node -r dotenv/config ./src/transform/index.ts",
-    "migrate:up": "db-migrate -m './src/db/migrations' up",
-    "migrate:down": "db-migrate -m './src/db/migrations' down",
+    "etl:import": "ts-node -r dotenv/config ./src/import/index.ts",
+    "migrate": "db-migrate -m './src/db/migrations' up",
+    "migrate:up": "db-migrate -m './src/db/migrations' up -c 1",
+    "migrate:down": "db-migrate -m './src/db/migrations' down -c 1",
+    "migrate:reset": "db-migrate -m './src/db/migrations' reset",
     "migrate:create": "db-migrate -m './src/db/migrations' create $1",
+    "migrate:check":"db-migrate -m './src/db/migrations' up --check",
     "lint": "eslint . --ext .ts"
   },
   "_moduleAliases": {
