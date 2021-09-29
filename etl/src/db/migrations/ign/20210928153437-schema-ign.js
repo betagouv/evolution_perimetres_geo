@@ -1,9 +1,9 @@
 'use strict';
 
-var { createMigration } = require('../helpers/createMigration');
+var { createMigration } = require('../../helpers/createMigration');
 var { setup, up, down } = createMigration(
   [
-    'eurostat/001_create_table_countries_2020'
+    '000_create_schema_ign'
   ],
   __dirname,
 );

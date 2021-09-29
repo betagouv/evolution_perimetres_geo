@@ -2,7 +2,6 @@
   "name": "etl_perimetres_geo",
   "version": "1.0.0",
   "description": "Programme d'etl pour importer les données necessaires pour suivre l'évolution des pèrimètres géographique français depuis 2019",
-  "main": "src/downloads/index.ts",
   "author": "Beta Gouv <contact@covoiturage.beta.gouv.fr>",
   "contributors": [
     "Nicolas Mérigot <nicolas.merigot@beta.gouv.fr>",
@@ -15,11 +14,8 @@
     "etl:transform": "ts-node -r dotenv/config ./src/transform/index.ts",
     "etl:import": "ts-node -r dotenv/config ./src/import/index.ts",
     "migrate": "db-migrate -m './src/db/migrations' up",
-    "migrate:up": "db-migrate -m './src/db/migrations' up -c 1",
-    "migrate:down": "db-migrate -m './src/db/migrations' down -c 1",
     "migrate:reset": "db-migrate -m './src/db/migrations' reset",
     "migrate:create": "db-migrate -m './src/db/migrations' create $1",
-    "migrate:check":"db-migrate -m './src/db/migrations' up --check",
     "lint": "eslint . --ext .ts"
   },
   "_moduleAliases": {
@@ -28,7 +24,7 @@
   "dependencies": {
     "axios": "^0.21.4",
     "csv-parser": "^3.0.0",
-    "db-migrate": "^1.0.0-beta.16",
+    "db-migrate": "^0.11.12",
     "db-migrate-pg": "^1.2.2",
     "extract-zip": "^2.0.1",
     "mapshaper": "^0.5.41",
