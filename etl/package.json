@@ -9,13 +9,15 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "test": "ava --config ava.cjs"
   },
   "_moduleAliases": {
     "@": "src"
   },
   "dependencies": {
     "axios": "^0.21.4",
+    "csv-parse": "^4.16.3",
     "csv-parser": "^3.0.0",
     "extract-zip": "^2.0.1",
     "mapshaper": "^0.5.41",

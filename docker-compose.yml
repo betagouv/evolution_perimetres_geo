@@ -16,7 +16,6 @@ services:
       PGDATA: '/var/lib/postgresql/data/pgdata'
     volumes:
       - ./db/postgres:/var/lib/postgresql/data/pgdata
-      - ./etl/assets:/etl/assets
 
   etl:
     build:

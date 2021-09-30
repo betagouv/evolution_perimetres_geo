@@ -1,5 +1,5 @@
-import { getDatasetUuid } from "@/helpers";
-import { StaticAbstractDataset } from "@/interfaces";
+import { getDatasetUuid } from "../helpers";
+import { StaticAbstractDataset } from "../interfaces";
 import { Pool } from "pg";
 
 export class Migrator {

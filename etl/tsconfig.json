@@ -13,9 +13,7 @@
     "lib": ["esnext"],
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }, 
+    "paths": {}, 
     "noImplicitAny": false,
   }
 }
