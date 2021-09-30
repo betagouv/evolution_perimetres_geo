@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 
 export interface StaticAbstractDataset {
-    readonly name: string;
+    readonly dataset: string;
     readonly year: number;
 
     constructor(
