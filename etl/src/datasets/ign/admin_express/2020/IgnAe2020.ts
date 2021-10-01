@@ -3,16 +3,16 @@ import { streamData } from '../../../../helpers';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 import path from 'path';
 
-export class IgnAe2019 extends AbstractDataset {
+export class IgnAe2020 extends AbstractDataset {
   static dataset = 'ign_ae';
-  static year = 2019;
+  static year = 2020;
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
-  readonly url: string = 'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-0__SHP__FRA_L93_2019-09-24.7z';
+  readonly url: string = 'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-1__SHP__FRA_L93_2020-11-20.7z';
   readonly fileType: FileTypeEnum = FileTypeEnum.Geojson;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.SevenZip;
-  readonly table: string = 'ign_ae_2019';
+  readonly table: string = 'ign_ae_2020';
   readonly rows: Map<string, [string, string]> = new Map([
     ['com', ['INSEE_COM', 'varchar']],
     ['pop', ['POPULATION', 'integer']]
