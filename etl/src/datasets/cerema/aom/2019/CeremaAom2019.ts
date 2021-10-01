@@ -1,8 +1,8 @@
-import { AbstractDataset } from '../../../common/AbstractDataset';
-import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../interfaces';
+import { AbstractDataset } from '../../../../common/AbstractDataset';
+import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 import path from 'path';
 
-export class Cerema2019 extends AbstractDataset {
+export class CeremaAom2019 extends AbstractDataset {
   static dataset = 'cerema_aom';
   static year = 2019;
 

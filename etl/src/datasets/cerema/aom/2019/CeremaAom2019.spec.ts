@@ -1,9 +1,9 @@
 import anyTest, { TestInterface } from 'ava';
 import { access } from 'fs/promises';
 import { Pool } from 'pg';
-import { AbstractDataset } from '../../../common/AbstractDataset';
-import { createPool } from '../../../helpers';
-import { Cerema2019 } from './Cerema2019';
+import { AbstractDataset } from '../../../../common/AbstractDataset';
+import { createPool } from '../../../../helpers';
+import { CeremaAom2019 as Dataset } from './CeremaAom2019';
 
 interface TestContext {
   connection: Pool;
@@ -14,7 +14,7 @@ const test = anyTest as TestInterface<TestContext>;
 
 test.before(async (t) => {
   t.context.connection = createPool();
-  t.context.dataset = new Cerema2019(t.context.connection);
+  t.context.dataset = new Dataset(t.context.connection);
   await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.dataset.table}
     `);
