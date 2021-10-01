@@ -1,12 +1,12 @@
 export enum FileTypeEnum {
-    Csv,
-    Ods,
-    Xls,
+  Csv,
+  Ods,
+  Xls,
 }
 
 export enum ArchiveFileTypeEnum {
-    None,
-    Zip,
-    GZip,
-    SevenZip,
+  None,
+  Zip,
+  GZip,
+  SevenZip,
 }

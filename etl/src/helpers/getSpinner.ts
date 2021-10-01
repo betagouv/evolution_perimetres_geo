@@ -1,6 +1,6 @@
-import ora from "ora"
+import ora from 'ora';
 
 export function getSpinner() {
-    const spinner = ora()
-    return spinner;
+  const spinner = ora();
+  return spinner;
 }

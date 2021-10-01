@@ -6,55 +6,55 @@ import { createPool } from '../../../helpers';
 import { Cerema2021 } from './Cerema2021';
 
 interface TestContext {
-    connection: Pool;
-    dataset: AbstractDataset;
+  connection: Pool;
+  dataset: AbstractDataset;
 }
 
 const test = anyTest as TestInterface<TestContext>;
 
-test.before(async t => {
-    t.context.connection = createPool();
-    t.context.dataset = new Cerema2021(t.context.connection);
-    await t.context.connection.query(`
+test.before(async (t) => {
+  t.context.connection = createPool();
+  t.context.dataset = new Cerema2021(t.context.connection);
+  await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.dataset.table}
     `);
 });
 
-test.after.always(async t => {
-    await t.context.connection.query(`
+test.after.always(async (t) => {
+  await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.dataset.table}
     `);
 });
 
 test.serial.skip('should validate', async (t) => {
-    await t.notThrowsAsync(() => t.context.dataset.validate(new Set()));
+  await t.notThrowsAsync(() => t.context.dataset.validate(new Set()));
 });
 
 test.serial('should prepare', async (t) => {
-    await t.context.dataset.before();
-    const query = `SELECT * FROM ${t.context.dataset.table}`;
-    t.log(query);
-    await t.notThrowsAsync(() => t.context.connection.query(query));
+  await t.context.dataset.before();
+  const query = `SELECT * FROM ${t.context.dataset.table}`;
+  t.log(query);
+  await t.notThrowsAsync(() => t.context.connection.query(query));
 });
 
 test.serial('should download file', async (t) => {
-    await t.context.dataset.download();
-    t.true(t.context.dataset.filepaths.length >= 1);
-    for (const path of t.context.dataset.filepaths) {
-      await t.notThrowsAsync(() => access(path));
-    }
+  await t.context.dataset.download();
+  t.true(t.context.dataset.filepaths.length >= 1);
+  for (const path of t.context.dataset.filepaths) {
+    await t.notThrowsAsync(() => access(path));
+  }
 });
 
 test.serial('should transform', async (t) => {
-    await t.notThrowsAsync(() => t.context.dataset.transform());
+  await t.notThrowsAsync(() => t.context.dataset.transform());
 });
 
 test.serial('should load', async (t) => {
-    await t.context.dataset.load();
-    const response = await t.context.connection.query(`
+  await t.context.dataset.load();
+  const response = await t.context.connection.query(`
       SELECT count(*) FROM ${t.context.dataset.table}
     `);
-    t.is(response.rows[0].count, '34967');
+  t.is(response.rows[0].count, '34967');
 });
 
 test.serial.skip('should import', async (t) => {});
