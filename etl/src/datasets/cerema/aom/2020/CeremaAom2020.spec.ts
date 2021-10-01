@@ -59,7 +59,7 @@ test.serial('should load', async (t) => {
 
 test.serial.skip('should import', async (t) => {});
 
-test.serial.skip('should cleanup', async (t) => {
+test.serial('should cleanup', async (t) => {
   await t.context.dataset.after();
   const query = `SELECT * FROM ${t.context.dataset.table}`;
   await t.throwsAsync(() => t.context.connection.query(query));
