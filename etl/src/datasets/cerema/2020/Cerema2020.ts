@@ -1,0 +1,47 @@
+import { AbstractDataset } from "../../../common/AbstractDataset";
+import { ArchiveFileTypeEnum, FileTypeEnum } from "../../../interfaces";
+import path from 'path';
+
+export class Cerema2020 extends AbstractDataset  {
+    static dataset = 'cerema_aom';
+    static year = 2020;
+    
+    readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
+    readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
+    readonly url: string = 'https://www.cerema.fr/system/files/documents/2020/07/base_rt_2020_v1-1_diffusion_0.ods';
+    readonly fileType: FileTypeEnum = FileTypeEnum.Ods;
+    readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
+    readonly table: string = 'cerema_aom_2020';
+    readonly rows: Map<string, [string, string]> = new Map([
+        ['id_reseau', ['Id réseau', 'integer']], 
+        ['nom_reseau', ['Nom du réseau', 'varchar']],
+        ['siren_aom', ['N° SIREN AOM', 'integer']],
+        ['nom_aom', ['Nom de l\’AOM', 'varchar']],
+        ['forme_juridique_aom', ['Forme juridique de l\’AOM', 'varchar']],
+        ['region', ['Région siège', 'varchar']],
+        ['departement', ['Département siège', 'varchar']], 
+        ['siren_group', ['N° SIREN groupement', 'integer']],
+        ['lien_banatic', ['Lien Banatic', 'varchar']],
+        ['nom_group', ['Nom du groupement', 'varchar']],
+        ['forme_juridique_group', ['Nature juridique du groupement', 'varchar']],
+        ['nb_membres', ['Nombre de membres', 'integer']],
+        ['pop_aom_2017', ['Population  totale 2017 (Banatic)', 'integer']],
+        ['siren_membre', ['Siren membre', 'integer']],
+        ['com', ['N° INSEE', 'varchar']],
+        ['nom_membre', ['Nom membre', 'varchar']],
+        ['pop_com_2017', ['Population  municipale 2017', 'varchar']],
+        ['pop_banatic_2017', ['Population  totale 2017 (Banatic)_1', 'integer']],
+        ['surface', ['Surface (km²)', 'integer']],
+        ['nom_com', ['intitulé commune wikipédia', 'varchar']],
+        ['wikipedia', ['Lien Page wikipedia', 'varchar']],
+    ]);
+
+    sheetOptions = {
+        name: 'RT_2020_-_Composition_communale',
+        startRow: 0,
+    };
+
+    async import(): Promise<void> {
+        // TODO
+    }
+}

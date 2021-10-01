@@ -12,24 +12,24 @@ export class Cerema2019 extends AbstractDataset  {
     readonly fileType: FileTypeEnum = FileTypeEnum.Ods;
     readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
     readonly table: string = 'cerema_aom_2019';
-    readonly rows: string[] = [
-        'id_reseau', 
-        'region',
-        'departement', 
-        'nom_reseau',
-        'nom_aom',
-        'forme_juridique_aom',
-        'siren_aom',
-        'siren_group',
-        'nom_group',
-        'forme_juridique_group',
-        'nb_membres',
-        'pop_aom',
-        'siren_membre',
-        'com',
-        'nom_membre',
-        'pop_com',
-    ];
+    readonly rows: Map<string, [string, string]> = new Map([
+        ['id_reseau', ['Id réseau', 'varchar']], 
+        ['region', ['Région siège', 'varchar']],
+        ['departement', ['Département siège', 'varchar']], 
+        ['nom_reseau', ['Nom du réseau', 'varchar']],
+        ['nom_aom', ['Nom de l\’AOM', 'varchar']],
+        ['forme_juridique_aom', ['Forme juridique de l\’AOM', 'varchar']],
+        ['siren_aom', ['N° SIREN de l\’AOM', 'varchar']],
+        ['siren_group', ['N° SIREN de l\’EPCI', 'varchar']],
+        ['nom_group', ['Nom de l’EPCI', 'varchar']],
+        ['forme_juridique_group', ['Nature juridique de l\’EPCI', 'varchar']],
+        ['nb_membres', ['Nombre de membres', 'integer']],
+        ['pop_aom', ['Population', 'integer']],
+        ['siren_membre', ['Siren membre', 'varchar']],
+        ['com', ['Code INSEE', 'varchar']],
+        ['nom_membre', ['Nom membre', 'varchar']],
+        ['pop_com', ['Population municipale', 'varchar']],
+    ]);
 
     sheetOptions = {
         name: 'RT 2019- Composition communale',
@@ -37,6 +37,6 @@ export class Cerema2019 extends AbstractDataset  {
     };
 
     async import(): Promise<void> {
-
+        // TODO
     }
 }

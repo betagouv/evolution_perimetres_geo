@@ -1,0 +1,1 @@
+Drop TABLE IF EXISTS cerema_aom_2020;

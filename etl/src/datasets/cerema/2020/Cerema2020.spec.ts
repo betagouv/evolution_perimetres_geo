@@ -3,7 +3,7 @@ import { access } from 'fs/promises';
 import { Pool } from 'pg';
 import { AbstractDataset } from '../../../common/AbstractDataset';
 import { createPool } from '../../../helpers';
-import { Cerema2019 } from './Cerema2019';
+import { Cerema2020 } from './Cerema2020';
 
 interface TestContext {
     connection: Pool;
@@ -14,7 +14,7 @@ const test = anyTest as TestInterface<TestContext>;
 
 test.before(async t => {
     t.context.connection = createPool();
-    t.context.dataset = new Cerema2019(t.context.connection);
+    t.context.dataset = new Cerema2020(t.context.connection);
     await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.dataset.table}
     `);
@@ -54,9 +54,13 @@ test.serial('should load', async (t) => {
     const response = await t.context.connection.query(`
       SELECT count(*) FROM ${t.context.dataset.table}
     `);
-    t.is(response.rows[0].count, 10);
+    t.is(response.rows[0].count, '34964');
 });
 
 test.serial.skip('should import', async (t) => {});
 
-test.serial.skip('should cleanup', async (t) => {});
+test.serial.skip('should cleanup', async (t) => {
+  await t.context.dataset.after();
+  const query = `SELECT * FROM ${t.context.dataset.table}`;
+  await t.throwsAsync(() => t.context.connection.query(query));
+});

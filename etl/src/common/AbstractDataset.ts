@@ -9,7 +9,7 @@ export abstract class AbstractDataset implements DatasetInterface {
     abstract readonly fileArchiveType: ArchiveFileTypeEnum;
     abstract readonly afterSqlPath: string;
     abstract readonly table: string;
-    abstract readonly rows: string[];
+    abstract readonly rows: Map<string, [string, string]>;
 
     sheetOptions: { name?: string; startRow?: number } | undefined;
     filepaths: string[] = [];
@@ -39,7 +39,6 @@ export abstract class AbstractDataset implements DatasetInterface {
     async transform(): Promise<void> {}
 
     async load(): Promise<void> {
-        console.log(this.filepaths);
         const connection = await this.connection.connect();
         await connection.query('BEGIN TRANSACTION');
         try {
@@ -49,16 +48,23 @@ export abstract class AbstractDataset implements DatasetInterface {
           do {
             const results = await cursor.next();
             done = !!results.done;
-            console.log({results})
             if (results.value) {
-                console.log(JSON.stringify(results.value));
-                  await connection.query({
+                const query = {
                       text: `
-                        INSERT INTO ${this.table} (${this.rows.join(',')})
-                        SELECT * FROM json_populate_recordset(null::${this.table}, $1)                      
+                        INSERT INTO ${this.table} (
+                            ${[...this.rows.keys()].join(", \n")}
+                        )
+                        SELECT *
+                        FROM json_to_recordset ($1)
+                          AS tmp (
+                          ${[...this.rows.values()].map(r => `"${r[0]}" ${r[1]}`).join(", \n")}
+                          )
                       `,
-                      values: [JSON.stringify(results.value)],
-                  });
+                      values: [JSON.stringify(results.value).replace(/'/g, "''")],
+                  
+                }
+                console.debug(query);
+                await connection.query(query);
             }
           } while (!done)
         }
