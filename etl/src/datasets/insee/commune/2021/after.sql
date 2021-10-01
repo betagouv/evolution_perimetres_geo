@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS insee_com_2021;

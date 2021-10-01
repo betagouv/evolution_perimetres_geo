@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS insee_mvtcom_2021;

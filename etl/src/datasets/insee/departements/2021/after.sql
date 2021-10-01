@@ -1,0 +1,1 @@
+Drop TABLE IF EXISTS insee_dep_2021;

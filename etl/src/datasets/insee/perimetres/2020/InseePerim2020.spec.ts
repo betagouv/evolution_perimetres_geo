@@ -3,7 +3,7 @@ import { access } from 'fs/promises';
 import { Pool } from 'pg';
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { createPool } from '../../../../helpers';
-import { InseeCommune2021 as Dataset } from './InseeCommune2021';
+import { InseePerim2020 as Dataset } from './InseePerim2020';
 
 interface TestContext {
   connection: Pool;
