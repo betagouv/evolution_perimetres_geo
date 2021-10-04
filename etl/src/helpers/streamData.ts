@@ -1,11 +1,10 @@
-import { FileTypeEnum } from '../interfaces';
+import { FileTypeEnum, XlsxOptions, CsvOptions, JsonOptions, StreamDataOptions } from '../interfaces';
 import xlsx from 'xlsx';
-import Pick from 'stream-json/filters/Pick';
-import {streamArray} from 'stream-json/streamers/StreamArray';
 import { createReadStream } from 'fs';
-import csvParse, { Options as CsvOptions } from 'csv-parse';
+import csvParse from 'csv-parse';
+import { streamJson } from './streamJson';
 
-async function* streamXlsx<T>(filepath: string, sheetOptions: any, chunkSize = 100): AsyncIterable<T[]> {
+async function* streamXlsx<T>(filepath: string, sheetOptions: XlsxOptions, chunkSize = 100): AsyncIterable<T[]> {
   const file = xlsx.readFile(filepath);
   const options = {
     name: 0,
@@ -21,11 +20,11 @@ async function* streamXlsx<T>(filepath: string, sheetOptions: any, chunkSize = 1
   return;
 }
 
-async function* streamCsv<T>(filepath: string, sheetOptions: any, chunkSize = 100): AsyncIterable<T[]> {
+async function* streamCsv<T>(filepath: string, sheetOptions: CsvOptions, chunkSize = 100): AsyncIterable<T[]> {
   const fsStream = createReadStream(filepath, { encoding: 'utf-8' });
   const parser = csvParse({
     columns: (header) => Object.keys(header).map((k) => k.toLowerCase()),
-    ...(sheetOptions as CsvOptions),
+    ...sheetOptions,
   });
   fsStream.pipe(parser);
   let chunk: T[] = [];
@@ -40,32 +39,20 @@ async function* streamCsv<T>(filepath: string, sheetOptions: any, chunkSize = 10
   return;
 }
 
-async function* streamGeojson<T>(filepath: string, sheetOptions: any, chunkSize = 100): AsyncIterable<T[]> {
-  const fsStream = createReadStream(filepath, { encoding: 'utf-8' });
-  const parser =  Pick.withParser({filter: 'features'})
-  const data = streamArray()
-  fsStream.pipe(parser).pipe(data);
-  let chunk: T[] = [];
-  for await (const line of data) {
-    if (chunk.length === chunkSize) {
-      yield chunk;
-      chunk = [];
-    }
-    chunk.push(line);
-  }
-  yield chunk;
-  return;
-}
-
-export function streamData<T>(filepath: string, filetype: FileTypeEnum, sheetOptions: any, chunkSize = 100): any {
+export function streamData<T>(
+  filepath: string,
+  filetype: FileTypeEnum,
+  sheetOptions: StreamDataOptions,
+  chunkSize = 100,
+): any {
   switch (filetype) {
     case FileTypeEnum.Ods:
     case FileTypeEnum.Xls:
-      return streamXlsx<T>(filepath, sheetOptions, chunkSize);
+      return streamXlsx<T>(filepath, sheetOptions as XlsxOptions, chunkSize);
     case FileTypeEnum.Csv:
-      return streamCsv<T>(filepath, sheetOptions, chunkSize);
+      return streamCsv<T>(filepath, sheetOptions as CsvOptions, chunkSize);
     case FileTypeEnum.Geojson:
-      return streamGeojson(filepath, sheetOptions, chunkSize);
+      return streamJson(filepath, sheetOptions as JsonOptions, chunkSize);
     default:
       throw new Error();
   }

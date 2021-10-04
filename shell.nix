@@ -7,6 +7,7 @@ stdenv.mkDerivation {
     buildInputs = [
         (yarn.override { nodejs = null; })
         nodejs-14_x
+        p7zip
     ];
 
     shellHook = ''

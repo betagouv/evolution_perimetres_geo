@@ -16,7 +16,9 @@ export class EurostatCountries2020 extends AbstractDataset {
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly table: string = 'eurostat_countries_2020';
   readonly rows: Map<string, [string, string]> = new Map([['codeiso3', ['ISO3_CODE', 'varchar']]]);
-  sheetOptions = {};
+  sheetOptions = {
+    filter: 'features',
+  };
 
   async import(): Promise<void> {
     // TODO
@@ -47,9 +49,8 @@ export class EurostatCountries2020 extends AbstractDataset {
                 st_multi(st_geomfromgeojson(geometry)) as geom 
                 FROM tmp
               `,
-              values: [JSON.stringify(results.value)],
+              values: [JSON.stringify(results.value).replace(/'/g, "''")],
             };
-            console.debug(query);
             await connection.query(query);
           }
         } while (!done);

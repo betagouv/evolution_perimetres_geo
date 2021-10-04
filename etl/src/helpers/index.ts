@@ -7,3 +7,4 @@ export * from './getTemporaryPath';
 export * from './loadSqlFile';
 export * from './randomString';
 export * from './streamData';
+export * from './streamJson';
