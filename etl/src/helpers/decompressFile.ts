@@ -2,11 +2,12 @@ import extract from 'extract-zip';
 import { createGunzip } from 'zlib';
 import { extractFull } from 'node-7z';
 import { createReadStream, createWriteStream } from 'fs';
-import { access, readdir } from 'fs/promises';
-import path from 'path';
+import { access } from 'fs/promises';
 
-import { ArchiveFileTypeEnum } from '../interfaces';
+import { ArchiveFileTypeEnum, FileTypeEnum } from '../interfaces';
 import { getTemporaryDirectoryPath } from '.';
+import { getAllFiles } from './getAllFiles';
+import { getFileExtensions } from './getFileExtension';
 
 function unzipFile(filepath: string, extractPath: string): Promise<void> {
   return extract(filepath, { dir: extractPath });
@@ -32,7 +33,11 @@ function un7zFile(filepath: string, extractPath: string): Promise<void> {
   });
 }
 
-export async function decompressFile(filepath: string, archiveType: ArchiveFileTypeEnum): Promise<string[]> {
+export async function decompressFile(
+  filepath: string,
+  archiveType: ArchiveFileTypeEnum,
+  fileType: FileTypeEnum,
+): Promise<string[]> {
   try {
     const extractPath = await getTemporaryDirectoryPath();
     await access(filepath);
@@ -51,8 +56,7 @@ export async function decompressFile(filepath: string, archiveType: ArchiveFileT
       default:
         throw new Error();
     }
-    const paths = await readdir(extractPath);
-    return paths.map((p) => path.join(extractPath, p));
+    return [...(await getAllFiles(extractPath, getFileExtensions(fileType)))];
   } catch (err) {
     console.error(err);
     throw err;
