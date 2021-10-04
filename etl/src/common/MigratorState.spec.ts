@@ -1,18 +1,18 @@
 import anyTest, { TestInterface } from 'ava';
 import { Pool } from 'pg';
 import { createPool } from '../helpers';
-import { Migrator } from './Migrator';
+import { MigratorState } from './MigratorState';
 
 interface TestContext {
   connection: Pool;
-  migrator: Migrator;
+  migrator: MigratorState;
 }
 
 const test = anyTest as TestInterface<TestContext>;
 
 test.before(async (t) => {
   t.context.connection = createPool();
-  t.context.migrator = new Migrator(t.context.connection);
+  t.context.migrator = new MigratorState(t.context.connection);
   await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.migrator.table}
     `);
