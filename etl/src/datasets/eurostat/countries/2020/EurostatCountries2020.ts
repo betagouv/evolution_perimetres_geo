@@ -47,9 +47,9 @@ export class EurostatCountries2020 extends AbstractDataset {
                 st_multi(st_geomfromgeojson(geometry)) as geom 
                 FROM tmp
               `,
-              values: [results.value.features],
+              values: [JSON.stringify(results.value)],
             };
-            //console.debug(results.value);
+            console.debug(query);
             await connection.query(query);
           }
         } while (!done);
