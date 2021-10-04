@@ -11,7 +11,7 @@ export interface StaticAbstractDataset extends Migrable {
 }
 
 export interface DatasetInterface {
-  validate(datasets: Set<string>): Promise<void>;
+  validate(done: Set<Migrable>): Promise<void>;
   before(): Promise<void>;
   download(): Promise<void>;
   transform(): Promise<void>;
