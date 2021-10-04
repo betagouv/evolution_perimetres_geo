@@ -9,12 +9,12 @@ import { InseePerim2020 } from './datasets/insee/perimetres/2020/InseePerim2020'
 import { InseePerim2021 } from './datasets/insee/perimetres/2021/InseePerim2021';
 import { InseeReg2021 } from './datasets/insee/regions/2021/InseeReg2021';
 import { CreateGeoTable } from './datastructure/000_CreateGeoTable';
-import { CreateCityUpdateTable } from './datastructure/001_CreateCityUpdateTable';
+import { CreateComEvolutionTable } from './datastructure/001_CreateComEvolutionTable';
 import { Migrable } from './interfaces';
 
 export const datasets: Set<Migrable> = new Set([
   CreateGeoTable,
-  CreateCityUpdateTable,
+  CreateComEvolutionTable,
   CeremaAom2019,
   CeremaAom2020,
   CeremaAom2021,
