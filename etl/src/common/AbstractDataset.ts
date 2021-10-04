@@ -1,8 +1,13 @@
-import { loadSqlFile, downloadFile, streamData, decompressFile } from '../helpers';
-import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum } from '../interfaces';
+import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid } from '../helpers';
+import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, Migrable } from '../interfaces';
 import { Pool } from 'pg';
 
 export abstract class AbstractDataset implements DatasetInterface {
+  static get uuid(): string {
+    const self = this.constructor as StaticAbstractDataset;
+    return getDatasetUuid(self.producer, self.dataset, self.year);
+  }
+
   abstract readonly beforeSqlPath: string;
   abstract readonly url: string;
   abstract readonly fileType: FileTypeEnum;
@@ -11,12 +16,18 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly table: string;
   abstract readonly rows: Map<string, [string, string]>;
 
+  required: Set<Migrable> = new Set();
   sheetOptions: { name?: string; startRow?: number } | undefined;
   filepaths: string[] = [];
 
   constructor(protected connection: Pool) {}
 
-  async validate(datasets: Set<string>): Promise<void> {}
+  async validate(done: Set<Migrable>): Promise<void> {
+    const difference = new Set([...this.required].filter((x) => !done.has(x)));
+    if (difference.size > 0) {
+      throw new Error(`Cant apply this dataset, element is missing (${[...difference].map((d) => d.uuid).join(', ')})`);
+    }
+  }
 
   async before(): Promise<void> {
     const sql = await loadSqlFile(this.beforeSqlPath);

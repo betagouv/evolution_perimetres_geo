@@ -1,14 +1,17 @@
 import { Pool } from 'pg';
 
-export interface StaticAbstractDataset {
+export interface Migrable {
+  readonly uuid: string;
+  new (connection: Pool): DatasetInterface;
+}
+export interface StaticAbstractDataset extends Migrable {
+  readonly producer: string;
   readonly dataset: string;
   readonly year: number;
-
-  new (connection: Pool): DatasetInterface;
 }
 
 export interface DatasetInterface {
-  validate(datasets: Set<string>): Promise<void>;
+  validate(done: Set<Migrable>): Promise<void>;
   before(): Promise<void>;
   download(): Promise<void>;
   transform(): Promise<void>;
