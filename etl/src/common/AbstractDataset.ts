@@ -1,6 +1,7 @@
 import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid } from '../helpers';
 import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, Migrable } from '../interfaces';
 import { Pool } from 'pg';
+import { StreamDataOptions } from 'src/interfaces/StreamDataOptions';
 
 export abstract class AbstractDataset implements DatasetInterface {
   static get uuid(): string {
@@ -17,7 +18,7 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly rows: Map<string, [string, string]>;
 
   required: Set<Migrable> = new Set();
-  sheetOptions: { name?: string; startRow?: number } | undefined;
+  sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
 
   constructor(protected connection: Pool) {}
