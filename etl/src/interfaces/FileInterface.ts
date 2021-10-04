@@ -2,7 +2,7 @@ export enum FileTypeEnum {
   Csv,
   Ods,
   Xls,
-  Geojson
+  Geojson,
 }
 
 export enum ArchiveFileTypeEnum {

@@ -41,7 +41,7 @@ async function* streamCsv<T>(filepath: string, sheetOptions: any, chunkSize = 10
 
 async function* streamGeojson<T>(filepath: string, sheetOptions: any, chunkSize = 100): AsyncIterable<T[]> {
   const fsStream = createReadStream(filepath, { encoding: 'utf-8' });
-  const parser =  JSONStream.parse('rows.*',{...sheetOptions});
+  const parser = JSONStream.parse('rows.*', { ...sheetOptions });
   fsStream.pipe(parser);
   let chunk: T[] = [];
   for await (const line of parser) {
@@ -52,7 +52,7 @@ async function* streamGeojson<T>(filepath: string, sheetOptions: any, chunkSize 
     chunk.push(line);
   }
   yield chunk;
-  
+
   return;
 }
 

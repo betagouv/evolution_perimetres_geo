@@ -9,13 +9,12 @@ export class EurostatCountries2020 extends AbstractDataset {
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
-  readonly url: string = 'https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_60M_2020_4326.geojson';
+  readonly url: string =
+    'https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_60M_2020_4326.geojson';
   readonly fileType: FileTypeEnum = FileTypeEnum.Geojson;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly table: string = 'eurostat_countries_2020';
-  readonly rows: Map<string, [string, string]> = new Map([
-    ['codeiso3', ['ISO3_CODE', 'varchar']]
-  ]);
+  readonly rows: Map<string, [string, string]> = new Map([['codeiso3', ['ISO3_CODE', 'varchar']]]);
   sheetOptions = {};
 
   async import(): Promise<void> {
