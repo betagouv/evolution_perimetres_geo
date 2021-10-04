@@ -33,14 +33,14 @@ export class IgnAe2020 extends AbstractDataset {
             const query = {
               text: `
                         INSERT INTO ${this.table} (
-                            ${[...this.rows.keys()].join(', \n')}
+                            ${[...this.rows.keys()].join(', \n')},geom
                         )
                         WITH temp as(
                           SELECT * FROM
                           json_to_recordset($1)
                           as tmp(type varchar, properties json,geometry json)
                         )
-                        SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')}
+                        SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
                         st_multi(st_geomfromgeojson(a.geometry)) as geom 
                         FROM tmp
                       `,

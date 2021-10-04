@@ -1,5 +1,6 @@
 import { FileTypeEnum } from '../interfaces';
 import xlsx from 'xlsx';
+import JSONStream from 'JSONStream';
 import { createReadStream } from 'fs';
 import csvParse, { Options as CsvOptions } from 'csv-parse';
 
@@ -38,6 +39,23 @@ async function* streamCsv<T>(filepath: string, sheetOptions: any, chunkSize = 10
   return;
 }
 
+async function* streamGeojson<T>(filepath: string, sheetOptions: any, chunkSize = 100): AsyncIterable<T[]> {
+  const fsStream = createReadStream(filepath, { encoding: 'utf-8' });
+  const parser =  JSONStream.parse('rows.*',{...sheetOptions});
+  fsStream.pipe(parser);
+  let chunk: T[] = [];
+  for await (const line of parser) {
+    if (chunk.length === chunkSize) {
+      yield chunk;
+      chunk = [];
+    }
+    chunk.push(line);
+  }
+  yield chunk;
+  
+  return;
+}
+
 export function streamData<T>(filepath: string, filetype: FileTypeEnum, sheetOptions: any, chunkSize = 100): any {
   switch (filetype) {
     case FileTypeEnum.Ods:
@@ -45,6 +63,8 @@ export function streamData<T>(filepath: string, filetype: FileTypeEnum, sheetOpt
       return streamXlsx<T>(filepath, sheetOptions, chunkSize);
     case FileTypeEnum.Csv:
       return streamCsv<T>(filepath, sheetOptions, chunkSize);
+    case FileTypeEnum.Geojson:
+      return streamGeojson(filepath, sheetOptions, chunkSize);
     default:
       throw new Error();
   }
