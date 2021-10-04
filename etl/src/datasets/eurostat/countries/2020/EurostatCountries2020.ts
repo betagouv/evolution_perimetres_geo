@@ -4,7 +4,8 @@ import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 import path from 'path';
 
 export class EurostatCountries2020 extends AbstractDataset {
-  static dataset = 'eurostat_countries';
+  static producer = 'eurostat';
+  static dataset = 'countries';
   static year = 2020;
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');

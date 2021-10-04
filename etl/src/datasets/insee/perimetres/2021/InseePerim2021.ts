@@ -3,7 +3,8 @@ import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 import path from 'path';
 
 export class InseePerim2021 extends AbstractDataset {
-  static dataset = 'insee_perim';
+  static producer = 'insee';
+  static dataset = 'perim';
   static year = 2021;
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
