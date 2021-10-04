@@ -39,7 +39,7 @@ export abstract class AbstractDataset implements DatasetInterface {
     const filepaths: string[] = [];
     const filepath = await downloadFile(this.url);
     if (this.fileArchiveType !== ArchiveFileTypeEnum.None) {
-      filepaths.push(...(await decompressFile(filepath, this.fileArchiveType)));
+      filepaths.push(...(await decompressFile(filepath, this.fileArchiveType, this.fileType)));
     } else {
       filepaths.push(filepath);
     }
