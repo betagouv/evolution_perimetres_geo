@@ -23,7 +23,7 @@ export class InseePays2021 extends AbstractDataset {
     ['ancnom', ['7', 'varchar']],
     ['codeiso2', ['8', 'varchar']],
     ['codeiso3', ['9', 'varchar']],
-    ['codenum3', ['10', 'varchar']]
+    ['codenum3', ['10', 'varchar']],
   ]);
   sheetOptions = {};
 

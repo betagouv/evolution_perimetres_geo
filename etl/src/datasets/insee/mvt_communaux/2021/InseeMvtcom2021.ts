@@ -26,7 +26,7 @@ export class InseeMvtcom2021 extends AbstractDataset {
     ['tncc_ap', ['10', 'varchar']],
     ['ncc_ap', ['11', 'varchar']],
     ['nccenr_ap', ['12', 'varchar']],
-    ['libelle_ap', ['13', 'varchar']]
+    ['libelle_ap', ['13', 'varchar']],
   ]);
   sheetOptions = {};
 

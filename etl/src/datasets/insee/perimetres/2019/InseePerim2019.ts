@@ -8,7 +8,8 @@ export class InseePerim2019 extends AbstractDataset {
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
-  readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/2510634/Intercommunalite_Metropole_au_01-01-2019.zip';
+  readonly url: string =
+    'https://www.insee.fr/fr/statistiques/fichier/2510634/Intercommunalite_Metropole_au_01-01-2019.zip';
   readonly fileType: FileTypeEnum = FileTypeEnum.Xls;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly table: string = 'insee_perim_2019';
@@ -18,7 +19,7 @@ export class InseePerim2019 extends AbstractDataset {
     ['epci', ['EPCI', 'varchar']],
     ['libepci', ['LIBEPCI', 'varchar']],
     ['dep', ['DEP', 'varchar']],
-    ['reg', ['REG', 'varchar']]
+    ['reg', ['REG', 'varchar']],
   ]);
   sheetOptions = {
     name: 'Composition_communale',

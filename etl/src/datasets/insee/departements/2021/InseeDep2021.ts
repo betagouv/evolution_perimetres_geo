@@ -20,7 +20,7 @@ export class InseeDep2021 extends AbstractDataset {
     ['tncc', ['3', 'varchar']],
     ['ncc', ['4', 'varchar']],
     ['nccenr', ['5', 'varchar']],
-    ['libelle', ['6', 'varchar']]
+    ['libelle', ['6', 'varchar']],
   ]);
   sheetOptions = {};
 

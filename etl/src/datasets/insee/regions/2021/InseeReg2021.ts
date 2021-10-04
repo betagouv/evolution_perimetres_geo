@@ -18,7 +18,7 @@ export class InseeReg2021 extends AbstractDataset {
     ['tncc', ['2', 'varchar']],
     ['ncc', ['3', 'varchar']],
     ['nccenr', ['4', 'varchar']],
-    ['libelle', ['5', 'varchar']]
+    ['libelle', ['5', 'varchar']],
   ]);
   sheetOptions = {};
 
