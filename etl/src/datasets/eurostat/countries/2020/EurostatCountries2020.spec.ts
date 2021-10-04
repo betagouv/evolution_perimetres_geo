@@ -54,13 +54,13 @@ test.serial('should load', async (t) => {
   const response = await t.context.connection.query(`
       SELECT count(*) FROM ${t.context.dataset.table}
     `);
-  t.is(response.rows[0].count, '0');
+  t.is(response.rows[0].count, '257');
 });
 
 test.serial.skip('should import', async (t) => {});
 
-/*test.serial('should cleanup', async (t) => {
+test.serial('should cleanup', async (t) => {
   await t.context.dataset.after();
   const query = `SELECT * FROM ${t.context.dataset.table}`;
   await t.throwsAsync(() => t.context.connection.query(query));
-});*/
+});

@@ -1,6 +1,7 @@
 import { FileTypeEnum } from '../interfaces';
 import xlsx from 'xlsx';
-import JSONStream from 'JSONStream';
+import Pick from 'stream-json/filters/Pick';
+import {streamArray} from 'stream-json/streamers/StreamArray';
 import { createReadStream } from 'fs';
 import csvParse, { Options as CsvOptions } from 'csv-parse';
 
@@ -41,10 +42,11 @@ async function* streamCsv<T>(filepath: string, sheetOptions: any, chunkSize = 10
 
 async function* streamGeojson<T>(filepath: string, sheetOptions: any, chunkSize = 100): AsyncIterable<T[]> {
   const fsStream = createReadStream(filepath, { encoding: 'utf-8' });
-  const parser = JSONStream.parse('rows.*', { ...sheetOptions });
-  fsStream.pipe(parser);
+  const parser =  Pick.withParser({filter: 'features'})
+  const data = streamArray()
+  fsStream.pipe(parser).pipe(data);
   let chunk: T[] = [];
-  for await (const line of parser) {
+  for await (const line of data) {
     if (chunk.length === chunkSize) {
       yield chunk;
       chunk = [];
@@ -52,7 +54,6 @@ async function* streamGeojson<T>(filepath: string, sheetOptions: any, chunkSize 
     chunk.push(line);
   }
   yield chunk;
-
   return;
 }
 
