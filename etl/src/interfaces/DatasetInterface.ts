@@ -1,10 +1,13 @@
 import { Pool } from 'pg';
 
-export interface StaticAbstractDataset {
+export interface Migrable {
+  readonly uuid: string;
+  new (connection: Pool): DatasetInterface;
+}
+export interface StaticAbstractDataset extends Migrable {
+  readonly producer: string;
   readonly dataset: string;
   readonly year: number;
-
-  new (connection: Pool): DatasetInterface;
 }
 
 export interface DatasetInterface {

@@ -1,8 +1,13 @@
-import { loadSqlFile, downloadFile, streamData, decompressFile } from '../helpers';
-import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum } from '../interfaces';
+import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid } from '../helpers';
+import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, Migrable } from '../interfaces';
 import { Pool } from 'pg';
 
 export abstract class AbstractDataset implements DatasetInterface {
+  static get uuid(): string {
+    const self = this.constructor as StaticAbstractDataset;
+    return getDatasetUuid(self.producer, self.dataset, self.year);
+  }
+
   abstract readonly beforeSqlPath: string;
   abstract readonly url: string;
   abstract readonly fileType: FileTypeEnum;

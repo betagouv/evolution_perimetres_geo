@@ -3,7 +3,8 @@ import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 import path from 'path';
 
 export class CeremaAom2021 extends AbstractDataset {
-  static dataset = 'cerema_aom';
+  static producer = 'cerema';
+  static dataset = 'aom';
   static year = 2021;
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
