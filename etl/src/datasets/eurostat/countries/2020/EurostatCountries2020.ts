@@ -15,7 +15,7 @@ export class EurostatCountries2020 extends AbstractDataset {
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly table: string = 'eurostat_countries_2020';
   readonly rows: Map<string, [string, string]> = new Map([['codeiso3', ['ISO3_CODE', 'varchar']]]);
-  
+
   fileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {
     filter: 'features',
