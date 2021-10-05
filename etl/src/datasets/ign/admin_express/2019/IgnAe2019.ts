@@ -13,13 +13,14 @@ export class IgnAe2019 extends AbstractDataset {
   readonly url: string =
     // eslint-disable-next-line max-len
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-0__SHP__FRA_L93_2019-09-24.7z';
-  readonly fileType: FileTypeEnum = FileTypeEnum.Geojson;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.SevenZip;
   readonly table: string = 'ign_ae_2019';
   readonly rows: Map<string, [string, string]> = new Map([
     ['com', ['INSEE_COM', 'varchar']],
     ['pop', ['POPULATION', 'integer']],
   ]);
+
+  fileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {};
 
   async load(): Promise<void> {

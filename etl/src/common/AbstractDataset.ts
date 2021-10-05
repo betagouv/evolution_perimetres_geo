@@ -11,12 +11,12 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   abstract readonly beforeSqlPath: string;
   abstract readonly url: string;
-  abstract readonly fileType: FileTypeEnum;
   abstract readonly fileArchiveType: ArchiveFileTypeEnum;
   abstract readonly afterSqlPath: string;
   abstract readonly table: string;
   abstract readonly rows: Map<string, [string, string]>;
-
+  
+  abstract fileType: FileTypeEnum;
   required: Set<Migrable> = new Set();
   sheetOptions: StreamDataOptions;
   filepaths: string[] = [];

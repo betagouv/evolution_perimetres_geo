@@ -10,7 +10,6 @@ export class InseePays2021 extends AbstractDataset {
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/pays2021-csv.zip';
-  readonly fileType: FileTypeEnum = FileTypeEnum.Csv;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly table: string = 'insee_pays_2021';
   readonly rows: Map<string, [string, string]> = new Map([
@@ -26,6 +25,8 @@ export class InseePays2021 extends AbstractDataset {
     ['codeiso3', ['9', 'varchar']],
     ['codenum3', ['10', 'varchar']],
   ]);
+
+  fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
 
   async import(): Promise<void> {
