@@ -5,3 +5,4 @@ dist
 # Environment variables
 assets
 .env
+yarn-error.log
