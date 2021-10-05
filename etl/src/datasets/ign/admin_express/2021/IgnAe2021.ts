@@ -44,7 +44,7 @@ export class IgnAe2021 extends AbstractDataset {
                           as tmp(type varchar, properties json,geometry json)
                         )
                         SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
-                        st_multi(st_geomfromgeojson(a.geometry)) as geom 
+                        st_multi(st_geomfromgeojson(geometry)) as geom 
                         FROM tmp
                       `,
               values: [JSON.stringify(results.value)],
