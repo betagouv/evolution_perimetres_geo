@@ -26,7 +26,7 @@ test.after.always(async (t) => {
     `);
 });
 
-test.serial.skip('should validate', async (t) => {
+test.serial('should validate', async (t) => {
   await t.notThrowsAsync(() => t.context.dataset.validate(new Set()));
 });
 
