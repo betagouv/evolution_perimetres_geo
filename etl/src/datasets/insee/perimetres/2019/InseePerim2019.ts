@@ -24,7 +24,7 @@ export class InseePerim2019 extends AbstractDataset {
   ]);
   sheetOptions = {
     name: 'Composition_communale',
-    startRow: 6,
+    startRow: 5,
   };
 
   async import(): Promise<void> {

@@ -54,7 +54,7 @@ test.serial('should load', async (t) => {
   const response = await t.context.connection.query(`
       SELECT count(*) FROM ${t.context.dataset.table}
     `);
-  t.is(response.rows[0].count, '34000');
+  t.is(response.rows[0].count, '34970');
 });
 
 test.serial.skip('should import', async (t) => {});
