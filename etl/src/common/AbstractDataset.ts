@@ -15,8 +15,9 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly afterSqlPath: string;
   abstract readonly table: string;
   abstract readonly rows: Map<string, [string, string]>;
-  
   abstract fileType: FileTypeEnum;
+  
+  readonly importSql: string = '';
   required: Set<Migrable> = new Set();
   sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
@@ -86,7 +87,9 @@ export abstract class AbstractDataset implements DatasetInterface {
     }
   }
 
-  abstract import(): Promise<void>;
+  async import(): Promise<void> {
+    await this.connection.query(this.importSql);
+  }
 
   async after(): Promise<void> {
     const sql = await loadSqlFile(this.afterSqlPath);
