@@ -48,8 +48,8 @@ jobs:
         run: yarn test
         working-directory: etl
         env:
-          DB_HOST: postgres
-          DB_PORT: "5432"
-          DB_USER: postgres
-          DB_PASSWORD: postgres
-          DB_DB: test
+          POSTGRES_DB: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: "5432"
