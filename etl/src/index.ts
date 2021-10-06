@@ -8,9 +8,7 @@ const pool = createPool();
 bootstrap(logger, [async () => pool.end()]);
 async function run(p: Pool) {
   const migrator = new Migrator(p, datasets);
-bootstrap(getConsole(), [async () => pool.end()]);
-const migrator = new Migrator(pool, datasets);
-migrator.run();
+  await migrator.prepare();
   await migrator.run();
 }
 

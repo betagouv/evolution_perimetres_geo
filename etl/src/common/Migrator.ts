@@ -15,6 +15,13 @@ export class Migrator {
     this.migrations = new Map([...migrations].map((m) => [m.uuid, m]));
   }
 
+  async prepare(): Promise<void> {
+    console.info(`Connecting to database`);
+    await this.pool.connect();
+    console.info(`Connected!`);
+    await this.state.install();
+  }
+
   async getState(): Promise<Set<Migrable>> {
     const stateUuid = await this.state.get();
     const state: Set<Migrable> = new Set();
