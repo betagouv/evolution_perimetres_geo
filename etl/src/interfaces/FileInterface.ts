@@ -3,6 +3,7 @@ export enum FileTypeEnum {
   Ods,
   Xls,
   Geojson,
+  Shp,
 }
 
 export enum ArchiveFileTypeEnum {

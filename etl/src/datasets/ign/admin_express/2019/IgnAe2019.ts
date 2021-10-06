@@ -1,9 +1,9 @@
-import { AbstractDataset } from '../../../../common/AbstractDataset';
+import { IgnDataset } from '../../common/IgnDataset';
 import { streamData } from '../../../../helpers';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 import path from 'path';
 
-export class IgnAe2019 extends AbstractDataset {
+export class IgnAe2019 extends IgnDataset {
   static producer = 'ign';
   static dataset = 'ae';
   static year = 2019;
@@ -19,16 +19,21 @@ export class IgnAe2019 extends AbstractDataset {
     ['com', ['INSEE_COM', 'varchar']],
     ['pop', ['POPULATION', 'integer']],
   ]);
+  readonly transformations: Map<string, [string,string, number,string?]> = new Map([
+    ['SHP_LAMB93_FR/COMMUNE_CARTO', ['commune','geojson',0.000001,'-simplify dp interval=100 keep-shapes']],
+    ['SHP_LAMB93_FR/CHEF_LIEU_CARTO', ['chef_lieu','geojson',0.000001]],
+  ]);
 
-  fileType: FileTypeEnum = FileTypeEnum.Geojson;
+  readonly fileType: FileTypeEnum = FileTypeEnum.Shp;
+  readonly transformedFileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {};
-
+  
   async load(): Promise<void> {
     const connection = await this.connection.connect();
     await connection.query('BEGIN TRANSACTION');
     try {
-      for (const filepath of this.filepaths) {
-        const cursor = streamData(filepath, this.fileType, this.sheetOptions);
+      for (const filepath of this.transformedFilepaths) {
+        const cursor = streamData(filepath, this.transformedFileType, this.sheetOptions);
         let done = false;
         do {
           const results = await cursor.next();
@@ -36,18 +41,18 @@ export class IgnAe2019 extends AbstractDataset {
           if (results.value) {
             const query = {
               text: `
-                        INSERT INTO ${this.table} (
-                            ${[...this.rows.keys()].join(', \n')},geom
-                        )
-                        WITH temp as(
-                          SELECT * FROM
-                          json_to_recordset($1)
-                          as tmp(type varchar, properties json,geometry json)
-                        )
-                        SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
-                        st_multi(st_geomfromgeojson(geometry)) as geom 
-                        FROM tmp
-                      `,
+                INSERT INTO ${this.table} (
+                    ${[...this.rows.keys()].join(', \n')},geom
+                )
+                WITH temp as(
+                  SELECT * FROM
+                  json_to_recordset($1)
+                  as tmp(type varchar, properties json,geometry json)
+                )
+                SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
+                st_multi(st_geomfromgeojson(geometry)) as geom 
+                FROM tmp
+              `,
               values: [JSON.stringify(results.value)],
             };
             console.debug(query);

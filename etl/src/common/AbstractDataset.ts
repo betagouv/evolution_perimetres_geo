@@ -15,7 +15,7 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly afterSqlPath: string;
   abstract readonly table: string;
   abstract readonly rows: Map<string, [string, string]>;
-  abstract fileType: FileTypeEnum;
+  abstract readonly fileType: FileTypeEnum;
 
   readonly importSql: string = '';
   required: Set<Migrable> = new Set();
