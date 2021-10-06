@@ -1,11 +1,20 @@
 import { getTemporaryFilePath } from '.';
 import mapshaper from 'mapshaper';
 
-export async function transformGeoFile(filepath: string,name:string, format: string,precision: number,simplify?:string):Promise<string>{ 
+export async function transformGeoFile(filepath: string,name:string, format: string,precision: number,force:boolean,simplify?:string):Promise<string>{ 
   try{
-    const outFilepath = `${getTemporaryFilePath()}/${name}.${format}`;
+    let outFilepath:string;
+    if(force){
+      outFilepath = filepath;
+    }else{
+      outFilepath = `${getTemporaryFilePath()}/${name}.${format}`;
+    }
     if(simplify){
-      await mapshaper.runCommands(`-i ${filepath} ${simplify} -o ${outFilepath} format=${format} precision=${precision}`);
+      if(force){
+        await mapshaper.runCommands(`-i ${filepath} ${simplify} -o force ${outFilepath} format=${format} precision=${precision}`);
+      } else{
+        await mapshaper.runCommands(`-i ${filepath} ${simplify} -o ${outFilepath} format=${format} precision=${precision}`);
+      }
     }else{
       await mapshaper.runCommands(`-i ${filepath} -o ${outFilepath} format=${format} precision=${precision}`);
     }

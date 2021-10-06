@@ -1,9 +1,9 @@
-import { AbstractDataset } from '../../../../common/AbstractDataset';
+import { IgnDataset } from '../../common/IgnDataset';
 import { streamData } from '../../../../helpers';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 import path from 'path';
 
-export class IgnAe2020 extends AbstractDataset {
+export class IgnAe2020 extends IgnDataset {
   static producer = 'ign';
   static dataset = 'ae';
   static year = 2020;
@@ -20,7 +20,20 @@ export class IgnAe2020 extends AbstractDataset {
     ['pop', ['POPULATION', 'integer']],
   ]);
 
-  fileType: FileTypeEnum = FileTypeEnum.Geojson;
+  readonly transformations: Map<string, [string,string, number,boolean,string?]> = new Map([
+    ['SHP_LAMB93_FR/COMMUNE', ['commune','geojson',0.000001,false]],
+    ['SHP_LAMB93_FR/ARRONDISSEMENT_MUNICIPAL', ['arrondissement','geojson',0.000001,false]],
+    ['SHP_LAMB93_FR/COMMUNE', ['commune_simple','geojson',0.000001,false,'-simplify 60% keep-shapes']],
+    ['SHP_LAMB93_FR/ARRONDISSEMENT_MUNICIPAL', ['arrondissement_simple','geojson',0.000001,false,'-simplify 60% keep-shapes']],
+    ['commune_simple', ['commune_simple','geojson',0.000001,true,'-simplify 50% keep-shapes']],
+    ['commune_simple', ['commune_simple','geojson',0.000001,true,'-simplify 40% keep-shapes']],
+    ['arrondissement_simple', ['arrondissement_simple','geojson',0.000001,true,'-simplify 50% keep-shapes']],
+    ['arrondissement_simple', ['arrondissement_simple','geojson',0.000001,true,'-simplify 40% keep-shapes']],
+    ['SHP_LAMB93_FR/CHEF_LIEU_CARTO', ['chef_lieu','geojson',0.000001,false]],
+    ['SHP_LAMB93_FR/CHFLIEU_ARRONDISSEMENT_MUNICIPAL', ['chef_lieu_arrondissement','geojson',0.000001,false]],
+  ]);
+  readonly fileType: FileTypeEnum = FileTypeEnum.Shp;
+  readonly transformedFileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {};
 
   async load(): Promise<void> {

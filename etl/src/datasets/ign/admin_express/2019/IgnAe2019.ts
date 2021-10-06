@@ -19,9 +19,9 @@ export class IgnAe2019 extends IgnDataset {
     ['com', ['INSEE_COM', 'varchar']],
     ['pop', ['POPULATION', 'integer']],
   ]);
-  readonly transformations: Map<string, [string,string, number,string?]> = new Map([
-    ['SHP_LAMB93_FR/COMMUNE_CARTO', ['commune','geojson',0.000001,'-simplify dp interval=100 keep-shapes']],
-    ['SHP_LAMB93_FR/CHEF_LIEU_CARTO', ['chef_lieu','geojson',0.000001]],
+  readonly transformations: Map<string, [string,string, number,boolean,string?]> = new Map([
+    ['SHP_LAMB93_FR/COMMUNE_CARTO', ['commune','geojson',0.000001,false,'-simplify dp interval=100 keep-shapes']],
+    ['SHP_LAMB93_FR/CHEF_LIEU_CARTO', ['chef_lieu','geojson',0.000001,false]],
   ]);
 
   readonly fileType: FileTypeEnum = FileTypeEnum.Shp;
