@@ -3,7 +3,7 @@ export * from './createPool';
 export * from './decompressFile';
 export * from './downloadFile';
 export * from './getAllFiles';
-export * from './getConsole';
+export * from './getLogger';
 export * from './getDatasetUuid';
 export * from './getFileExtension';
 export * from './getSpinner';
