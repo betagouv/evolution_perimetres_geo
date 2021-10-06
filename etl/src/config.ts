@@ -11,6 +11,6 @@ export const pool: PoolConfig = {
 
 export const spinner: OraOptions = {};
 
-export const console = {
+export const logger = {
   level: process.env.LOG_LEVEL || 'debug',
 };

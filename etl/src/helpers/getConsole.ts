@@ -1,6 +1,6 @@
-import createConsole from 'console-log-level';
-import { console } from '../config';
+import createLogger from 'console-log-level';
+import { logger } from '../config';
 
-export function getConsole() {
-  return createConsole(console as any);
+export function getLogger() {
+  return createLogger(logger as any);
 }
