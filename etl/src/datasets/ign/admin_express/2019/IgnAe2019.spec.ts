@@ -26,7 +26,7 @@ test.after.always(async (t) => {
     `);
 });
 
-test.serial.skip('should validate', async (t) => {
+test.serial('should validate', async (t) => {
   await t.notThrowsAsync(() => t.context.dataset.validate(new Set()));
 });
 
@@ -41,6 +41,7 @@ test.serial('should download file', async (t) => {
   await t.context.dataset.download();
   t.true(t.context.dataset.filepaths.length >= 1);
   for (const path of t.context.dataset.filepaths) {
+    t.log(path);
     await t.notThrowsAsync(() => access(path));
   }
 });

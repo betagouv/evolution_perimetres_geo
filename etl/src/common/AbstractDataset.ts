@@ -1,6 +1,7 @@
 import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid } from '../helpers';
 import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, Migrable } from '../interfaces';
 import { Pool } from 'pg';
+import { StreamDataOptions } from 'src/interfaces/StreamDataOptions';
 
 export abstract class AbstractDataset implements DatasetInterface {
   static get uuid(): string {
@@ -10,14 +11,15 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   abstract readonly beforeSqlPath: string;
   abstract readonly url: string;
-  abstract readonly fileType: FileTypeEnum;
   abstract readonly fileArchiveType: ArchiveFileTypeEnum;
   abstract readonly afterSqlPath: string;
   abstract readonly table: string;
   abstract readonly rows: Map<string, [string, string]>;
+  abstract fileType: FileTypeEnum;
 
+  readonly importSql: string = '';
   required: Set<Migrable> = new Set();
-  sheetOptions: { name?: string; startRow?: number } | undefined;
+  sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
 
   constructor(protected connection: Pool) {}
@@ -38,7 +40,7 @@ export abstract class AbstractDataset implements DatasetInterface {
     const filepaths: string[] = [];
     const filepath = await downloadFile(this.url);
     if (this.fileArchiveType !== ArchiveFileTypeEnum.None) {
-      filepaths.push(...(await decompressFile(filepath, this.fileArchiveType)));
+      filepaths.push(...(await decompressFile(filepath, this.fileArchiveType, this.fileType)));
     } else {
       filepaths.push(filepath);
     }
@@ -85,7 +87,9 @@ export abstract class AbstractDataset implements DatasetInterface {
     }
   }
 
-  abstract import(): Promise<void>;
+  async import(): Promise<void> {
+    await this.connection.query(this.importSql);
+  }
 
   async after(): Promise<void> {
     const sql = await loadSqlFile(this.afterSqlPath);

@@ -12,11 +12,14 @@ export class EurostatCountries2020 extends AbstractDataset {
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string =
     'https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_60M_2020_4326.geojson';
-  readonly fileType: FileTypeEnum = FileTypeEnum.Geojson;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly table: string = 'eurostat_countries_2020';
   readonly rows: Map<string, [string, string]> = new Map([['codeiso3', ['ISO3_CODE', 'varchar']]]);
-  sheetOptions = {};
+
+  fileType: FileTypeEnum = FileTypeEnum.Geojson;
+  sheetOptions = {
+    filter: 'features',
+  };
 
   async import(): Promise<void> {
     // TODO
@@ -47,7 +50,7 @@ export class EurostatCountries2020 extends AbstractDataset {
                 st_multi(st_geomfromgeojson(geometry)) as geom 
                 FROM tmp
               `,
-              values: [JSON.stringify(results.value)],
+              values: [JSON.stringify(results.value).replace(/'/g, "''")],
             };
             console.debug(query);
             await connection.query(query);

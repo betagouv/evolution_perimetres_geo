@@ -26,7 +26,7 @@ test.after.always(async (t) => {
     `);
 });
 
-test.serial.skip('should validate', async (t) => {
+test.serial('should validate', async (t) => {
   await t.notThrowsAsync(() => t.context.dataset.validate(new Set()));
 });
 
@@ -54,7 +54,7 @@ test.serial('should load', async (t) => {
   const response = await t.context.connection.query(`
       SELECT count(*) FROM ${t.context.dataset.table}
     `);
-  t.is(response.rows[0].count, '37742');
+  t.is(response.rows[0].count, '34968');
 });
 
 test.serial.skip('should import', async (t) => {});

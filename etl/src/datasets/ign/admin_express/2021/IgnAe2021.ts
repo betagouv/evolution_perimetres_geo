@@ -13,13 +13,14 @@ export class IgnAe2021 extends AbstractDataset {
   readonly url: string =
     // eslint-disable-next-line max-len
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_3-0__SHP__FRA_L93_2021-05-19.7z';
-  readonly fileType: FileTypeEnum = FileTypeEnum.Geojson;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.SevenZip;
   readonly table: string = 'ign_ae_2021';
   readonly rows: Map<string, [string, string]> = new Map([
     ['com', ['INSEE_COM', 'varchar']],
     ['pop', ['POPULATION', 'integer']],
   ]);
+
+  fileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {};
 
   async load(): Promise<void> {
@@ -44,7 +45,7 @@ export class IgnAe2021 extends AbstractDataset {
                           as tmp(type varchar, properties json,geometry json)
                         )
                         SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
-                        st_multi(st_geomfromgeojson(a.geometry)) as geom 
+                        st_multi(st_geomfromgeojson(geometry)) as geom 
                         FROM tmp
                       `,
               values: [JSON.stringify(results.value)],

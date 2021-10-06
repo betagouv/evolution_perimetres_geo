@@ -11,7 +11,6 @@ export class CeremaAom2019 extends AbstractDataset {
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string =
     'http://www.cerema.fr/system/files/documents/2019/07/base_rt_2019_-_v1-1_-_version_diffusable_0.ods';
-  readonly fileType: FileTypeEnum = FileTypeEnum.Ods;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly table: string = 'cerema_aom_2019';
   readonly rows: Map<string, [string, string]> = new Map([
@@ -33,6 +32,7 @@ export class CeremaAom2019 extends AbstractDataset {
     ['pop_com', ['Population municipale', 'varchar']],
   ]);
 
+  fileType: FileTypeEnum = FileTypeEnum.Ods;
   sheetOptions = {
     name: 'RT 2019- Composition communale',
     startRow: 0,

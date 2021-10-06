@@ -10,7 +10,6 @@ export class CeremaAom2021 extends AbstractDataset {
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string = 'https://www.cerema.fr/system/files/documents/2021/06/base_rt_2021_v4_diffusion.xlsx';
-  readonly fileType: FileTypeEnum = FileTypeEnum.Xls;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly table: string = 'cerema_aom_2021';
   readonly rows: Map<string, [string, string]> = new Map([
@@ -37,6 +36,7 @@ export class CeremaAom2021 extends AbstractDataset {
     ['wikipedia', ['Lien Page wikipedia', 'varchar']],
   ]);
 
+  fileType: FileTypeEnum = FileTypeEnum.Xls;
   sheetOptions = {
     name: 'RT_2021_-_Composition_communale',
     startRow: 0,
