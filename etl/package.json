@@ -9,12 +9,11 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
     "lint": "eslint . --ext .ts",
     "test": "ava --config ava.cjs",
     "coverage": "nyc --nycrc-path ./nyc.cjs --reporter=text ava --config ava.cjs"
-  },
-  "_moduleAliases": {
-    "@": "src"
   },
   "dependencies": {
     "axios": "^0.21.4",

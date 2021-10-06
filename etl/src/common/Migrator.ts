@@ -1,7 +1,7 @@
 import { Ora } from 'ora';
 import { Pool } from 'pg';
-import { getSpinner } from 'src/helpers';
-import { Migrable } from 'src/interfaces';
+import { getSpinner } from '../helpers';
+import { Migrable } from '../interfaces';
 import { MigratorState } from './MigratorState';
 
 export class Migrator {
