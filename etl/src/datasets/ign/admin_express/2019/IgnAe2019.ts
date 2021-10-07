@@ -35,7 +35,6 @@ export class IgnAe2019 extends IgnDataset {
 
   readonly fileType: FileTypeEnum = FileTypeEnum.Shp;
   readonly transformedFileType: FileTypeEnum = FileTypeEnum.Geojson;
-  sheetOptions = {};
 
   readonly importSql = `
     INSERT INTO perimeters(year,centroid,geom,geom_simple,arr,pop,country,l_country)
