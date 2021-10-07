@@ -1,28 +1,27 @@
-import { AbstractDataset } from "src/common/AbstractDataset";
+import { AbstractDataset } from 'src/common/AbstractDataset';
 import { streamData, transformGeoFile } from '../../../helpers';
-import {  FileTypeEnum } from '../../../interfaces';
+import { FileTypeEnum } from '../../../interfaces';
 
 export abstract class IgnDataset extends AbstractDataset {
   //transformations : filename, [output filename,output file format,digit number dor geometry,boolean to force overwriting file, simplification (optionnal)]
-  abstract readonly transformations: Map<string, [string,string,number,boolean,string?]>;
+  abstract readonly transformations: Map<string, [string, string, number, boolean, string?]>;
   abstract readonly transformedFileType: FileTypeEnum;
-  transformedFilepaths:string[] = [];
+  transformedFilepaths: string[] = [];
   //loading : filename, [boolean for insert or update table, geometry column name]
-  abstract readonly loading: Map<string,[boolean,string]>;
-  
+  abstract readonly loading: Map<string, [boolean, string]>;
 
-  async transform():Promise<void> {
-    for await(let file of this.transformations){
-      let path:string | undefined;
-      if(file[0][3]){
-        path = this.transformedFilepaths.find(f=>f.indexOf(file[0]));
+  async transform(): Promise<void> {
+    for await (const file of this.transformations) {
+      let path: string | undefined;
+      if (file[0][3]) {
+        path = this.transformedFilepaths.find((f) => f.indexOf(file[0]));
       } else {
-        path = this.filepaths.find(f=>f.indexOf(file[0]));
+        path = this.filepaths.find((f) => f.indexOf(file[0]));
       }
-      if (path){
-        const geoFile = await transformGeoFile(path,file[1][0],file[1][1],file[1][2],file[1][3],file[1][4]);
-        if(!file[0][3]){
-          this.transformedFilepaths.push(geoFile)
+      if (path) {
+        const geoFile = await transformGeoFile(path, file[1][0], file[1][1], file[1][2], file[1][3], file[1][4]);
+        if (!file[0][3]) {
+          this.transformedFilepaths.push(geoFile);
         }
       }
     }
@@ -33,9 +32,9 @@ export abstract class IgnDataset extends AbstractDataset {
     await connection.query('BEGIN TRANSACTION');
     try {
       for (const file of this.loading) {
-        let path = this.transformedFilepaths.find(f=>f.indexOf(file[0]));
-        let query: {text: string, values: string[]} ={text:'', values:[]}
-        if(path){
+        const path = this.transformedFilepaths.find((f) => f.indexOf(file[0]));
+        const query: { text: string; values: string[] } = { text: '', values: [] };
+        if (path) {
           const cursor = streamData(path, this.transformedFileType, this.sheetOptions);
           let done = false;
           do {
@@ -43,7 +42,7 @@ export abstract class IgnDataset extends AbstractDataset {
             done = !!results.done;
             if (results.value) {
               // CASE INSERT
-              if (file[1][0]){
+              if (file[1][0]) {
                 query.text = `
                   INSERT INTO ${this.table} (
                       ${[...this.rows.keys()].join(', \n')},${file[1][1]}
@@ -57,9 +56,9 @@ export abstract class IgnDataset extends AbstractDataset {
                   st_multi(st_geomfromgeojson(geometry)) as ${file[1][1]} 
                   FROM tmp
                 `;
-              }else{
+              } else {
                 // CASE UPDATE
-                if (file[1][1] === 'centroid'){
+                if (file[1][1] === 'centroid') {
                   query.text = `
                     WITH tmp as(
                       SELECT * FROM
@@ -71,7 +70,7 @@ export abstract class IgnDataset extends AbstractDataset {
                     FROM tmp
                     WHERE a.${this.rows[0][0]} = (tmp.properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
                   `;
-                }else{
+                } else {
                   query.text = `
                     WITH tmp as(
                       SELECT * FROM
@@ -88,8 +87,8 @@ export abstract class IgnDataset extends AbstractDataset {
               query.values = [JSON.stringify(results.value)];
               console.debug(query);
               await connection.query(query);
-            } 
-          }while (!done);
+            }
+          } while (!done);
         }
       }
       await connection.query('COMMIT');

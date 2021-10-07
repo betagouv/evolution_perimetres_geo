@@ -1,5 +1,4 @@
 import { IgnDataset } from '../../common/IgnDataset';
-import { streamData } from '../../../../helpers';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 import path from 'path';
 
@@ -19,23 +18,26 @@ export class IgnAe2019 extends IgnDataset {
     ['com', ['INSEE_COM', 'varchar']],
     ['pop', ['POPULATION', 'integer']],
   ]);
-  readonly transformations: Map<string, [string,string, number,boolean,string?]> = new Map([
-    ['SHP_LAMB93_FR/COMMUNE.shp', ['commune','geojson',0.000001,false]],
-    ['SHP_LAMB93_FR/COMMUNE_CARTO.shp', ['commune_simple','geojson',0.000001,false,'-simplify dp interval=100 keep-shapes']],
-    ['SHP_LAMB93_FR/CHEF_LIEU_CARTO.shp', ['chef_lieu','geojson',0.000001,false]],
+  readonly transformations: Map<string, [string, string, number, boolean, string?]> = new Map([
+    ['SHP_LAMB93_FR/COMMUNE.shp', ['commune', 'geojson', 0.000001, false]],
+    [
+      'SHP_LAMB93_FR/COMMUNE_CARTO.shp',
+      ['commune_simple', 'geojson', 0.000001, false, '-simplify dp interval=100 keep-shapes'],
+    ],
+    ['SHP_LAMB93_FR/CHEF_LIEU_CARTO.shp', ['chef_lieu', 'geojson', 0.000001, false]],
   ]);
 
-  readonly loading: Map<string,[boolean,string]> = new Map([
-    ['commune.geojson', [true,'geom']],
-    ['commune_simple.geojson', [false,'geom_simple']],
-    ['chef_lieu.geojson', [false,'centroid']],
+  readonly loading: Map<string, [boolean, string]> = new Map([
+    ['commune.geojson', [true, 'geom']],
+    ['commune_simple.geojson', [false, 'geom_simple']],
+    ['chef_lieu.geojson', [false, 'centroid']],
   ]);
 
   readonly fileType: FileTypeEnum = FileTypeEnum.Shp;
   readonly transformedFileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {};
-  
-  readonly importSql =`
+
+  readonly importSql = `
     INSERT INTO perimeters(year,centroid,geom,geom_simple,arr,pop,country,l_country)
     SELECT 2019 as year,centroid,geom,geom_simple,com,pop,'XXXXX' as country,'France' as l_country
     FROM ${this.table};

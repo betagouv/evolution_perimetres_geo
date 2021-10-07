@@ -25,7 +25,7 @@ export class InseeDep2021 extends AbstractDataset {
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
 
-  readonly importSql =`
+  readonly importSql = `
     UPDATE perimeters a
     SET a.l_dep = b.libelle
     FROM ${this.table} b

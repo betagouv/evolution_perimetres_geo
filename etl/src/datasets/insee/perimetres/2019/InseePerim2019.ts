@@ -28,7 +28,7 @@ export class InseePerim2019 extends AbstractDataset {
     startRow: 5,
   };
 
-  readonly importSql =`
+  readonly importSql = `
     UPDATE perimeters a
     SET a.com = b.codgeo,
     a.l_com = b.libgeo,

@@ -42,7 +42,7 @@ export class CeremaAom2021 extends AbstractDataset {
     startRow: 0,
   };
 
-  readonly importSql =`
+  readonly importSql = `
     UPDATE perimeters a
     SET a.aom = b.id_reseau,
     a.l_aom = b.nom_aom

@@ -38,7 +38,7 @@ export class CeremaAom2019 extends AbstractDataset {
     startRow: 0,
   };
 
-  readonly importSql =`
+  readonly importSql = `
     UPDATE perimeters a
     SET a.aom = (CASE WHEN b.id_reseau = '/' THEN NULL ELSE b.id_reseau END),
     a.l_aom = b.nom_aom

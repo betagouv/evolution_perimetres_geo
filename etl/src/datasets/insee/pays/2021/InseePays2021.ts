@@ -29,7 +29,7 @@ export class InseePays2021 extends AbstractDataset {
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
 
-  readonly importSql =`
+  readonly importSql = `
     INSERT INTO perimeters(year,centroid,geom,geom_simple,arr,country,l_country)
     SELECT 2021 as year,
     ST_PointOnSurface(st_transform(b.geom,2154)) as centroid,
