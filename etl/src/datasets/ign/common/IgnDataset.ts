@@ -3,9 +3,11 @@ import { streamData, transformGeoFile } from '../../../helpers';
 import {  FileTypeEnum } from '../../../interfaces';
 
 export abstract class IgnDataset extends AbstractDataset {
+  //transformations : filename, [output filename,output file format,digit number dor geometry,boolean to force overwriting file, simplification (optionnal)]
   abstract readonly transformations: Map<string, [string,string,number,boolean,string?]>;
   abstract readonly transformedFileType: FileTypeEnum;
   transformedFilepaths:string[] = [];
+  //loading : filename, [boolean for insert or update table, geometry column name]
   abstract readonly loading: Map<string,[boolean,string]>;
   
 

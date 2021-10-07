@@ -42,7 +42,11 @@ export class CeremaAom2021 extends AbstractDataset {
     startRow: 0,
   };
 
-  async import(): Promise<void> {
-    // TODO
-  }
+  readonly importSql =`
+    UPDATE perimeters a
+    SET a.aom = b.id_reseau,
+    a.l_aom = b.nom_aom
+    FROM ${this.table} b
+    WHERE a.com = b.com AND a.year = 2021;
+  `;
 }

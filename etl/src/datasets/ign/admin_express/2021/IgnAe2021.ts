@@ -46,7 +46,9 @@ export class IgnAe2021 extends IgnDataset {
   readonly transformedFileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {};
 
-  async import(): Promise<void> {
-    // TODO
-  }
+  readonly importSql =`
+    INSERT INTO perimeters(year,centroid,geom,geom_simple,arr,pop,country,l_country)
+    SELECT 2021 as year,centroid,geom,geom_simple,com,pop,'XXXXX' as country,'France' as l_country
+    FROM ${this.table};
+  `;
 }

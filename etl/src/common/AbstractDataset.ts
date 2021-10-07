@@ -17,10 +17,10 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly rows: Map<string, [string, string]>;
   abstract readonly fileType: FileTypeEnum;
 
-  readonly importSql: string = '';
   required: Set<Migrable> = new Set();
   sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
+  readonly importSql: string = '';
 
   constructor(protected connection: Pool) {}
 

@@ -21,10 +21,6 @@ export class EurostatCountries2020 extends AbstractDataset {
     filter: 'features',
   };
 
-  async import(): Promise<void> {
-    // TODO
-  }
-
   async load(): Promise<void> {
     const connection = await this.connection.connect();
     await connection.query('BEGIN TRANSACTION');
