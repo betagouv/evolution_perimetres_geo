@@ -32,6 +32,16 @@ export class IgnAe2021 extends IgnDataset {
     ['SHP_LAMB93_FR/CHFLIEU_COMMUNE', ['chef_lieu','geojson',0.000001,false]],
     ['SHP_LAMB93_FR/CHFLIEU_ARRONDISSEMENT_MUNICIPAL', ['chef_lieu_arrondissement','geojson',0.000001,false]],
   ]);
+
+  readonly loading: Map<string,[boolean,string]> = new Map([
+    ['commune.geojson', [true,'geom']],
+    ['arrondissement.geojson', [true,'geom']],
+    ['commune_simple.geojson', [false,'geom_simple']],
+    ['arrondissement_simple.geojson', [false,'geom_simple']],
+    ['chef_lieu.geojson', [false,'centroid']],
+    ['chef_lieu_arrondissement.geojson', [false,'centroid']],
+  ]);
+  
   readonly fileType: FileTypeEnum = FileTypeEnum.Shp;
   readonly transformedFileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {};
