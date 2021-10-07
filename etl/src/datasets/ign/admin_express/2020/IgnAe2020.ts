@@ -1,5 +1,6 @@
 import { IgnDataset, TransformationParamsInterface } from '../../common/IgnDataset';
 import path from 'path';
+import { StaticAbstractDataset } from 'src/interfaces';
 
 export class IgnAe2020 extends IgnDataset {
   static producer = 'ign';
@@ -35,8 +36,24 @@ export class IgnAe2020 extends IgnDataset {
   ]);
 
   readonly importSql = `
-    INSERT INTO perimeters(year,centroid,geom,geom_simple,arr,pop,country,l_country)
-    SELECT 2020 as year,centroid,geom,geom_simple,com,pop,'XXXXX' as country,'France' as l_country
+    INSERT INTO ${this.targetTable} (
+      year,
+      centroid,
+      geom,
+      geom_simple,
+      arr,
+      pop,
+      country,
+      l_country
+    ) SELECT
+      ${(this.constructor as StaticAbstractDataset).year} as year,
+      centroid,
+      geom,
+      geom_simple,
+      com,
+      pop,
+      'XXXXX' as country,
+      'France' as l_country
     FROM ${this.table};
   `;
 }
