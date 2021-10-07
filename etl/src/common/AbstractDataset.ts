@@ -21,6 +21,7 @@ export abstract class AbstractDataset implements DatasetInterface {
   sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
   readonly importSql: string = '';
+  readonly targetTable: string = 'perimeters';
 
   constructor(protected connection: Pool) {}
 

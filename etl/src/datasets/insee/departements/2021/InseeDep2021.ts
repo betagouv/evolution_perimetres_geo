@@ -26,8 +26,8 @@ export class InseeDep2021 extends AbstractDataset {
   sheetOptions = {};
 
   readonly importSql = `
-    UPDATE perimeters a
-    SET a.l_dep = b.libelle
+    UPDATE ${this.targetTable} a
+      SET a.l_dep = b.libelle
     FROM ${this.table} b
     WHERE a.dep = b.dep;
   `;
