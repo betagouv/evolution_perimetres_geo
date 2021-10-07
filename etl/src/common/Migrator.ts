@@ -41,39 +41,29 @@ export class Migrator {
   }
 
   async process(migrable: Migrable): Promise<void> {
-    const timer = this.logger.start(`Processing ${migrable.uuid}`);
-    const state = await this.getState();
-    const migableInstance = new migrable(this.pool);
-
-    const validateTimer = timer.start('Validation');
-    await migableInstance.validate(state);
-    validateTimer.stop();
-
-    const beforeTimer = timer.start('Before');
-    await migableInstance.before();
-    beforeTimer.stop();
-
-    const downloadTimer = timer.start('Starting download');
-    await migableInstance.download();
-    downloadTimer.stop();
-
-    const transformTimer = timer.start('Transform');
-    await migableInstance.transform();
-    transformTimer.stop();
-
-    const loadTimer = timer.start('Load');
-    await migableInstance.load();
-    loadTimer.stop();
-
-    const importTimer = timer.start('Import');
-    await migableInstance.import();
-    importTimer.stop();
-
-    const afterTimer = timer.start('After');
-    await migableInstance.after();
-    afterTimer.stop();
-
-    timer.stop();
+    try {
+      console.info(`${migrable.uuid} : start processing`);
+      const state = await this.getState();
+      const migableInstance = new migrable(this.pool);
+      console.debug(`${migrable.uuid} : validation`);
+      await migableInstance.validate(state);
+      console.debug(`${migrable.uuid} : before`);
+      await migableInstance.before();
+      console.debug(`${migrable.uuid} : download`);
+      await migableInstance.download();
+      console.debug(`${migrable.uuid} : transform`);
+      await migableInstance.transform();
+      console.debug(`${migrable.uuid} : load`);
+      await migableInstance.load();
+      console.debug(`${migrable.uuid} : import`);
+      await migableInstance.import();
+      console.debug(`${migrable.uuid} : after`);
+      await migableInstance.after();
+      console.info(`${migrable.uuid} : done`);
+    } catch (e) {
+      console.error(`${migrable.uuid} : ${(e as Error).message}`);
+      throw e;
+    }
   }
 
   async run(): Promise<void> {

@@ -1,9 +1,9 @@
 import { DatasetInterface, Migrable } from '../interfaces';
 import { Pool } from 'pg';
+import { SqlError } from '../errors';
 
 export abstract class AbstractDatastructure implements DatasetInterface {
-  abstract readonly beforeSql: string;
-  abstract readonly afterSql: string;
+  abstract readonly sql: string;
   abstract readonly table: string;
 
   required: Set<Migrable> = new Set();
@@ -18,7 +18,11 @@ export abstract class AbstractDatastructure implements DatasetInterface {
   }
 
   async before(): Promise<void> {
-    await this.connection.query(this.beforeSql);
+    try {
+      await this.connection.query(this.sql);
+    } catch (e) {
+      throw new SqlError(this, (e as Error).message);
+    }
   }
 
   async download(): Promise<void> {}
@@ -29,7 +33,5 @@ export abstract class AbstractDatastructure implements DatasetInterface {
 
   async import(): Promise<void> {}
 
-  async after(): Promise<void> {
-    await this.connection.query(this.afterSql);
-  }
+  async after(): Promise<void> {}
 }

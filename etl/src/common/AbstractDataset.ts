@@ -5,7 +5,7 @@ import { StreamDataOptions } from '../interfaces/StreamDataOptions';
 
 export abstract class AbstractDataset implements DatasetInterface {
   static get uuid(): string {
-    const self = this.constructor as StaticAbstractDataset;
+    const self = this as unknown as StaticAbstractDataset;
     return getDatasetUuid(self.producer, self.dataset, self.year);
   }
 

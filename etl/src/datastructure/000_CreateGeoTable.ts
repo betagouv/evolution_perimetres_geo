@@ -3,7 +3,7 @@ import { AbstractDatastructure } from '../common/AbstractDatastructure';
 export class CreateGeoTable extends AbstractDatastructure {
   static uuid = 'create_geo_table';
   readonly table = 'perimeters';
-  readonly beforeSql = `
+  readonly sql = `
       CREATE EXTENSION IF NOT EXISTS postgis;
       CREATE TABLE IF NOT EXISTS ${this.table} (
           id SERIAL PRIMARY KEY,
@@ -31,10 +31,6 @@ export class CreateGeoTable extends AbstractDatastructure {
       CREATE INDEX ${this.table}_id_index ON ${this.table} USING btree (id);
       CREATE INDEX ${this.table}_centroid_index ON ${this.table} USING gist (centroid);
       CREATE INDEX ${this.table}_geom_index ON ${this.table} USING gist (geom);
-      CREATE INDEX ${this.table}_simplified_geom_index ON ${this.table} USING gist (simplified_geom);
-    `;
-
-  readonly afterSql = `
-      DROP TABLE IF EXISTS ${this.table}
+      CREATE INDEX ${this.table}_geom_simple_index ON ${this.table} USING gist (geom_simple);
     `;
 }
