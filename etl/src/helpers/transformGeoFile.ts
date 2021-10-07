@@ -10,25 +10,18 @@ export async function transformGeoFile(
   simplify?: string,
 ): Promise<string> {
   try {
-    let outFilepath: string;
-    if (force) {
-      outFilepath = filepath;
-    } else {
-      outFilepath = `${getTemporaryFilePath()}/${name}.${format}`;
-    }
-    if (simplify) {
-      if (force) {
-        await mapshaper.runCommands(
-          `-i ${filepath} ${simplify} -o force ${outFilepath} format=${format} precision=${precision}`,
-        );
-      } else {
-        await mapshaper.runCommands(
-          `-i ${filepath} ${simplify} -o ${outFilepath} format=${format} precision=${precision}`,
-        );
-      }
-    } else {
-      await mapshaper.runCommands(`-i ${filepath} -o ${outFilepath} format=${format} precision=${precision}`);
-    }
+    const outFilepath = force ? filepath : `${getTemporaryFilePath()}/${name}.${format}`;
+    const options = [
+      '-i',
+      filepath,
+      simplify || '',
+      '-o',
+      force ? 'force' : '',
+      outFilepath,
+      `format=${format}`,
+      `precision=${precision}`
+    ];
+    await mapshaper.runCommands(options.join(' '));
     return outFilepath;
   } catch (err) {
     console.error(err);
