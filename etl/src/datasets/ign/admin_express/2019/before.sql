@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS ign_ae_2019 (
   id SERIAL PRIMARY KEY,
   com varchar(5) NOT NULL,
   pop integer,
-  geom geometry(MULTIPOLYGON,2154)
+  geom geometry(MULTIPOLYGON,2154),
   centroid GEOMETRY(POINT, 2154),
   geom_simple GEOMETRY(MULTIPOLYGON, 2154),
 );
