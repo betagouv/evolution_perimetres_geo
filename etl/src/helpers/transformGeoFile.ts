@@ -3,14 +3,13 @@ import mapshaper from 'mapshaper';
 
 export async function transformGeoFile(
   filepath: string,
-  name: string,
   format: string,
   precision: number,
   force: boolean,
   simplify?: string,
 ): Promise<string> {
   try {
-    const outFilepath = force ? filepath : `${getTemporaryFilePath()}/${name}.${format}`;
+    const outFilepath = getTemporaryFilePath();
     const options = [
       '-i',
       filepath,
@@ -19,7 +18,7 @@ export async function transformGeoFile(
       force ? 'force' : '',
       outFilepath,
       `format=${format}`,
-      `precision=${precision}`
+      `precision=${precision}`,
     ];
     await mapshaper.runCommands(options.join(' '));
     return outFilepath;
