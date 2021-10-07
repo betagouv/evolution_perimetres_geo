@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS eurostat.countries_2020;

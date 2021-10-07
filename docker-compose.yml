@@ -29,7 +29,7 @@ services:
     volumes:
       - ./etl:/etl
     environment:
-      PG_HOST: postgres
+      POSTGRES_HOST: postgres
 
 networks:
   back:

@@ -1,7 +1,15 @@
+import { Pool } from 'pg';
 import { Migrator } from './common/Migrator';
 import { datasets } from './datasets';
-import { createPool } from './helpers';
+import { bootstrap, createPool, getLogger } from './helpers';
 
+const logger = getLogger();
 const pool = createPool();
-const migrator = new Migrator(pool, datasets);
-migrator.run();
+bootstrap(logger, [async () => pool.end()]);
+async function run(p: Pool) {
+  const migrator = new Migrator(p, datasets);
+  await migrator.prepare();
+  await migrator.run();
+}
+
+run(pool);

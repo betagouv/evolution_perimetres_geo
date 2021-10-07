@@ -1,7 +1,7 @@
 import { Ora } from 'ora';
 import { Pool } from 'pg';
-import { getSpinner } from 'src/helpers';
-import { Migrable } from 'src/interfaces';
+import { getSpinner } from '../helpers';
+import { Migrable } from '../interfaces';
 import { MigratorState } from './MigratorState';
 
 export class Migrator {
@@ -13,6 +13,13 @@ export class Migrator {
     this.state = new MigratorState(pool);
     this.logger = getSpinner();
     this.migrations = new Map([...migrations].map((m) => [m.uuid, m]));
+  }
+
+  async prepare(): Promise<void> {
+    console.info(`Connecting to database`);
+    await this.pool.connect();
+    console.info(`Connected!`);
+    await this.state.install();
   }
 
   async getState(): Promise<Set<Migrable>> {
@@ -34,39 +41,29 @@ export class Migrator {
   }
 
   async process(migrable: Migrable): Promise<void> {
-    const timer = this.logger.start(`Processing ${migrable.uuid}`);
-    const state = await this.getState();
-    const migableInstance = new migrable(this.pool);
-
-    const validateTimer = timer.start('Validation');
-    await migableInstance.validate(state);
-    validateTimer.stop();
-
-    const beforeTimer = timer.start('Before');
-    await migableInstance.before();
-    beforeTimer.stop();
-
-    const downloadTimer = timer.start('Starting download');
-    await migableInstance.download();
-    downloadTimer.stop();
-
-    const transformTimer = timer.start('Transform');
-    await migableInstance.transform();
-    transformTimer.stop();
-
-    const loadTimer = timer.start('Load');
-    await migableInstance.load();
-    loadTimer.stop();
-
-    const importTimer = timer.start('Import');
-    await migableInstance.import();
-    importTimer.stop();
-
-    const afterTimer = timer.start('After');
-    await migableInstance.after();
-    afterTimer.stop();
-
-    timer.stop();
+    try {
+      console.info(`${migrable.uuid} : start processing`);
+      const state = await this.getState();
+      const migableInstance = new migrable(this.pool);
+      console.debug(`${migrable.uuid} : validation`);
+      await migableInstance.validate(state);
+      console.debug(`${migrable.uuid} : before`);
+      await migableInstance.before();
+      console.debug(`${migrable.uuid} : download`);
+      await migableInstance.download();
+      console.debug(`${migrable.uuid} : transform`);
+      await migableInstance.transform();
+      console.debug(`${migrable.uuid} : load`);
+      await migableInstance.load();
+      console.debug(`${migrable.uuid} : import`);
+      await migableInstance.import();
+      console.debug(`${migrable.uuid} : after`);
+      await migableInstance.after();
+      console.info(`${migrable.uuid} : done`);
+    } catch (e) {
+      console.error(`${migrable.uuid} : ${(e as Error).message}`);
+      throw e;
+    }
   }
 
   async run(): Promise<void> {
