@@ -86,7 +86,6 @@ export abstract class AbstractDataset implements DatasetInterface {
                       `,
               values: [JSON.stringify(results.value).replace(/'/g, "''")],
             };
-            console.debug(query);
             await connection.query(query);
           }
         } while (!done);

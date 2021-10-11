@@ -48,7 +48,6 @@ export class EurostatCountries2020 extends AbstractDataset {
               `,
               values: [JSON.stringify(results.value).replace(/'/g, "''")],
             };
-            console.debug(query);
             await connection.query(query);
           }
         } while (!done);
