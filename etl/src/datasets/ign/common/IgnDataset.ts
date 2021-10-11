@@ -1,5 +1,5 @@
-import { AbstractDataset } from 'src/common/AbstractDataset';
-import { SqlError, TransformError } from 'src/errors';
+import { AbstractDataset } from '../../../common/AbstractDataset';
+import { SqlError, TransformError } from '../../../errors';
 import { streamData, transformGeoFile } from '../../../helpers';
 import { FileTypeEnum, ArchiveFileTypeEnum } from '../../../interfaces';
 

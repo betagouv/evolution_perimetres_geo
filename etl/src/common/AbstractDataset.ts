@@ -2,7 +2,7 @@ import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid }
 import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, Migrable } from '../interfaces';
 import { Pool } from 'pg';
 import { StreamDataOptions } from '../interfaces/StreamDataOptions';
-import { DownloadError, SqlError, ValidationError } from 'src/errors';
+import { DownloadError, SqlError, ValidationError } from '../errors';
 
 export abstract class AbstractDataset implements DatasetInterface {
   static get uuid(): string {

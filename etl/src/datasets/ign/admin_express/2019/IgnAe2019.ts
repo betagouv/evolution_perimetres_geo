@@ -1,6 +1,6 @@
 import { IgnDataset, TransformationParamsInterface } from '../../common/IgnDataset';
 import path from 'path';
-import { StaticAbstractDataset } from 'src/interfaces';
+import { StaticAbstractDataset } from '../../../../interfaces';
 
 export class IgnAe2019 extends IgnDataset {
   static producer = 'ign';
