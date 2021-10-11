@@ -1,14 +1,14 @@
 export enum FileTypeEnum {
-  Csv,
-  Ods,
-  Xls,
-  Geojson,
-  Shp,
+  Csv = 'CSV',
+  Ods = 'ODS',
+  Xls = 'XLS',
+  Geojson = 'GEOJSON',
+  Shp = 'SHP',
 }
 
 export enum ArchiveFileTypeEnum {
-  None,
-  Zip,
-  GZip,
-  SevenZip,
+  None = 'NONE',
+  Zip = 'ZIP',
+  GZip = 'GZIP',
+  SevenZip = '7ZIP',
 }
