@@ -29,7 +29,10 @@ export abstract class IgnDataset extends AbstractDataset {
     ['pop', ['POPULATION', 'integer']],
   ]);
 
-  sheetOptions = {};
+  sheetOptions = {
+    filter: 'features',
+  };
+
   fileType: FileTypeEnum = FileTypeEnum.Shp;
 
   async transform(): Promise<void> {
