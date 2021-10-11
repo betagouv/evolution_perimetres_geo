@@ -3,6 +3,7 @@ import { createGunzip } from 'zlib';
 import { extractFull } from 'node-7z';
 import { createReadStream, createWriteStream } from 'fs';
 import { access } from 'fs/promises';
+import { basename } from 'path';
 
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../interfaces';
 import { getTemporaryDirectoryPath } from '.';
@@ -39,8 +40,8 @@ export async function decompressFile(
   fileType: FileTypeEnum,
 ): Promise<string[]> {
   try {
-    const extractPath = await getTemporaryDirectoryPath();
     await access(filepath);
+    const extractPath = await getTemporaryDirectoryPath(`${basename(filepath)}-extract`);
     switch (archiveType) {
       case ArchiveFileTypeEnum.Zip:
         await unzipFile(filepath, extractPath);
@@ -56,7 +57,9 @@ export async function decompressFile(
       default:
         throw new Error();
     }
-    return [...(await getAllFiles(extractPath, getFileExtensions(fileType)))];
+    const files: Set<string> = new Set();
+    await getAllFiles(extractPath, getFileExtensions(fileType), files);
+    return [...files];
   } catch (err) {
     console.error(err);
     throw err;
