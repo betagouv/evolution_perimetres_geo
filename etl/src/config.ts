@@ -1,3 +1,4 @@
+import os from 'os';
 import { PoolConfig } from 'pg';
 import { Options as OraOptions } from 'ora';
 
@@ -14,3 +15,5 @@ export const spinner: OraOptions = {};
 export const logger = {
   level: process.env.LOG_LEVEL || 'debug',
 };
+
+export const temporaryDirectory = process.env.TEMPORARY_DIRECTORY || os.tmpdir();
