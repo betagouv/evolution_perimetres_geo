@@ -1,5 +1,5 @@
-import { getTemporaryFilePath } from '.';
 import mapshaper from 'mapshaper';
+import { getTemporaryFilePath } from '.';
 
 export async function transformGeoFile(
   filepath: string,
@@ -9,7 +9,7 @@ export async function transformGeoFile(
   simplify?: string,
 ): Promise<string> {
   try {
-    const outFilepath = getTemporaryFilePath();
+    const outFilepath = `${getTemporaryFilePath()}.${format}`;
     const options = [
       '-i',
       filepath,
@@ -20,6 +20,7 @@ export async function transformGeoFile(
       `format=${format}`,
       `precision=${precision}`,
     ];
+    console.debug(`Running mapshaper with options ${options.join(' ')}`);
     await mapshaper.runCommands(options.join(' '));
     return outFilepath;
   } catch (err) {
