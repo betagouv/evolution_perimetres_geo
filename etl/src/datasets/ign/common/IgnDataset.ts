@@ -1,4 +1,5 @@
 import { AbstractDataset } from 'src/common/AbstractDataset';
+import { SqlError, TransformError } from 'src/errors';
 import { streamData, transformGeoFile } from '../../../helpers';
 import { FileTypeEnum, ArchiveFileTypeEnum } from '../../../interfaces';
 
@@ -32,32 +33,36 @@ export abstract class IgnDataset extends AbstractDataset {
   fileType: FileTypeEnum = FileTypeEnum.Shp;
 
   async transform(): Promise<void> {
-    const filepaths: string[] = [];
-    for await (const [file, customConfig] of this.transformations) {
-      const config = { ...defaultConfig, customConfig };
-      const path = this.filepaths.find((f) => f.indexOf(file));
-      if (path) {
-        let transformedFilePath: string;
-        if (config.simplify && config.simplify.length) {
-          transformedFilePath = path;
-          for (const simplify of config.simplify) {
-            transformedFilePath = await transformGeoFile(
-              transformedFilePath,
-              config.format,
-              config.precision,
-              config.force,
-              simplify,
-            );
+    try {
+      const filepaths: string[] = [];
+      for await (const [file, customConfig] of this.transformations) {
+        const config = { ...defaultConfig, customConfig };
+        const path = this.filepaths.find((f) => f.indexOf(file));
+        if (path) {
+          let transformedFilePath: string;
+          if (config.simplify && config.simplify.length) {
+            transformedFilePath = path;
+            for (const simplify of config.simplify) {
+              transformedFilePath = await transformGeoFile(
+                transformedFilePath,
+                config.format,
+                config.precision,
+                config.force,
+                simplify,
+              );
+            }
+          } else {
+            transformedFilePath = await transformGeoFile(path, config.format, config.precision, config.force);
           }
-        } else {
-          transformedFilePath = await transformGeoFile(path, config.format, config.precision, config.force);
+          filepaths.push(transformedFilePath);
+          this.transformations.set(file, { ...customConfig, file: transformedFilePath });
         }
-        filepaths.push(transformedFilePath);
-        this.transformations.set(file, { ...customConfig, file: transformedFilePath });
       }
+      this.filepaths = filepaths;
+      this.fileType = FileTypeEnum.Geojson;
+    } catch (e) {
+      throw new TransformError(this, (e as Error).message);
     }
-    this.filepaths = filepaths;
-    this.fileType = FileTypeEnum.Geojson;
   }
 
   async load(): Promise<void> {
@@ -134,7 +139,7 @@ export abstract class IgnDataset extends AbstractDataset {
     } catch (e) {
       await connection.query('ROLLBACK');
       connection.release();
-      throw e;
+      throw new SqlError(this, (e as Error).message);
     }
   }
 }
