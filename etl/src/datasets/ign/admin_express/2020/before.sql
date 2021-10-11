@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS ign_ae_2020 (
   pop integer,
   geom geometry(MULTIPOLYGON,2154),
   centroid GEOMETRY(POINT, 2154),
-  geom_simple GEOMETRY(MULTIPOLYGON, 2154),
+  geom_simple GEOMETRY(MULTIPOLYGON, 2154)
 );
 CREATE INDEX ign_ae_2020_id_index ON ign_ae_2020 USING btree (id);
 CREATE INDEX ign_ae_2020_geom_index ON ign_ae_2020 USING gist (geom);
