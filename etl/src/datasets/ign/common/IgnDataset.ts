@@ -74,15 +74,29 @@ export abstract class IgnDataset extends AbstractDataset {
     try {
       for (const [, { file, key }] of this.transformations) {
         if (file && file.length) {
+          console.debug(`Processing file ${file}`);
           const cursor = streamData(file, this.fileType, this.sheetOptions);
           let done = false;
           do {
             const results = await cursor.next();
             done = !!results.done;
             if (results.value) {
-              const values = [JSON.stringify(results.value)];
+              const values = [JSON.stringify(results.value.map((r) => r.value))];
               switch (key) {
                 case 'geom':
+                  console.debug(`
+                    INSERT INTO ${this.table} (
+                      ${[...this.rows.keys()].join(', \n')}, ${key}
+                    )
+                    WITH tmp as(
+                      SELECT * FROM
+                      json_to_recordset($1)
+                      as t(type varchar, properties json,geometry json)
+                    )
+                    SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
+                    st_multi(st_geomfromgeojson(geometry)) as ${key} 
+                    FROM tmp 
+                  `);
                   await connection.query({
                     text: `
                       INSERT INTO ${this.table} (
@@ -101,6 +115,17 @@ export abstract class IgnDataset extends AbstractDataset {
                   });
                   break;
                 case 'geom_simple':
+                  console.debug(`
+                    WITH tmp as(
+                      SELECT * FROM
+                      json_to_recordset($1)
+                      as t(type varchar, properties json,geometry json)
+                    )
+                    UPDATE ${this.table} AS a
+                    SET a.${key} = st_geomfromgeojson(tmp.geometry)
+                    FROM tmp
+                    WHERE a.${this.rows[0][0]} = (tmp.properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
+                  `);
                   await connection.query({
                     text: `
                       WITH tmp as(
@@ -117,6 +142,17 @@ export abstract class IgnDataset extends AbstractDataset {
                   });
                   break;
                 case 'centroid':
+                  console.debug(`
+                    WITH tmp as(
+                      SELECT * FROM
+                      json_to_recordset($1)
+                      as t(type varchar, properties json,geometry json)
+                    )
+                    UPDATE ${this.table} AS a
+                    SET a.${key} = st_geomfromgeojson(tmp.geometry)
+                    FROM tmp
+                    WHERE a.${this.rows[0][0]} = (tmp.properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
+                  `);
                   await connection.query({
                     text: `
                       WITH tmp as(
