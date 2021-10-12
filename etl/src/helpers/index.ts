@@ -6,7 +6,6 @@ export * from './getAllFiles';
 export * from './getLogger';
 export * from './getDatasetUuid';
 export * from './getFileExtension';
-export * from './getSpinner';
 export * from './getTemporaryPath';
 export * from './loadSqlFile';
 export * from './randomString';

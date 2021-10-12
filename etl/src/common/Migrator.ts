@@ -1,18 +1,20 @@
-import { Ora } from 'ora';
 import { Pool } from 'pg';
-import { getSpinner } from '../helpers';
 import { Migrable } from '../interfaces';
 import { MigratorState } from './MigratorState';
 
+export interface MigratorConfig {
+  pool: Pool;
+  migrations: Set<Migrable>;
+}
 export class Migrator {
+  protected pool: Pool;
   protected state: MigratorState;
-  protected logger: Ora;
   protected migrations: Map<string, Migrable>;
 
-  constructor(protected pool: Pool, migrations: Set<Migrable>) {
-    this.state = new MigratorState(pool);
-    this.logger = getSpinner();
-    this.migrations = new Map([...migrations].map((m) => [m.uuid, m]));
+  constructor(config: MigratorConfig) {
+    this.pool = config.pool;
+    this.state = new MigratorState(config.pool);
+    this.migrations = new Map([...config.migrations].map((m) => [m.uuid, m]));
   }
 
   async prepare(): Promise<void> {
