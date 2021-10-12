@@ -1,4 +1,4 @@
 import { prepare, run } from './app';
 
-const config = prepare();
-run(config);
+const migrator = prepare();
+run(migrator);

@@ -25,7 +25,7 @@ export class CreateGeoTable extends AbstractDatastructure {
           country VARCHAR(5),
           l_aom VARCHAR(256),
           aom VARCHAR(9),
-          population INT,
+          pop INT,
           surface FLOAT(4)
       );
       CREATE INDEX ${this.table}_id_index ON ${this.table} USING btree (id);

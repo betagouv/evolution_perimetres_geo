@@ -9,6 +9,7 @@ export class CreateComEvolutionTable extends AbstractDatastructure {
           old_com VARCHAR(5) NOT NULL,
           new_com VARCHAR(5) NOT NULL
       );
-      CREATE INDEX ${this.table}_id_index ON ${this.table} USING btree (id);
+      CREATE INDEX ${this.table}_old_com_index ON ${this.table} USING btree (old_com);
+      CREATE INDEX ${this.table}_new_com_index ON ${this.table} USING btree (new_com);
     `;
 }
