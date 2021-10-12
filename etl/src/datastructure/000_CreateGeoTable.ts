@@ -2,7 +2,7 @@ import { AbstractDatastructure } from '../common/AbstractDatastructure';
 
 export class CreateGeoTable extends AbstractDatastructure {
   static uuid = 'create_geo_table';
-  readonly table = 'perimeters';
+  static table = 'perimeters';
   readonly sql = `
       CREATE EXTENSION IF NOT EXISTS postgis;
       CREATE TABLE IF NOT EXISTS ${this.table} (

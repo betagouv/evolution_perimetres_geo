@@ -9,7 +9,8 @@ export interface MigratorConfig {
 export class Migrator {
   protected pool: Pool;
   protected state: MigratorState;
-  protected migrations: Map<string, Migrable>;
+
+  readonly migrations: Map<string, Migrable>;
 
   constructor(config: MigratorConfig) {
     this.pool = config.pool;

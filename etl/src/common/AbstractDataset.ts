@@ -14,7 +14,6 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly url: string;
   abstract readonly fileArchiveType: ArchiveFileTypeEnum;
   abstract readonly afterSqlPath: string;
-  abstract readonly table: string;
   abstract readonly rows: Map<string, [string, string]>;
   abstract readonly fileType: FileTypeEnum;
 
@@ -24,6 +23,10 @@ export abstract class AbstractDataset implements DatasetInterface {
   readonly importSql: string = '';
   readonly targetTable: string = 'perimeters';
 
+  get table(): string {
+    return (this.constructor as StaticAbstractDataset).table;
+  }
+  
   constructor(protected connection: Pool) {}
 
   async validate(done: Set<Migrable>): Promise<void> {

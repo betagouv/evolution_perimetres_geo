@@ -1,10 +1,13 @@
-import { DatasetInterface, Migrable } from '../interfaces';
+import { DatasetInterface, Migrable, StaticAbstractDataset } from '../interfaces';
 import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
 
 export abstract class AbstractDatastructure implements DatasetInterface {
   abstract readonly sql: string;
-  abstract readonly table: string;
+  get table(): string {
+    return (this.constructor as StaticAbstractDataset).table;
+  }
+  
 
   required: Set<Migrable> = new Set();
 

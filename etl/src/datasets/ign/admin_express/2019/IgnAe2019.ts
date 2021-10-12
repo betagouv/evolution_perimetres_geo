@@ -6,13 +6,13 @@ export class IgnAe2019 extends IgnDataset {
   static producer = 'ign';
   static dataset = 'ae';
   static year = 2019;
+  static table: string = 'ign_ae_2019';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string =
     // eslint-disable-next-line max-len
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-0__SHP__FRA_L93_2019-09-24.7z';
-  readonly table: string = 'ign_ae_2019';
 
   readonly transformations: Array<[string, Partial<TransformationParamsInterface>]> = [
     ['SHP_LAMB93_FR/COMMUNE.shp', { key: 'geom' }],

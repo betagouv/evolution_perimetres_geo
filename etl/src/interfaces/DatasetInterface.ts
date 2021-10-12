@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 
 export interface Migrable {
   readonly uuid: string;
+  readonly table: string;
   new (connection: Pool): DatasetInterface;
 }
 export interface StaticAbstractDataset extends Migrable {

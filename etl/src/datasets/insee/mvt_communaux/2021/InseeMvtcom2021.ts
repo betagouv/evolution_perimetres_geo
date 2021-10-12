@@ -6,12 +6,12 @@ export class InseeMvtcom2021 extends AbstractDataset {
   static producer = 'insee';
   static dataset = 'mvtcom';
   static year = 2021;
+  static table: string = 'insee_mvtcom_2021';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/mvtcommune2021-csv.zip';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
-  readonly table: string = 'insee_mvtcom_2021';
   readonly rows: Map<string, [string, string]> = new Map([
     ['mod', ['0', 'smallint']],
     ['date_eff', ['1', 'varchar']],

@@ -2,7 +2,7 @@ import { AbstractDatastructure } from '../common/AbstractDatastructure';
 
 export class CreateComEvolutionTable extends AbstractDatastructure {
   static uuid = 'create_com_evolution_table';
-  readonly table = 'com_evolution';
+  static table = 'com_evolution';
   readonly sql = `
       CREATE TABLE IF NOT EXISTS ${this.table} (
           year SMALLINT NOT NULL,

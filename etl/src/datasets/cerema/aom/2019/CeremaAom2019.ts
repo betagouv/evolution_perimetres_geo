@@ -6,13 +6,13 @@ export class CeremaAom2019 extends AbstractDataset {
   static producer = 'cerema';
   static dataset = 'aom';
   static year = 2019;
+  static table: string = 'cerema_aom_2019';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string =
     'http://www.cerema.fr/system/files/documents/2019/07/base_rt_2019_-_v1-1_-_version_diffusable_0.ods';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
-  readonly table: string = 'cerema_aom_2019';
   readonly rows: Map<string, [string, string]> = new Map([
     ['id_reseau', ['Id réseau', 'varchar']],
     ['region', ['Région siège', 'varchar']],

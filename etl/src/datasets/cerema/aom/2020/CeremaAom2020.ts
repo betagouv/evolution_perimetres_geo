@@ -6,12 +6,12 @@ export class CeremaAom2020 extends AbstractDataset {
   static producer = 'cerema';
   static dataset = 'aom';
   static year = 2020;
+  static table: string = 'cerema_aom_2020';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string = 'https://www.cerema.fr/system/files/documents/2020/07/base_rt_2020_v1-1_diffusion_0.ods';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
-  readonly table: string = 'cerema_aom_2020';
   readonly rows: Map<string, [string, string]> = new Map([
     ['id_reseau', ['Id réseau', 'integer']],
     ['nom_reseau', ['Nom du réseau', 'varchar']],
