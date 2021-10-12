@@ -1,16 +1,16 @@
 import { Pool } from 'pg';
-import { Migrable } from '../interfaces';
+import { StaticMigrable } from '../interfaces';
 import { MigratorState } from './MigratorState';
 
 export interface MigratorConfig {
   pool: Pool;
-  migrations: Set<Migrable>;
+  migrations: Set<StaticMigrable>;
 }
 export class Migrator {
   protected pool: Pool;
   protected state: MigratorState;
 
-  readonly migrations: Map<string, Migrable>;
+  readonly migrations: Map<string, StaticMigrable>;
 
   constructor(config: MigratorConfig) {
     this.pool = config.pool;
@@ -25,9 +25,9 @@ export class Migrator {
     await this.state.install();
   }
 
-  async getState(): Promise<Set<Migrable>> {
+  async getState(): Promise<Set<StaticMigrable>> {
     const stateUuid = await this.state.get();
-    const state: Set<Migrable> = new Set();
+    const state: Set<StaticMigrable> = new Set();
     for (const uuid of stateUuid) {
       const migration = this.migrations.get(uuid);
       if (!migration) {
@@ -38,12 +38,12 @@ export class Migrator {
     return state;
   }
 
-  async todo(): Promise<Set<Migrable>> {
+  async todo(): Promise<Set<StaticMigrable>> {
     const done = await this.state.get();
     return new Set([...this.migrations.values()].filter((m) => !done.has(m.uuid)));
   }
 
-  async process(migrable: Migrable): Promise<void> {
+  async process(migrable: StaticMigrable): Promise<void> {
     try {
       console.info(`${migrable.uuid} : start processing`);
       const state = await this.getState();

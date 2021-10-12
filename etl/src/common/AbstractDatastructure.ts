@@ -1,4 +1,4 @@
-import { DatasetInterface, Migrable, StaticAbstractDataset } from '../interfaces';
+import { DatasetInterface, StaticMigrable, StaticAbstractDataset } from '../interfaces';
 import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
 
@@ -8,11 +8,11 @@ export abstract class AbstractDatastructure implements DatasetInterface {
     return (this.constructor as StaticAbstractDataset).table;
   }
 
-  required: Set<Migrable> = new Set();
+  required: Set<StaticMigrable> = new Set();
 
   constructor(protected connection: Pool) {}
 
-  async validate(done: Set<Migrable>): Promise<void> {
+  async validate(done: Set<StaticMigrable>): Promise<void> {
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
     if (difference.size > 0) {
       throw new ValidationError(

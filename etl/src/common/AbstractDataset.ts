@@ -1,5 +1,5 @@
 import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid } from '../helpers';
-import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, Migrable } from '../interfaces';
+import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, StaticMigrable } from '../interfaces';
 import { Pool } from 'pg';
 import { StreamDataOptions } from '../interfaces/StreamDataOptions';
 import { DownloadError, SqlError, ValidationError } from '../errors';
@@ -17,7 +17,7 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly rows: Map<string, [string, string]>;
   abstract readonly fileType: FileTypeEnum;
 
-  required: Set<Migrable> = new Set();
+  required: Set<StaticMigrable> = new Set();
   sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
   readonly importSql: string = '';
@@ -29,7 +29,7 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   constructor(protected connection: Pool) {}
 
-  async validate(done: Set<Migrable>): Promise<void> {
+  async validate(done: Set<StaticMigrable>): Promise<void> {
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
     if (difference.size > 0) {
       throw new ValidationError(
