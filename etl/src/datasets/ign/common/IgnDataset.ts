@@ -147,7 +147,7 @@ export abstract class IgnDataset extends AbstractDataset {
           UPDATE ${this.table}
           SET centroid = ST_PointOnSurface(geom)
           WHERE st_astext(centroid) IS NULL
-        `
+        `,
       });
       await connection.query('COMMIT');
       connection.release();

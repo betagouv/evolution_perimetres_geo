@@ -28,9 +28,9 @@ test.before(async (t) => {
 
 test.after.always(async (t) => {
   for await (const migrable of t.context.migrator.migrations.values()) {
-    /*await t.context.connection.query(`
+    await t.context.connection.query(`
         DROP TABLE IF EXISTS ${migrable.table}
-      `);*/
+      `);
   }
 });
 test.serial('should create perimeters table', async (t) => {
