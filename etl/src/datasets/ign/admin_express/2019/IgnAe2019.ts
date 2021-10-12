@@ -14,11 +14,11 @@ export class IgnAe2019 extends IgnDataset {
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-0__SHP__FRA_L93_2019-09-24.7z';
   readonly table: string = 'ign_ae_2019';
 
-  readonly transformations: Map<string, Partial<TransformationParamsInterface>> = new Map([
+  readonly transformations: Array<[string, Partial<TransformationParamsInterface>]> = [
     ['SHP_LAMB93_FR/COMMUNE.shp', { key: 'geom' }],
     ['SHP_LAMB93_FR/COMMUNE_CARTO.shp', { key: 'geom_simple', simplify: ['-simplify dp interval=100 keep-shapes'] }],
     ['SHP_LAMB93_FR/CHEF_LIEU_CARTO.shp', { key: 'centroid' }],
-  ]);
+  ];
 
   readonly importSql = `
     INSERT INTO ${this.targetTable} (

@@ -14,7 +14,7 @@ export class IgnAe2021 extends IgnDataset {
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_3-0__SHP__FRA_L93_2021-05-19.7z';
   readonly table: string = 'ign_ae_2021';
 
-  readonly transformations: Map<string, Partial<TransformationParamsInterface>> = new Map([
+  readonly transformations: Array<[string, Partial<TransformationParamsInterface>]> = [
     ['SHP_LAMB93_FR/COMMUNE', { key: 'geom' }],
     ['SHP_LAMB93_FR/ARRONDISSEMENT_MUNICIPAL', { key: 'geom' }],
     [
@@ -33,7 +33,7 @@ export class IgnAe2021 extends IgnDataset {
     ],
     ['SHP_LAMB93_FR/CHFLIEU_COMMUNE', { key: 'centroid' }],
     ['SHP_LAMB93_FR/CHFLIEU_ARRONDISSEMENT_MUNICIPAL', { key: 'centroid' }],
-  ]);
+  ];
 
   readonly importSql = `
     INSERT INTO ${this.targetTable} (

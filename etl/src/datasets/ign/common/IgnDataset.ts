@@ -5,7 +5,6 @@ import { FileTypeEnum, ArchiveFileTypeEnum } from '../../../interfaces';
 
 export interface TransformationParamsInterface {
   key: string;
-  file: string;
   format: string;
   precision: number;
   force: boolean;
@@ -14,14 +13,13 @@ export interface TransformationParamsInterface {
 
 const defaultConfig: TransformationParamsInterface = {
   key: '',
-  file: '',
   format: 'geojson',
   precision: 0.000001,
   force: false,
   simplify: [],
 };
 export abstract class IgnDataset extends AbstractDataset {
-  abstract readonly transformations: Map<string, Partial<TransformationParamsInterface>>;
+  abstract readonly transformations: Array<[string, Partial<TransformationParamsInterface>]>;
 
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.SevenZip;
   readonly rows: Map<string, [string, string]> = new Map([
@@ -35,12 +33,14 @@ export abstract class IgnDataset extends AbstractDataset {
 
   fileType: FileTypeEnum = FileTypeEnum.Shp;
 
+  transformedFiles: Array<{ file: string; key: string } & { [k: string]: any }> = [];
+
   async transform(): Promise<void> {
     try {
       const filepaths: string[] = [];
       for await (const [file, customConfig] of this.transformations) {
-        const config = { ...defaultConfig, customConfig };
-        const path = this.filepaths.find((f) => f.indexOf(file));
+        const config = { ...defaultConfig, ...customConfig };
+        const path = this.filepaths.find((f) => f.indexOf(file) >= 0);
         if (path) {
           let transformedFilePath: string;
           if (config.simplify && config.simplify.length) {
@@ -58,7 +58,7 @@ export abstract class IgnDataset extends AbstractDataset {
             transformedFilePath = await transformGeoFile(path, config.format, config.precision, config.force);
           }
           filepaths.push(transformedFilePath);
-          this.transformations.set(file, { ...customConfig, file: transformedFilePath });
+          this.transformedFiles.push({ file: transformedFilePath, key: config.key, file_orig: file });
         }
       }
       this.filepaths = filepaths;
@@ -71,43 +71,35 @@ export abstract class IgnDataset extends AbstractDataset {
   async load(): Promise<void> {
     const connection = await this.connection.connect();
     await connection.query('BEGIN TRANSACTION');
+    let i = 1;
     try {
-      for (const [, { file, key }] of this.transformations) {
+      for (const { file, key } of this.transformedFiles) {
         if (file && file.length) {
-          console.debug(`Processing file ${file}`);
+          console.debug(`Processing file ${file} : ${key}`);
           const cursor = streamData(file, this.fileType, this.sheetOptions);
           let done = false;
+          const comField = this.rows.get('com') || [];
           do {
             const results = await cursor.next();
             done = !!results.done;
             if (results.value) {
               const values = [JSON.stringify(results.value.map((r) => r.value))];
+              console.debug(`Batch ${i}`);
               switch (key) {
                 case 'geom':
-                  console.debug(`
-                    INSERT INTO ${this.table} (
-                      ${[...this.rows.keys()].join(', \n')}, ${key}
-                    )
-                    WITH tmp as(
-                      SELECT * FROM
-                      json_to_recordset($1)
-                      as t(type varchar, properties json,geometry json)
-                    )
-                    SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
-                    st_multi(ST_SetSRID(st_geomfromgeojson(geometry),2154)) as ${key} 
-                    FROM tmp 
-                  `);
                   await connection.query({
                     text: `
                       INSERT INTO ${this.table} (
-                        ${[...this.rows.keys()].join(', \n')}, ${key}
+                        ${[...this.rows.keys(), key].join(', \n')}
                       )
                       WITH tmp as(
                         SELECT * FROM
                         json_to_recordset($1)
                         as t(type varchar, properties json,geometry json)
                       )
-                      SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
+                      SELECT ${[...this.rows]
+                        .map(([k, r]) => `(properties->>'${r[0]}')::${r[1]} AS ${k}`)
+                        .join(', \n')},
                       st_multi(ST_SetSRID(st_geomfromgeojson(geometry),2154)) as ${key} 
                       FROM tmp 
                     `,
@@ -115,61 +107,38 @@ export abstract class IgnDataset extends AbstractDataset {
                   });
                   break;
                 case 'geom_simple':
-                  console.debug(`
-                    WITH tmp as(
-                      SELECT * FROM
-                      json_to_recordset($1)
-                      as t(type varchar, properties json,geometry json)
-                    )
-                    UPDATE ${this.table} AS a
-                    SET a.${key} = ST_SetSRID(st_geomfromgeojson(tmp.geometry),2154)
-                    FROM tmp
-                    WHERE a.${this.rows[0][0]} = (properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
-                  `);
                   await connection.query({
                     text: `
-                      WITH tmp as(
+                      UPDATE ${this.table}
+                      SET ${key} = st_multi(ST_SetSRID(st_geomfromgeojson(tt.geometry),2154))
+                      FROM (
                         SELECT * FROM
                         json_to_recordset($1)
                         as t(type varchar, properties json,geometry json)
-                      )
-                      UPDATE ${this.table} AS a
-                      SET a.${key} = ST_SetSRID(st_geomfromgeojson(tmp.geometry),2154)
-                      FROM tmp
-                      WHERE a.${this.rows[0][0]} = (properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
+                      ) AS tt
+                      WHERE com = (tt.properties->>'${comField[0]}')::${comField[1]}
                     `,
                     values,
                   });
-                  break;*/
+                  break;
                 case 'centroid':
-                  console.debug(`
-                    WITH tmp as(
-                      SELECT * FROM
-                      json_to_recordset($1)
-                      as t(type varchar, properties json,geometry json)
-                    )
-                    UPDATE ${this.table} AS a
-                    SET a.${key} = st_multi(ST_SetSRID(st_geomfromgeojson(tmp.geometry),2154))
-                    FROM tmp
-                    WHERE a.${this.rows[0][0]} = (properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
-                  `);
                   await connection.query({
                     text: `
-                      WITH tmp as(
+                      UPDATE ${this.table}
+                      SET ${key} = ST_SetSRID(st_geomfromgeojson(tt.geometry),2154)
+                      FROM (
                         SELECT * FROM
                         json_to_recordset($1)
                         as t(type varchar, properties json,geometry json)
-                      )
-                      UPDATE ${this.table} AS a
-                      SET a.${key} = st_multi(ST_SetSRID(st_geomfromgeojson(tmp.geometry),2154))
-                      FROM tmp
-                      WHERE a.${this.rows[0][0]} = (properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
+                      ) AS tt
+                      WHERE com = (tt.properties->>'${comField[0]}')::${comField[1]}
                     `,
                     values,
                   });
                   break;
               }
             }
+            i += 1;
           } while (!done);
         }
       }
@@ -178,6 +147,7 @@ export abstract class IgnDataset extends AbstractDataset {
     } catch (e) {
       await connection.query('ROLLBACK');
       connection.release();
+      console.error(e);
       throw new SqlError(this, (e as Error).message);
     }
   }
