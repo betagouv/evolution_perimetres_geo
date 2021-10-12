@@ -21,10 +21,6 @@ export class EurostatCountries2020 extends AbstractDataset {
     filter: 'features',
   };
 
-  async import(): Promise<void> {
-    // TODO
-  }
-
   async load(): Promise<void> {
     const connection = await this.connection.connect();
     await connection.query('BEGIN TRANSACTION');
@@ -52,7 +48,6 @@ export class EurostatCountries2020 extends AbstractDataset {
               `,
               values: [JSON.stringify(results.value).replace(/'/g, "''")],
             };
-            console.debug(query);
             await connection.query(query);
           }
         } while (!done);
@@ -64,5 +59,9 @@ export class EurostatCountries2020 extends AbstractDataset {
       connection.release();
       throw e;
     }
+  }
+
+  async import(): Promise<void> {
+    // TODO
   }
 }

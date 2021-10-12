@@ -2,7 +2,8 @@ import extract from 'extract-zip';
 import { createGunzip } from 'zlib';
 import { extractFull } from 'node-7z';
 import { createReadStream, createWriteStream } from 'fs';
-import { access } from 'fs/promises';
+import { access, mkdir } from 'fs/promises';
+import { basename } from 'path';
 
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../interfaces';
 import { getTemporaryDirectoryPath } from '.';
@@ -39,24 +40,32 @@ export async function decompressFile(
   fileType: FileTypeEnum,
 ): Promise<string[]> {
   try {
-    const extractPath = await getTemporaryDirectoryPath();
     await access(filepath);
-    switch (archiveType) {
-      case ArchiveFileTypeEnum.Zip:
-        await unzipFile(filepath, extractPath);
-        break;
-      case ArchiveFileTypeEnum.GZip:
-        await ungzFile(filepath, extractPath);
-        break;
-      case ArchiveFileTypeEnum.SevenZip:
-        await un7zFile(filepath, extractPath);
-        break;
-      case ArchiveFileTypeEnum.None:
-        break;
-      default:
-        throw new Error();
+    const extractPath = getTemporaryDirectoryPath(`${basename(filepath)}-extract`);
+    try {
+      await access(extractPath);
+    } catch {
+      // If directory not found, create it and decompress
+      await mkdir(extractPath);
+      switch (archiveType) {
+        case ArchiveFileTypeEnum.Zip:
+          await unzipFile(filepath, extractPath);
+          break;
+        case ArchiveFileTypeEnum.GZip:
+          await ungzFile(filepath, extractPath);
+          break;
+        case ArchiveFileTypeEnum.SevenZip:
+          await un7zFile(filepath, extractPath);
+          break;
+        case ArchiveFileTypeEnum.None:
+          break;
+        default:
+          throw new Error();
+      }
     }
-    return [...(await getAllFiles(extractPath, getFileExtensions(fileType)))];
+    const files: Set<string> = new Set();
+    await getAllFiles(extractPath, getFileExtensions(fileType), files);
+    return [...files];
   } catch (err) {
     console.error(err);
     throw err;

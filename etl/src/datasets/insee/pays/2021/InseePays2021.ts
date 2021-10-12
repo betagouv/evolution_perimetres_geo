@@ -29,7 +29,25 @@ export class InseePays2021 extends AbstractDataset {
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
 
-  async import(): Promise<void> {
-    // TODO
-  }
+  readonly importSql = `
+    INSERT INTO ${this.targetTable} (
+      year,
+      centroid,
+      geom,
+      geom_simple,
+      arr,
+      country,
+      l_country
+    ) SELECT
+      2021 as year,
+      ST_PointOnSurface(st_transform(b.geom,2154)) as centroid,
+      st_transform(b.geom,2154) as geom,
+      st_transform(b.geom,2154) as geom_simple,
+      a.cog,
+      a.cog,
+      a.libcog
+    FROM ${this.table} a
+    LEFT JOIN  eurostat_countries_2020 b
+    ON a.codeiso3 = b.codeiso3;
+  `;
 }

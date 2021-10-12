@@ -10,7 +10,9 @@ export function getFileExtensions(filetype: FileTypeEnum): string[] {
       return ['.xls', '.xlsx'];
     case FileTypeEnum.Geojson:
       return ['.json', '.geojson'];
+    case FileTypeEnum.Shp:
+      return ['.shp'];
     default:
-      throw new Error('Unknown file type');
+      throw new Error(`Unknown file type ${filetype}`);
   }
 }

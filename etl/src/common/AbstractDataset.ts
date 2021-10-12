@@ -2,6 +2,7 @@ import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid }
 import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, Migrable } from '../interfaces';
 import { Pool } from 'pg';
 import { StreamDataOptions } from '../interfaces/StreamDataOptions';
+import { DownloadError, SqlError, ValidationError } from '../errors';
 
 export abstract class AbstractDataset implements DatasetInterface {
   static get uuid(): string {
@@ -15,36 +16,48 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly afterSqlPath: string;
   abstract readonly table: string;
   abstract readonly rows: Map<string, [string, string]>;
-  abstract fileType: FileTypeEnum;
+  abstract readonly fileType: FileTypeEnum;
 
-  readonly importSql: string = '';
   required: Set<Migrable> = new Set();
   sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
+  readonly importSql: string = '';
+  readonly targetTable: string = 'perimeters';
 
   constructor(protected connection: Pool) {}
 
   async validate(done: Set<Migrable>): Promise<void> {
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
     if (difference.size > 0) {
-      throw new Error(`Cant apply this dataset, element is missing (${[...difference].map((d) => d.uuid).join(', ')})`);
+      throw new ValidationError(
+        this,
+        `Cant apply this dataset, element is missing (${[...difference].map((d) => d.uuid).join(', ')})`,
+      );
     }
   }
 
   async before(): Promise<void> {
-    const sql = await loadSqlFile(this.beforeSqlPath);
-    await this.connection.query(sql);
+    try {
+      const sql = await loadSqlFile(this.beforeSqlPath);
+      await this.connection.query(sql);
+    } catch (e) {
+      throw new SqlError(this, (e as Error).message);
+    }
   }
 
   async download(): Promise<void> {
-    const filepaths: string[] = [];
-    const filepath = await downloadFile(this.url);
-    if (this.fileArchiveType !== ArchiveFileTypeEnum.None) {
-      filepaths.push(...(await decompressFile(filepath, this.fileArchiveType, this.fileType)));
-    } else {
-      filepaths.push(filepath);
+    try {
+      const filepaths: string[] = [];
+      const filepath = await downloadFile(this.url);
+      if (this.fileArchiveType !== ArchiveFileTypeEnum.None) {
+        filepaths.push(...(await decompressFile(filepath, this.fileArchiveType, this.fileType)));
+      } else {
+        filepaths.push(filepath);
+      }
+      this.filepaths = filepaths;
+    } catch (e) {
+      throw new DownloadError(this, (e as Error).message);
     }
-    this.filepaths = filepaths;
   }
 
   async transform(): Promise<void> {}
@@ -73,7 +86,6 @@ export abstract class AbstractDataset implements DatasetInterface {
                       `,
               values: [JSON.stringify(results.value).replace(/'/g, "''")],
             };
-            console.debug(query);
             await connection.query(query);
           }
         } while (!done);
@@ -83,16 +95,24 @@ export abstract class AbstractDataset implements DatasetInterface {
     } catch (e) {
       await connection.query('ROLLBACK');
       connection.release();
-      throw e;
+      throw new SqlError(this, (e as Error).message);
     }
   }
 
   async import(): Promise<void> {
-    await this.connection.query(this.importSql);
+    try {
+      await this.connection.query(this.importSql);
+    } catch (e) {
+      throw new SqlError(this, (e as Error).message);
+    }
   }
 
   async after(): Promise<void> {
-    const sql = await loadSqlFile(this.afterSqlPath);
-    await this.connection.query(sql);
+    try {
+      const sql = await loadSqlFile(this.afterSqlPath);
+      await this.connection.query(sql);
+    } catch (e) {
+      throw new SqlError(this, (e as Error).message);
+    }
   }
 }

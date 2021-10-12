@@ -38,7 +38,11 @@ export class CeremaAom2019 extends AbstractDataset {
     startRow: 0,
   };
 
-  async import(): Promise<void> {
-    // TODO
-  }
+  readonly importSql = `
+    UPDATE ${this.targetTable} a SET
+      a.aom = (CASE WHEN b.id_reseau = '/' THEN NULL ELSE b.id_reseau END),
+      a.l_aom = b.nom_aom
+    FROM ${this.table} b
+    WHERE a.com = b.com AND a.year = 2019;
+  `;
 }

@@ -28,7 +28,15 @@ export class InseePerim2019 extends AbstractDataset {
     startRow: 5,
   };
 
-  async import(): Promise<void> {
-    // TODO
-  }
+  readonly importSql = `
+    UPDATE ${this.targetTable} a SET
+      a.com = b.codgeo,
+      a.l_com = b.libgeo,
+      a.epci = b.epci,
+      a.l_epci = b.l_epci,
+      a.dep = b.dep,
+      a.reg = b.reg
+    FROM ${this.table} b
+    WHERE a.year = 2019;
+  `;
 }

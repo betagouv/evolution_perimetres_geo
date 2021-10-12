@@ -1,9 +1,8 @@
-import { AbstractDataset } from '../../../../common/AbstractDataset';
-import { streamData } from '../../../../helpers';
-import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
+import { IgnDataset, TransformationParamsInterface } from '../../common/IgnDataset';
 import path from 'path';
+import { StaticAbstractDataset } from '../../../../interfaces';
 
-export class IgnAe2020 extends AbstractDataset {
+export class IgnAe2020 extends IgnDataset {
   static producer = 'ign';
   static dataset = 'ae';
   static year = 2020;
@@ -13,58 +12,48 @@ export class IgnAe2020 extends AbstractDataset {
   readonly url: string =
     // eslint-disable-next-line max-len
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-1__SHP__FRA_L93_2020-11-20.7z';
-  readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.SevenZip;
   readonly table: string = 'ign_ae_2020';
-  readonly rows: Map<string, [string, string]> = new Map([
-    ['com', ['INSEE_COM', 'varchar']],
-    ['pop', ['POPULATION', 'integer']],
-  ]);
 
-  fileType: FileTypeEnum = FileTypeEnum.Geojson;
-  sheetOptions = {};
+  readonly transformations: Array<[string, Partial<TransformationParamsInterface>]> = [
+    ['SHP_LAMB93_FR/COMMUNE', { key: 'geom' }],
+    ['SHP_LAMB93_FR/ARRONDISSEMENT_MUNICIPAL', { key: 'geom' }],
+    [
+      'SHP_LAMB93_FR/COMMUNE',
+      {
+        key: 'geom_simple',
+        simplify: ['-simplify 60% keep-shapes', '-simplify 50% keep-shapes', '-simplify 40% keep-shapes'],
+      },
+    ],
+    [
+      'SHP_LAMB93_FR/ARRONDISSEMENT_MUNICIPAL',
+      {
+        key: 'geom_simple',
+        simplify: ['-simplify 60% keep-shapes', '-simplify 50% keep-shapes', '-simplify 40% keep-shapes'],
+      },
+    ],
+    ['SHP_LAMB93_FR/CHEF_LIEU_CARTO', { key: 'centroid' }],
+    ['SHP_LAMB93_FR/CHFLIEU_ARRONDISSEMENT_MUNICIPAL', { key: 'centroid' }],
+  ];
 
-  async load(): Promise<void> {
-    const connection = await this.connection.connect();
-    await connection.query('BEGIN TRANSACTION');
-    try {
-      for (const filepath of this.filepaths) {
-        const cursor = streamData(filepath, this.fileType, this.sheetOptions);
-        let done = false;
-        do {
-          const results = await cursor.next();
-          done = !!results.done;
-          if (results.value) {
-            const query = {
-              text: `
-                        INSERT INTO ${this.table} (
-                            ${[...this.rows.keys()].join(', \n')},geom
-                        )
-                        WITH temp as(
-                          SELECT * FROM
-                          json_to_recordset($1)
-                          as tmp(type varchar, properties json,geometry json)
-                        )
-                        SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
-                        st_multi(st_geomfromgeojson(geometry)) as geom 
-                        FROM tmp
-                      `,
-              values: [JSON.stringify(results.value)],
-            };
-            console.debug(query);
-            await connection.query(query);
-          }
-        } while (!done);
-      }
-      await connection.query('COMMIT');
-      connection.release();
-    } catch (e) {
-      await connection.query('ROLLBACK');
-      connection.release();
-      throw e;
-    }
-  }
-
-  async import(): Promise<void> {
-    // TODO
-  }
+  readonly importSql = `
+    INSERT INTO ${this.targetTable} (
+      year,
+      centroid,
+      geom,
+      geom_simple,
+      arr,
+      pop,
+      country,
+      l_country
+    ) SELECT
+      ${(this.constructor as StaticAbstractDataset).year} as year,
+      centroid,
+      geom,
+      geom_simple,
+      com,
+      pop,
+      'XXXXX' as country,
+      'France' as l_country
+    FROM ${this.table};
+  `;
 }

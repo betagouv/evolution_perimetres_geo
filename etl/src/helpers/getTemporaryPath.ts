@@ -1,14 +1,11 @@
 import path from 'path';
-import fs from 'fs/promises';
-import os from 'os';
-import { randomString } from '.';
+import { hash, randomString } from '.';
+import { temporaryDirectory } from '../config';
 
-export async function getTemporaryDirectoryPath(): Promise<string> {
-  const path = getTemporaryFilePath();
-  await fs.mkdir(path);
-  return path;
+export function getTemporaryDirectoryPath(name?: string): string {
+  return name ? path.join(temporaryDirectory, name) : getTemporaryFilePath();
 }
 
-export function getTemporaryFilePath(): string {
-  return path.join(os.tmpdir(), randomString());
+export function getTemporaryFilePath(data?: string): string {
+  return path.join(temporaryDirectory, data ? hash(data) : randomString());
 }

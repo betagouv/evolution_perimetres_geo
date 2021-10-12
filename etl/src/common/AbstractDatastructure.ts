@@ -1,6 +1,6 @@
 import { DatasetInterface, Migrable } from '../interfaces';
 import { Pool } from 'pg';
-import { SqlError } from '../errors';
+import { SqlError, ValidationError } from '../errors';
 
 export abstract class AbstractDatastructure implements DatasetInterface {
   abstract readonly sql: string;
@@ -13,7 +13,10 @@ export abstract class AbstractDatastructure implements DatasetInterface {
   async validate(done: Set<Migrable>): Promise<void> {
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
     if (difference.size > 0) {
-      throw new Error(`Cant apply this dataset, element is missing (${[...difference].map((d) => d.uuid).join(', ')})`);
+      throw new ValidationError(
+        this,
+        `Cant apply this dataset, element is missing (${[...difference].map((d) => d.uuid).join(', ')})`,
+      );
     }
   }
 
