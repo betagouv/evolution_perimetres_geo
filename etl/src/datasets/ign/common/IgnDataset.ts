@@ -140,7 +140,7 @@ export abstract class IgnDataset extends AbstractDataset {
                     `,
                     values,
                   });
-                  break;*/
+                  break;
                 case 'centroid':
                   console.debug(`
                     WITH tmp as(
