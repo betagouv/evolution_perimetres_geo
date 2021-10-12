@@ -94,7 +94,7 @@ export abstract class IgnDataset extends AbstractDataset {
                       as t(type varchar, properties json,geometry json)
                     )
                     SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
-                    st_multi(st_geomfromgeojson(geometry)) as ${key} 
+                    st_multi(ST_SetSRID(st_geomfromgeojson(geometry),2154)) as ${key} 
                     FROM tmp 
                   `);
                   await connection.query({
@@ -108,7 +108,7 @@ export abstract class IgnDataset extends AbstractDataset {
                         as t(type varchar, properties json,geometry json)
                       )
                       SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
-                      st_multi(st_geomfromgeojson(geometry)) as ${key} 
+                      st_multi(ST_SetSRID(st_geomfromgeojson(geometry),2154)) as ${key} 
                       FROM tmp 
                     `,
                     values,
@@ -122,9 +122,9 @@ export abstract class IgnDataset extends AbstractDataset {
                       as t(type varchar, properties json,geometry json)
                     )
                     UPDATE ${this.table} AS a
-                    SET a.${key} = st_geomfromgeojson(tmp.geometry)
+                    SET a.${key} = ST_SetSRID(st_geomfromgeojson(tmp.geometry),2154)
                     FROM tmp
-                    WHERE a.${this.rows[0][0]} = (tmp.properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
+                    WHERE a.${this.rows[0][0]} = (properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
                   `);
                   await connection.query({
                     text: `
@@ -134,13 +134,13 @@ export abstract class IgnDataset extends AbstractDataset {
                         as t(type varchar, properties json,geometry json)
                       )
                       UPDATE ${this.table} AS a
-                      SET a.${key} = st_geomfromgeojson(tmp.geometry)
+                      SET a.${key} = ST_SetSRID(st_geomfromgeojson(tmp.geometry),2154)
                       FROM tmp
-                      WHERE a.${this.rows[0][0]} = (tmp.properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
+                      WHERE a.${this.rows[0][0]} = (properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
                     `,
                     values,
                   });
-                  break;
+                  break;*/
                 case 'centroid':
                   console.debug(`
                     WITH tmp as(
@@ -149,9 +149,9 @@ export abstract class IgnDataset extends AbstractDataset {
                       as t(type varchar, properties json,geometry json)
                     )
                     UPDATE ${this.table} AS a
-                    SET a.${key} = st_geomfromgeojson(tmp.geometry)
+                    SET a.${key} = st_multi(ST_SetSRID(st_geomfromgeojson(tmp.geometry),2154))
                     FROM tmp
-                    WHERE a.${this.rows[0][0]} = (tmp.properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
+                    WHERE a.${this.rows[0][0]} = (properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
                   `);
                   await connection.query({
                     text: `
@@ -161,9 +161,9 @@ export abstract class IgnDataset extends AbstractDataset {
                         as t(type varchar, properties json,geometry json)
                       )
                       UPDATE ${this.table} AS a
-                      SET a.${key} = st_multi(st_geomfromgeojson(tmp.geometry))
+                      SET a.${key} = st_multi(ST_SetSRID(st_geomfromgeojson(tmp.geometry),2154))
                       FROM tmp
-                      WHERE a.${this.rows[0][0]} = (tmp.properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
+                      WHERE a.${this.rows[0][0]} = (properties->>'${this.rows[0][0]}')::${this.rows[0][1]}
                     `,
                     values,
                   });

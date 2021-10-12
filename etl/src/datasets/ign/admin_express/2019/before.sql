@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS ign_ae_2019 (
   id SERIAL PRIMARY KEY,
-  com varchar(5) NOT NULL,
+  com varchar(5),
   pop integer,
   geom geometry(MULTIPOLYGON,2154),
   centroid GEOMETRY(POINT, 2154),
