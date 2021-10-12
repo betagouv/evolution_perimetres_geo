@@ -6,7 +6,7 @@ export class CeremaAom2021 extends AbstractDataset {
   static producer = 'cerema';
   static dataset = 'aom';
   static year = 2021;
-  static table: string = 'cerema_aom_2021';
+  static table = 'cerema_aom_2021';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');

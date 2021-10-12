@@ -7,7 +7,7 @@ export class EurostatCountries2020 extends AbstractDataset {
   static producer = 'eurostat';
   static dataset = 'countries';
   static year = 2020;
-  static table: string = 'eurostat_countries_2020';
+  static table = 'eurostat_countries_2020';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');

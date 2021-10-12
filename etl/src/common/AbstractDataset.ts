@@ -26,7 +26,7 @@ export abstract class AbstractDataset implements DatasetInterface {
   get table(): string {
     return (this.constructor as StaticAbstractDataset).table;
   }
-  
+
   constructor(protected connection: Pool) {}
 
   async validate(done: Set<Migrable>): Promise<void> {

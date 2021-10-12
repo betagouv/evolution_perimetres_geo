@@ -7,7 +7,6 @@ export abstract class AbstractDatastructure implements DatasetInterface {
   get table(): string {
     return (this.constructor as StaticAbstractDataset).table;
   }
-  
 
   required: Set<Migrable> = new Set();
 

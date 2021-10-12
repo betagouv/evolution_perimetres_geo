@@ -6,7 +6,7 @@ export class InseeMvtcom2021 extends AbstractDataset {
   static producer = 'insee';
   static dataset = 'mvtcom';
   static year = 2021;
-  static table: string = 'insee_mvtcom_2021';
+  static table = 'insee_mvtcom_2021';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');

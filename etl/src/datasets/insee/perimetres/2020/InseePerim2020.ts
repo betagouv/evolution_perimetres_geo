@@ -6,7 +6,7 @@ export class InseePerim2020 extends AbstractDataset {
   static producer = 'insee';
   static dataset = 'perim';
   static year = 2020;
-  static table: string = 'insee_perim_2020';
+  static table = 'insee_perim_2020';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');

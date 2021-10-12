@@ -6,7 +6,7 @@ export class IgnAe2021 extends IgnDataset {
   static producer = 'ign';
   static dataset = 'ae';
   static year = 2021;
-  static table: string = 'ign_ae_2021';
+  static table = 'ign_ae_2021';
 
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
