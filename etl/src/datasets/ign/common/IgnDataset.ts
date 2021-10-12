@@ -142,6 +142,13 @@ export abstract class IgnDataset extends AbstractDataset {
           } while (!done);
         }
       }
+      await connection.query({
+        text: `
+          UPDATE ${this.table}
+          SET centroid = ST_PointOnSurface(geom)
+          WHERE st_astext(centroid) IS NULL
+        `
+      });
       await connection.query('COMMIT');
       connection.release();
     } catch (e) {

@@ -47,11 +47,11 @@ export class IgnAe2020 extends IgnDataset {
       l_country
     ) SELECT
       ${(this.constructor as StaticAbstractDataset).year} as year,
-      centroid,
-      geom,
-      geom_simple,
-      com,
-      pop,
+      centroid as centroid,
+      geom as geom,
+      geom_simple as geom_simple,
+      com as com,
+      pop as pop,
       'XXXXX' as country,
       'France' as l_country
     FROM ${this.table};
