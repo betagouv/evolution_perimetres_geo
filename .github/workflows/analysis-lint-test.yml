@@ -13,7 +13,7 @@ jobs:
   analysis:
     name: Analysis
     runs-on: ubuntu-latest
-    container: node:14.16.1
+    container: node:14.18-bullseye
     services:
       postgres:
         image: postgis/postgis:13-3.1-alpine
@@ -39,7 +39,7 @@ jobs:
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
       - name: Install dependencies
-        run: yarn --frozen-lockfile
+        run: apt-get update && apt-get install -y p7zip-full && yarn --frozen-lockfile
         working-directory: etl
       - name: Lint
         run: yarn lint
