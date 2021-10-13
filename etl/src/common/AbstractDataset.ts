@@ -68,6 +68,7 @@ export abstract class AbstractDataset implements DatasetInterface {
   async load(): Promise<void> {
     const connection = await this.connection.connect();
     await connection.query('BEGIN TRANSACTION');
+    let i = 1;
     try {
       for (const filepath of this.filepaths) {
         const cursor = streamData(filepath, this.fileType, this.sheetOptions);
@@ -76,6 +77,7 @@ export abstract class AbstractDataset implements DatasetInterface {
           const results = await cursor.next();
           done = !!results.done;
           if (results.value) {
+            console.debug(`Batch ${i}`);
             const query = {
               text: `
                         INSERT INTO ${this.table} (
@@ -91,6 +93,7 @@ export abstract class AbstractDataset implements DatasetInterface {
             };
             await connection.query(query);
           }
+          i += 1;
         } while (!done);
       }
       await connection.query('COMMIT');
