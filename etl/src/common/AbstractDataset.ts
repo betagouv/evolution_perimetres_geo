@@ -1,4 +1,4 @@
-import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid } from '../helpers';
+import { loadFileAsString, streamData, getDatasetUuid } from '../helpers';
 import {
   ArchiveFileTypeEnum,
   DatasetInterface,
@@ -9,6 +9,7 @@ import {
 import { Pool } from 'pg';
 import { StreamDataOptions } from '../interfaces/StreamDataOptions';
 import { DownloadError, SqlError, ValidationError } from '../errors';
+import { FileProvider } from '../providers/FileProvider';
 
 export abstract class AbstractDataset implements DatasetInterface {
   static get uuid(): string {
@@ -36,7 +37,7 @@ export abstract class AbstractDataset implements DatasetInterface {
     return (this.constructor as StaticAbstractDataset).table;
   }
 
-  constructor(protected connection: Pool) {}
+  constructor(protected connection: Pool, protected file: FileProvider) {}
 
   async validate(done: Set<StaticMigrable>): Promise<void> {
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
@@ -64,7 +65,7 @@ export abstract class AbstractDataset implements DatasetInterface {
         }
         ${this.extraBeforeSql || ''}
       `;
-      const sql = this.beforeSqlPath ? await loadSqlFile(this.beforeSqlPath) : generatedSql;
+      const sql = this.beforeSqlPath ? await loadFileAsString(this.beforeSqlPath) : generatedSql;
       console.debug(sql);
       await this.connection.query(sql);
     } catch (e) {
@@ -75,9 +76,9 @@ export abstract class AbstractDataset implements DatasetInterface {
   async download(): Promise<void> {
     try {
       const filepaths: string[] = [];
-      const filepath = await downloadFile(this.url);
+      const filepath = await this.file.download(this.url);
       if (this.fileArchiveType !== ArchiveFileTypeEnum.None) {
-        filepaths.push(...(await decompressFile(filepath, this.fileArchiveType, this.fileType)));
+        filepaths.push(...(await this.file.decompress(filepath, this.fileArchiveType, this.fileType)));
       } else {
         filepaths.push(filepath);
       }
@@ -140,7 +141,7 @@ export abstract class AbstractDataset implements DatasetInterface {
   async after(): Promise<void> {
     try {
       const generatedSql = `DROP TABLE IF EXISTS ${this.table}`;
-      const sql = this.afterSqlPath ? await loadSqlFile(this.afterSqlPath) : generatedSql;
+      const sql = this.afterSqlPath ? await loadFileAsString(this.afterSqlPath) : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);

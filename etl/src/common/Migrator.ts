@@ -1,21 +1,16 @@
 import { Pool } from 'pg';
-import { StaticMigrable } from '../interfaces';
+import { FileProvider } from '../providers/FileProvider';
+import { StaticMigrable, AppConfigInterface } from '../interfaces';
 import { MigratorState } from './MigratorState';
 
-export interface MigratorConfig {
-  pool: Pool;
-  migrations: Set<StaticMigrable>;
-}
 export class Migrator {
-  protected pool: Pool;
   protected state: MigratorState;
 
   readonly migrations: Map<string, StaticMigrable>;
 
-  constructor(config: MigratorConfig) {
-    this.pool = config.pool;
-    this.state = new MigratorState(config.pool);
-    this.migrations = new Map([...config.migrations].map((m) => [m.uuid, m]));
+  constructor(readonly pool: Pool, readonly file: FileProvider, readonly config: AppConfigInterface) {
+    this.state = new MigratorState(this.pool);
+    this.migrations = new Map([...this.config.migrations].map((m) => [m.uuid, m]));
   }
 
   async prepare(): Promise<void> {
@@ -47,7 +42,7 @@ export class Migrator {
     try {
       console.info(`${migrable.uuid} : start processing`);
       const state = await this.getState();
-      const migableInstance = new migrable(this.pool);
+      const migableInstance = new migrable(this.pool, this.file);
       console.debug(`${migrable.uuid} : validation`);
       await migableInstance.validate(state);
       console.debug(`${migrable.uuid} : before`);

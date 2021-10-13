@@ -1,6 +1,6 @@
 import { AbstractDataset } from '../../../common/AbstractDataset';
 import { SqlError, TransformError } from '../../../errors';
-import { streamData, transformGeoFile } from '../../../helpers';
+import { streamData } from '../../../helpers';
 import { FileTypeEnum, ArchiveFileTypeEnum } from '../../../interfaces';
 
 export interface TransformationParamsInterface {
@@ -46,7 +46,7 @@ export abstract class IgnDataset extends AbstractDataset {
           if (config.simplify && config.simplify.length) {
             transformedFilePath = path;
             for (const simplify of config.simplify) {
-              transformedFilePath = await transformGeoFile(
+              transformedFilePath = await this.file.transform(
                 transformedFilePath,
                 config.format,
                 config.precision,
@@ -55,7 +55,7 @@ export abstract class IgnDataset extends AbstractDataset {
               );
             }
           } else {
-            transformedFilePath = await transformGeoFile(path, config.format, config.precision, config.force);
+            transformedFilePath = await this.file.transform(path, config.format, config.precision, config.force);
           }
           filepaths.push(transformedFilePath);
           this.transformedFiles.push({ file: transformedFilePath, key: config.key, file_orig: file });

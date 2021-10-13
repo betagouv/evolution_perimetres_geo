@@ -1,10 +1,12 @@
 import { Pool } from 'pg';
+import { FileProvider } from '../providers/FileProvider';
 
 export interface StaticMigrable {
   readonly uuid: string;
-  readonly table: string;
-  new (connection: Pool): DatasetInterface;
+  table: string;
+  new (connection: Pool, file: FileProvider): DatasetInterface;
 }
+
 export interface StaticAbstractDataset extends StaticMigrable {
   readonly producer: string;
   readonly dataset: string;

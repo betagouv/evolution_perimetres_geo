@@ -1,4 +1,5 @@
 import os from 'os';
+import { datasets } from './datasets';
 import { ConfigInterface } from './interfaces/ConfigInterface';
 
 export const config: ConfigInterface = {
@@ -12,6 +13,11 @@ export const config: ConfigInterface = {
   logger: {
     level: process.env.LOG_LEVEL || 'debug',
   },
-  temporaryDirectory: process.env.TEMPORARY_DIRECTORY || os.tmpdir(),
-  targetSchema: 'public',
-}
+  file: {
+    basePath: process.env.TEMPORARY_DIRECTORY || os.tmpdir(),
+  },
+  app: {
+    targetSchema: 'public',
+    migrations: datasets,
+  },
+};

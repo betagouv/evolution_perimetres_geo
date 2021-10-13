@@ -1,4 +1,4 @@
-import { FileTypeEnum } from '../interfaces';
+import { FileTypeEnum } from '../../interfaces';
 
 export function getFileExtensions(filetype: FileTypeEnum): string[] {
   switch (filetype) {

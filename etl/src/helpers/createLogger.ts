@@ -1,7 +1,8 @@
 import { Console } from 'console';
+import { LoggerConfigInterface } from '../interfaces';
 import { config as defaultConfig } from '../config';
 
-export function getLogger(config = defaultConfig.logger): Console {
+export function createLogger(config: LoggerConfigInterface = defaultConfig.logger): Console {
   const logger = new Console({ stdout: process.stdout, stderr: process.stderr });
   const rewrite = ['log', 'debug', 'info', 'warn', 'error'];
   const noop = () => {};
