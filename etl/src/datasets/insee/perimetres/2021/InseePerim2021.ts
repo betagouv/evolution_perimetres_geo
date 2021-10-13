@@ -1,6 +1,5 @@
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
-import path from 'path';
 
 export class InseePerim2021 extends AbstractDataset {
   static producer = 'insee';
@@ -8,19 +7,21 @@ export class InseePerim2021 extends AbstractDataset {
   static year = 2021;
   static table = 'insee_perim_2021';
 
-  readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
-  readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string =
     'https://www.insee.fr/fr/statistiques/fichier/2510634/Intercommunalite_Metropole_au_01-01-2021.zip';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly rows: Map<string, [string, string]> = new Map([
-    ['codgeo', ['CODGEO', 'varchar']],
+    ['codgeo', ['CODGEO', 'varchar(5)']],
     ['libgeo', ['LIBGEO', 'varchar']],
-    ['epci', ['EPCI', 'varchar']],
+    ['epci', ['EPCI', 'varchar(9)']],
     ['libepci', ['LIBEPCI', 'varchar']],
-    ['dep', ['DEP', 'varchar']],
-    ['reg', ['REG', 'varchar']],
+    ['dep', ['DEP', 'varchar(3)']],
+    ['reg', ['REG', 'varchar(2)']],
   ]);
+  readonly extraBeforeSql = `ALTER TABLE ${this.table} 
+    ALTER COLUMN codgeo SET NOT NULL,
+    ADD CONSTRAINT codgeo_unique UNIQUE (codgeo);
+  `;
 
   fileType: FileTypeEnum = FileTypeEnum.Xls;
   sheetOptions = {

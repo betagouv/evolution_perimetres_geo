@@ -1,6 +1,5 @@
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
-import path from 'path';
 
 export class InseePays2021 extends AbstractDataset {
   static producer = 'insee';
@@ -8,13 +7,11 @@ export class InseePays2021 extends AbstractDataset {
   static year = 2021;
   static table = 'insee_pays_2021';
 
-  readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
-  readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/pays2021-csv.zip';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly rows: Map<string, [string, string]> = new Map([
-    ['cog', ['0', 'varchar']],
-    ['actual', ['1', 'varchar']],
+    ['cog', ['0', 'varchar(5)']],
+    ['actual', ['1', 'varchar(1)']],
     ['capay', ['2', 'varchar']],
     ['crpay', ['3', 'varchar']],
     ['ani', ['4', 'varchar']],
@@ -25,6 +22,7 @@ export class InseePays2021 extends AbstractDataset {
     ['codeiso3', ['9', 'varchar']],
     ['codenum3', ['10', 'varchar']],
   ]);
+  readonly extraBeforeSql = `ALTER TABLE ${this.table} ALTER COLUMN cog SET NOT NULL;`;
 
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};

@@ -1,5 +1,11 @@
 import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid } from '../helpers';
-import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, StaticMigrable } from '../interfaces';
+import {
+  ArchiveFileTypeEnum,
+  DatasetInterface,
+  FileTypeEnum,
+  StaticAbstractDataset,
+  StaticMigrable,
+} from '../interfaces';
 import { Pool } from 'pg';
 import { StreamDataOptions } from '../interfaces/StreamDataOptions';
 import { DownloadError, SqlError, ValidationError } from '../errors';
@@ -10,18 +16,21 @@ export abstract class AbstractDataset implements DatasetInterface {
     return getDatasetUuid(self.producer, self.dataset, self.year);
   }
 
-  abstract readonly beforeSqlPath: string;
   abstract readonly url: string;
   abstract readonly fileArchiveType: ArchiveFileTypeEnum;
-  abstract readonly afterSqlPath: string;
-  abstract readonly rows: Map<string, [string, string]>;
   abstract readonly fileType: FileTypeEnum;
+  abstract readonly rows: Map<string, [string, string]>;
+
+  readonly tableIndex: string | undefined;
+  readonly beforeSqlPath: string | undefined;
+  readonly extraBeforeSql: string | undefined;
+  readonly afterSqlPath: string | undefined;
+  readonly importSql: string = '';
+  readonly targetTable: string = 'perimeters';
 
   required: Set<StaticMigrable> = new Set();
   sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
-  readonly importSql: string = '';
-  readonly targetTable: string = 'perimeters';
 
   get table(): string {
     return (this.constructor as StaticAbstractDataset).table;
@@ -41,7 +50,22 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   async before(): Promise<void> {
     try {
-      const sql = await loadSqlFile(this.beforeSqlPath);
+      const generatedSql = `
+        CREATE TABLE IF NOT EXISTS ${this.table} (
+          id SERIAL PRIMARY KEY,
+          ${[...this.rows].map(([k, v]) => `${k} ${v[1]}`).join(',\n')}
+        );
+        ${
+          this.tableIndex
+            ? `
+          CREATE INDEX IF NOT EXISTS ${this.table.replace('.', '_')}
+            ON ${this.table} USING btree(${this.tableIndex});`
+            : ''
+        }
+        ${this.extraBeforeSql || ''}
+      `;
+      const sql = this.beforeSqlPath ? await loadSqlFile(this.beforeSqlPath) : generatedSql;
+      console.debug(sql);
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
@@ -115,7 +139,8 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   async after(): Promise<void> {
     try {
-      const sql = await loadSqlFile(this.afterSqlPath);
+      const generatedSql = `DROP TABLE IF EXISTS ${this.table}`;
+      const sql = this.afterSqlPath ? await loadSqlFile(this.afterSqlPath) : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);

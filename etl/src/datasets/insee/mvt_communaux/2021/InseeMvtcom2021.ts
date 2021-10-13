@@ -1,6 +1,5 @@
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
-import path from 'path';
 
 export class InseeMvtcom2021 extends AbstractDataset {
   static producer = 'insee';
@@ -8,8 +7,6 @@ export class InseeMvtcom2021 extends AbstractDataset {
   static year = 2021;
   static table = 'insee_mvtcom_2021';
 
-  readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
-  readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/mvtcommune2021-csv.zip';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly rows: Map<string, [string, string]> = new Map([
@@ -29,9 +26,12 @@ export class InseeMvtcom2021 extends AbstractDataset {
     ['libelle_ap', ['13', 'varchar']],
   ]);
 
+  readonly extraBeforeSql = `ALTER TABLE ${this.table} ALTER COLUMN mod SET NOT NULL;`;
+
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
 
+  // TODO index
   async import(): Promise<void> {
     // TODO
   }

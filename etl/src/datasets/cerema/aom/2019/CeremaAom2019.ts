@@ -1,6 +1,5 @@
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
-import path from 'path';
 
 export class CeremaAom2019 extends AbstractDataset {
   static producer = 'cerema';
@@ -8,8 +7,6 @@ export class CeremaAom2019 extends AbstractDataset {
   static year = 2019;
   static table = 'cerema_aom_2019';
 
-  readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
-  readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string =
     'http://www.cerema.fr/system/files/documents/2019/07/base_rt_2019_-_v1-1_-_version_diffusable_0.ods';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
@@ -38,6 +35,7 @@ export class CeremaAom2019 extends AbstractDataset {
     startRow: 0,
   };
 
+  readonly tableIndex = 'com';
   readonly importSql = `
     UPDATE ${this.targetTable} a SET
       aom = (CASE WHEN b.id_reseau = '/' THEN NULL ELSE b.id_reseau END),
