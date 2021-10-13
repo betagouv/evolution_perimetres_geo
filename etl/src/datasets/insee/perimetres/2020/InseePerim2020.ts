@@ -34,10 +34,10 @@ export class InseePerim2020 extends AbstractDataset {
       com = t.codgeo,
       l_com = t.libgeo,
       epci = t.epci,
-      l_epci = t.l_epci,
+      l_epci = t.libepci,
       dep = t.dep,
       reg = t.reg
     FROM ${this.tableWithSchema} t
-    WHERE year = 2020;
+    WHERE year = 2020 AND arr = t.codgeo;
   `;
 }
