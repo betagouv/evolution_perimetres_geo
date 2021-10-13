@@ -17,16 +17,16 @@ export class InseeReg2021 extends AbstractDataset {
     ['nccenr', ['4', 'varchar']],
     ['libelle', ['5', 'varchar']],
   ]);
-  readonly extraBeforeSql = `ALTER TABLE ${this.table} ALTER COLUMN reg SET NOT NULL;`;
+  readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} ALTER COLUMN reg SET NOT NULL;`;
 
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
 
   readonly tableIndex = 'reg';
   readonly importSql = `
-    UPDATE ${this.targetTable} AS a 
-    SET l_reg = t.libelle
-    FROM ${this.table} AS t
-    WHERE a.reg = t.reg;
+    UPDATE ${this.targetTable} SET
+      l_reg = b.libelle
+    FROM ${this.tableWithSchema} b
+    WHERE reg = b.reg;
   `;
 }

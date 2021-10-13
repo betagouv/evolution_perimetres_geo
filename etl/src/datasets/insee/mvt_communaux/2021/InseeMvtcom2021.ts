@@ -26,7 +26,7 @@ export class InseeMvtcom2021 extends AbstractDataset {
     ['libelle_ap', ['13', 'varchar']],
   ]);
 
-  readonly extraBeforeSql = `ALTER TABLE ${this.table} ALTER COLUMN mod SET NOT NULL;`;
+  readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} ALTER COLUMN mod SET NOT NULL;`;
 
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};

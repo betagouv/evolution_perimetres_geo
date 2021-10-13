@@ -89,7 +89,7 @@ export abstract class IgnDataset extends AbstractDataset {
                 case 'geom':
                   await connection.query({
                     text: `
-                      INSERT INTO ${this.table} (
+                      INSERT INTO ${this.tableWithSchema} (
                         ${[...this.rows.keys(), key].join(', \n')}
                       )
                       WITH tmp as(
@@ -109,7 +109,7 @@ export abstract class IgnDataset extends AbstractDataset {
                 case 'geom_simple':
                   await connection.query({
                     text: `
-                      UPDATE ${this.table}
+                      UPDATE ${this.tableWithSchema}
                       SET ${key} = st_multi(ST_SetSRID(st_geomfromgeojson(tt.geometry),2154))
                       FROM (
                         SELECT * FROM
@@ -124,7 +124,7 @@ export abstract class IgnDataset extends AbstractDataset {
                 case 'centroid':
                   await connection.query({
                     text: `
-                      UPDATE ${this.table}
+                      UPDATE ${this.tableWithSchema}
                       SET ${key} = ST_SetSRID(st_geomfromgeojson(tt.geometry),2154)
                       FROM (
                         SELECT * FROM

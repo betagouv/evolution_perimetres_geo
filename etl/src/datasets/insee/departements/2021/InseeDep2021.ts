@@ -19,16 +19,16 @@ export class InseeDep2021 extends AbstractDataset {
     ['libelle', ['6', 'varchar']],
   ]);
 
-  readonly extraBeforeSql = `ALTER TABLE ${this.table} ALTER COLUMN dep SET NOT NULL;`;
+  readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} ALTER COLUMN dep SET NOT NULL;`;
 
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
 
   readonly tableIndex = 'dep';
   readonly importSql = `
-    UPDATE ${this.targetTable} AS a
-    SET l_dep = t.libelle
-    FROM ${this.table} AS t
-    WHERE a.dep = t.dep;
+    UPDATE ${this.targetTable}
+      SET l_dep = b.libelle
+    FROM ${this.tableWithSchema} b
+    WHERE dep = b.dep;
   `;
 }

@@ -22,7 +22,7 @@ export class InseePays2021 extends AbstractDataset {
     ['codeiso3', ['9', 'varchar']],
     ['codenum3', ['10', 'varchar']],
   ]);
-  readonly extraBeforeSql = `ALTER TABLE ${this.table} ALTER COLUMN cog SET NOT NULL;`;
+  readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} ALTER COLUMN cog SET NOT NULL;`;
 
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
@@ -48,7 +48,7 @@ export class InseePays2021 extends AbstractDataset {
       a.libcog,
       a.cog,
       a.libcog
-    FROM ${this.table} a
+    FROM ${this.tableWithSchema} a
     LEFT JOIN  eurostat_countries_2020 b
     ON a.codeiso3 = b.codeiso3;
   `;

@@ -9,7 +9,7 @@ export class Migrator {
   readonly migrations: Map<string, StaticMigrable>;
 
   constructor(readonly pool: Pool, readonly file: FileProvider, readonly config: AppConfigInterface) {
-    this.state = new MigratorState(this.pool);
+    this.state = new MigratorState(this.pool, this.config.targetSchema);
     this.migrations = new Map([...this.config.migrations].map((m) => [m.uuid, m]));
   }
 
@@ -42,7 +42,7 @@ export class Migrator {
     try {
       console.info(`${migrable.uuid} : start processing`);
       const state = await this.getState();
-      const migableInstance = new migrable(this.pool, this.file);
+      const migableInstance = new migrable(this.pool, this.file, this.config.targetSchema);
       console.debug(`${migrable.uuid} : validation`);
       await migableInstance.validate(state);
       console.debug(`${migrable.uuid} : before`);

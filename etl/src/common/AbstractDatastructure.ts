@@ -1,6 +1,7 @@
 import { DatasetInterface, StaticMigrable, StaticAbstractDataset } from '../interfaces';
 import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
+import { FileProvider } from 'src/providers/FileProvider';
 
 export abstract class AbstractDatastructure implements DatasetInterface {
   abstract readonly sql: string;
@@ -8,9 +9,13 @@ export abstract class AbstractDatastructure implements DatasetInterface {
     return (this.constructor as StaticAbstractDataset).table;
   }
 
+  get tableWithSchema(): string {
+    return `${this.targetSchema}.${this.table}`;
+  }
+
   required: Set<StaticMigrable> = new Set();
 
-  constructor(protected connection: Pool) {}
+  constructor(protected connection: Pool, protected file: FileProvider, protected targetSchema: string = 'public') {}
 
   async validate(done: Set<StaticMigrable>): Promise<void> {
     const difference = new Set([...this.required].filter((x) => !done.has(x)));

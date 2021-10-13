@@ -34,7 +34,7 @@ export class EurostatCountries2020 extends AbstractDataset {
           if (results.value) {
             const query = {
               text: `
-                INSERT INTO ${this.table} (
+                INSERT INTO ${this.tableWithSchema} (
                     ${[...this.rows.keys()].join(', \n')}
                 )
                 WITH tmp as(

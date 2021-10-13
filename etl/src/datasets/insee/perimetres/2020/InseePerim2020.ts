@@ -18,7 +18,7 @@ export class InseePerim2020 extends AbstractDataset {
     ['dep', ['DEP', 'varchar(3)']],
     ['reg', ['REG', 'varchar(2)']],
   ]);
-  readonly extraBeforeSql = `ALTER TABLE ${this.table} 
+  readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} 
     ALTER COLUMN codgeo SET NOT NULL,
     ADD CONSTRAINT codgeo_unique UNIQUE (codgeo);
   `;
@@ -31,15 +31,13 @@ export class InseePerim2020 extends AbstractDataset {
 
   readonly importSql = `
     UPDATE ${this.targetTable} SET
-      l_arr = t.libgeo,
-      com = t.codgeo,
-      l_com = t.libgeo,
-      epci = t.epci,
-      l_epci = t.libepci,
-      dep = t.dep,
-      reg = t.reg
-    FROM ${this.table} AS t
-    WHERE year = 2020
-    AND arr = t.codgeo;
+      com = b.codgeo,
+      l_com = b.libgeo,
+      epci = b.epci,
+      l_epci = b.l_epci,
+      dep = b.dep,
+      reg = b.reg
+    FROM ${this.tableWithSchema} b
+    WHERE a.year = 2020;
   `;
 }

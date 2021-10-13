@@ -37,7 +37,11 @@ export abstract class AbstractDataset implements DatasetInterface {
     return (this.constructor as StaticAbstractDataset).table;
   }
 
-  constructor(protected connection: Pool, protected file: FileProvider) {}
+  get tableWithSchema(): string {
+    return `${this.targetSchema}.${this.table}`;
+  }
+
+  constructor(protected connection: Pool, protected file: FileProvider, protected targetSchema: string = 'public') {}
 
   async validate(done: Set<StaticMigrable>): Promise<void> {
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
@@ -52,15 +56,15 @@ export abstract class AbstractDataset implements DatasetInterface {
   async before(): Promise<void> {
     try {
       const generatedSql = `
-        CREATE TABLE IF NOT EXISTS ${this.table} (
+        CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (
           id SERIAL PRIMARY KEY,
           ${[...this.rows].map(([k, v]) => `${k} ${v[1]}`).join(',\n')}
         );
         ${
           this.tableIndex
             ? `
-          CREATE INDEX IF NOT EXISTS ${this.table.replace('.', '_')}
-            ON ${this.table} USING btree(${this.tableIndex});`
+          CREATE INDEX IF NOT EXISTS ${this.tableWithSchema.replace('.', '_')}
+            ON ${this.tableWithSchema} USING btree(${this.tableIndex});`
             : ''
         }
         ${this.extraBeforeSql || ''}
@@ -105,7 +109,7 @@ export abstract class AbstractDataset implements DatasetInterface {
             console.debug(`Batch ${i}`);
             const query = {
               text: `
-                        INSERT INTO ${this.table} (
+                        INSERT INTO ${this.tableWithSchema} (
                             ${[...this.rows.keys()].join(', \n')}
                         )
                         SELECT *
@@ -140,7 +144,7 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   async after(): Promise<void> {
     try {
-      const generatedSql = `DROP TABLE IF EXISTS ${this.table}`;
+      const generatedSql = `DROP TABLE IF EXISTS ${this.tableWithSchema}`;
       const sql = this.afterSqlPath ? await loadFileAsString(this.afterSqlPath) : generatedSql;
       await this.connection.query(sql);
     } catch (e) {

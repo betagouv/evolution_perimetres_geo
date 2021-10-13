@@ -4,7 +4,7 @@ import { FileProvider } from '../providers/FileProvider';
 export interface StaticMigrable {
   readonly uuid: string;
   table: string;
-  new (connection: Pool, file: FileProvider): DatasetInterface;
+  new (connection: Pool, file: FileProvider, targetSchema: string): DatasetInterface;
 }
 
 export interface StaticAbstractDataset extends StaticMigrable {
