@@ -31,6 +31,7 @@ export class InseePerim2019 extends AbstractDataset {
 
   readonly importSql = `
     UPDATE ${this.targetTable} SET
+      l_arr = t.libgeo,
       com = t.codgeo,
       l_com = t.libgeo,
       epci = t.epci,

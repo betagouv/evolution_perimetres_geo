@@ -40,16 +40,16 @@ export class InseePays2021 extends AbstractDataset {
       l_country
     ) SELECT
       2021 as year,
-      ST_PointOnSurface(st_transform(b.geom,2154)) as centroid,
-      st_transform(b.geom,2154) as geom,
-      st_transform(b.geom,2154) as geom_simple,
+      ST_PointOnSurface(st_transform(t.geom,2154)) as centroid,
+      st_transform(t.geom,2154) as geom,
+      st_transform(t.geom,2154) as geom_simple,
       st_area(geom) as surface,
       a.cog,
       a.libcog,
       a.cog,
       a.libcog
     FROM ${this.tableWithSchema} a
-    LEFT JOIN  eurostat_countries_2020 b
-    ON a.codeiso3 = b.codeiso3;
+    LEFT JOIN  eurostat_countries_2020 t
+    ON a.codeiso3 = t.codeiso3;
   `;
 }

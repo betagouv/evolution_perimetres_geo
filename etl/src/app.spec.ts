@@ -36,30 +36,29 @@ test.before(async (t) => {
 });
 
 test.after.always(async (t) => {
-  /*for await (const migrable of t.context.migrator.migrations.values()) {
+  for await (const migrable of t.context.migrator.migrations.values()) {
     await t.context.connection.query(`
         DROP TABLE IF EXISTS ${config.app.targetSchema}.${migrable.table}
       `);
-  }*/
+  }
 });
 test.serial('should create perimeters table', async (t) => {
-  // this is an example
   await t.context.migrator.process(CreateGeoTable);
   const result = await t.context.connection.query(`SELECT count(*) FROM perimeters`);
   t.is(result.rows[0].count, '0');
 });
 
-/*test.serial('should do migration IgnAe2019', async (t) => {
+test.serial('should do migration IgnAe2019', async (t) => {
   await t.context.migrator.process(IgnAe2019);
   const result = await t.context.connection.query(`SELECT count(*) FROM perimeters where year = 2019`);
   t.is(result.rows[0].count, '34886');
-});*/
+});
 
-/*test.serial('should do migration IgnAe2020', async (t) => {
+test.serial('should do migration IgnAe2020', async (t) => {
   await t.context.migrator.process(IgnAe2020);
   const result = await t.context.connection.query(`SELECT count(*) FROM perimeters where year = 2020`);
   t.is(result.rows[0].count, '34884');
-});*/
+});
 
 test.serial('should do migration IgnAe2021', async (t) => {
   await t.context.migrator.process(IgnAe2021);
@@ -73,17 +72,17 @@ test.serial.skip('should do migration EurostatCountries2020', async (t) => {
   t.is(result.rows[0].count, '257');
 });
 
-/*test.serial('should do migration InseePerim2019', async (t) => {
+test.serial('should do migration InseePerim2019', async (t) => {
   await t.context.migrator.process(InseePerim2019);
   const result = await t.context.connection.query(`SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2019`);
-  t.is(result.rows[0].count, '34886');
-});*/
+  t.is(result.rows[0].count, '34841');
+});
 
-/*test.serial('should do migration InseePerim2020', async (t) => {
+test.serial('should do migration InseePerim2020', async (t) => {
   await t.context.migrator.process(InseePerim2020);
   const result = await t.context.connection.query(`SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2020`);
   t.is(result.rows[0].count, '34839');
-});*/
+});
 
 test.serial('should do migration InseePerim2021', async (t) => {
   await t.context.migrator.process(InseePerim2021);
@@ -103,17 +102,17 @@ test.serial('should do migration InseeReg2021', async (t) => {
   t.is(result.rows[0].count, '13');
 });
 
-/*test.serial('should do migration CeremaAom2019', async (t) => {
+test.serial('should do migration CeremaAom2019', async (t) => {
   await t.context.migrator.process(CeremaAom2019);
   const result = await t.context.connection.query(`SELECT count(distinct l_aom) FROM perimeters`);
   t.is(result.rows[0].count, '323');
-});*/
+});
 
-/*test.serial('should do migration CeremaAom2020', async (t) => {
+test.serial('should do migration CeremaAom2020', async (t) => {
   await t.context.migrator.process(CeremaAom2020);
   const result = await t.context.connection.query(`SELECT count(distinct l_aom) FROM perimeters`);
   t.is(result.rows[0].count, '260');
-});*/
+});
 
 test.serial('should do migration CeremaAom2021', async (t) => {
   await t.context.migrator.process(CeremaAom2021);

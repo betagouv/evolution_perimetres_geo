@@ -41,10 +41,10 @@ export class CeremaAom2021 extends AbstractDataset {
 
   readonly tableIndex = 'com';
   readonly importSql = `
-    UPDATE ${this.targetTable} SET
+    UPDATE ${this.targetTable} AS a SET
       aom = t.id_reseau,
       l_aom = t.nom_aom
     FROM ${this.tableWithSchema} t
-    WHERE com = t.com AND year = 2021;
+    WHERE a.com = t.com AND year = 2021;
   `;
 }

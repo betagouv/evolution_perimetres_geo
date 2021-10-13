@@ -34,6 +34,7 @@ export class MigratorState {
       `,
       values: [key],
     };
+    console.debug(query)
     await this.connection.query(query);
   }
 }

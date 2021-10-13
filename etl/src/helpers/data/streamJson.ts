@@ -1,5 +1,5 @@
 import { createReadStream } from 'fs';
-import { JsonOptions } from '../interfaces';
+import { JsonOptions } from '../../interfaces';
 import { withParser } from 'stream-json/filters/Pick';
 import { streamArray } from 'stream-json/streamers/StreamArray';
 
