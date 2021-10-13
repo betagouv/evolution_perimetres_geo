@@ -17,7 +17,7 @@ export const config: ConfigInterface = {
     basePath: process.env.TEMPORARY_DIRECTORY || os.tmpdir(),
   },
   app: {
-    targetSchema: 'public',
+    targetSchema: process.env.POSTGRES_SCHEMA || 'public',
     migrations: datasets,
   },
 };
