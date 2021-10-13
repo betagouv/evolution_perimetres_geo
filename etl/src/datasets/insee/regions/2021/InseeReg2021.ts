@@ -1,6 +1,5 @@
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
-import path from 'path';
 
 export class InseeReg2021 extends AbstractDataset {
   static producer = 'insee';
@@ -8,26 +7,26 @@ export class InseeReg2021 extends AbstractDataset {
   static year = 2021;
   static table = 'insee_reg_2021';
 
-  readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
-  readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/region2021-csv.zip';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly rows: Map<string, [string, string]> = new Map([
-    ['reg', ['0', 'varchar']],
-    ['chef_lieu', ['1', 'varchar']],
+    ['reg', ['0', 'varchar(2)']],
+    ['chef_lieu', ['1', 'varchar(5)']],
     ['tncc', ['2', 'varchar']],
     ['ncc', ['3', 'varchar']],
     ['nccenr', ['4', 'varchar']],
     ['libelle', ['5', 'varchar']],
   ]);
+  readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} ALTER COLUMN reg SET NOT NULL;`;
 
   fileType: FileTypeEnum = FileTypeEnum.Csv;
   sheetOptions = {};
 
+  readonly tableIndex = 'reg';
   readonly importSql = `
-    UPDATE ${this.targetTable} AS a 
-    SET l_reg = t.libelle
-    FROM ${this.table} AS t
-    WHERE a.reg = t.reg;
+    UPDATE ${this.targetTable} SET
+      l_reg = t.libelle
+    FROM ${this.tableWithSchema} t
+    WHERE reg = t.reg;
   `;
 }

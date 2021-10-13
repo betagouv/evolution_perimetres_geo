@@ -16,6 +16,7 @@ import { InseeReg2021 } from './datasets/insee/regions/2021/InseeReg2021';
 import { CeremaAom2019 } from './datasets/cerema/aom/2019/CeremaAom2019';
 import { CeremaAom2020 } from './datasets/cerema/aom/2020/CeremaAom2020';
 import { CeremaAom2021 } from './datasets/cerema/aom/2021/CeremaAom2021';
+import { config } from './config';
 
 interface TestContext {
   connection: Pool;
@@ -25,12 +26,11 @@ interface TestContext {
 const test = anyTest as TestInterface<TestContext>;
 
 test.before(async (t) => {
-  const pool = createPool();
-  t.context.migrator = prepare({ pool });
-  t.context.connection = pool;
+  t.context.migrator = prepare(config);
+  t.context.connection = t.context.migrator.pool;
   for await (const migrable of t.context.migrator.migrations.values()) {
     await t.context.connection.query(`
-        DROP TABLE IF EXISTS ${migrable.table}
+        DROP TABLE IF EXISTS ${config.app.targetSchema}.${migrable.table}
       `);
   }
 });
@@ -38,7 +38,7 @@ test.before(async (t) => {
 test.after.always(async (t) => {
   /*for await (const migrable of t.context.migrator.migrations.values()) {
     await t.context.connection.query(`
-        DROP TABLE IF EXISTS ${migrable.table}
+        DROP TABLE IF EXISTS ${config.app.targetSchema}.${migrable.table}
       `);
   }*/
 });

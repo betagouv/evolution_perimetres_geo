@@ -5,7 +5,7 @@ export class CreateGeoTable extends AbstractDatastructure {
   static table = 'perimeters';
   readonly sql = `
       CREATE EXTENSION IF NOT EXISTS postgis;
-      CREATE TABLE IF NOT EXISTS ${this.table} (
+      CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (
           id SERIAL PRIMARY KEY,
           year SMALLINT NOT NULL,
           centroid GEOMETRY(POINT, 2154) NOT NULL,
@@ -28,9 +28,9 @@ export class CreateGeoTable extends AbstractDatastructure {
           pop INT,
           surface FLOAT(4)
       );
-      CREATE INDEX ${this.table}_id_index ON ${this.table} USING btree (id);
-      CREATE INDEX ${this.table}_centroid_index ON ${this.table} USING gist (centroid);
-      CREATE INDEX ${this.table}_geom_index ON ${this.table} USING gist (geom);
-      CREATE INDEX ${this.table}_geom_simple_index ON ${this.table} USING gist (geom_simple);
+      CREATE INDEX ${this.tableWithSchema}_id_index ON ${this.tableWithSchema} USING btree (id);
+      CREATE INDEX ${this.tableWithSchema}_centroid_index ON ${this.tableWithSchema} USING gist (centroid);
+      CREATE INDEX ${this.tableWithSchema}_geom_index ON ${this.tableWithSchema} USING gist (geom);
+      CREATE INDEX ${this.tableWithSchema}_geom_simple_index ON ${this.tableWithSchema} USING gist (geom_simple);
     `;
 }

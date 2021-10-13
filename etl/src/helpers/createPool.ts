@@ -1,7 +1,7 @@
 import { Pool, PoolConfig } from 'pg';
-import { pool } from '../config';
+import { config as defaultConfig } from '../config';
 
-export function createPool(config: PoolConfig = pool): Pool {
+export function createPool(config: PoolConfig = defaultConfig.pool): Pool {
   return new Pool({
     ...config,
   });

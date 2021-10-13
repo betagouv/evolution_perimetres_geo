@@ -1,6 +1,5 @@
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
-import path from 'path';
 
 export class CeremaAom2021 extends AbstractDataset {
   static producer = 'cerema';
@@ -8,8 +7,6 @@ export class CeremaAom2021 extends AbstractDataset {
   static year = 2021;
   static table = 'cerema_aom_2021';
 
-  readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
-  readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string = 'https://www.cerema.fr/system/files/documents/2021/06/base_rt_2021_v4_diffusion.xlsx';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly rows: Map<string, [string, string]> = new Map([
@@ -42,11 +39,12 @@ export class CeremaAom2021 extends AbstractDataset {
     startRow: 0,
   };
 
+  readonly tableIndex = 'com';
   readonly importSql = `
-    UPDATE ${this.targetTable} a SET
-      aom = b.id_reseau,
-      l_aom = b.nom_aom
-    FROM ${this.table} b
-    WHERE a.com = b.com AND a.year = 2021;
+    UPDATE ${this.targetTable} SET
+      aom = t.id_reseau,
+      l_aom = t.nom_aom
+    FROM ${this.tableWithSchema} t
+    WHERE com = t.com AND year = 2021;
   `;
 }

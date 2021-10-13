@@ -1,8 +1,15 @@
-import { loadSqlFile, downloadFile, streamData, decompressFile, getDatasetUuid } from '../helpers';
-import { ArchiveFileTypeEnum, DatasetInterface, FileTypeEnum, StaticAbstractDataset, Migrable } from '../interfaces';
+import { loadFileAsString, streamData, getDatasetUuid } from '../helpers';
+import {
+  ArchiveFileTypeEnum,
+  DatasetInterface,
+  FileTypeEnum,
+  StaticAbstractDataset,
+  StaticMigrable,
+} from '../interfaces';
 import { Pool } from 'pg';
 import { StreamDataOptions } from '../interfaces/StreamDataOptions';
 import { DownloadError, SqlError, ValidationError } from '../errors';
+import { FileProvider } from '../providers/FileProvider';
 
 export abstract class AbstractDataset implements DatasetInterface {
   static get uuid(): string {
@@ -10,26 +17,33 @@ export abstract class AbstractDataset implements DatasetInterface {
     return getDatasetUuid(self.producer, self.dataset, self.year);
   }
 
-  abstract readonly beforeSqlPath: string;
   abstract readonly url: string;
   abstract readonly fileArchiveType: ArchiveFileTypeEnum;
-  abstract readonly afterSqlPath: string;
-  abstract readonly rows: Map<string, [string, string]>;
   abstract readonly fileType: FileTypeEnum;
+  abstract readonly rows: Map<string, [string, string]>;
 
-  required: Set<Migrable> = new Set();
-  sheetOptions: StreamDataOptions;
-  filepaths: string[] = [];
+  readonly tableIndex: string | undefined;
+  readonly beforeSqlPath: string | undefined;
+  readonly extraBeforeSql: string | undefined;
+  readonly afterSqlPath: string | undefined;
   readonly importSql: string = '';
   readonly targetTable: string = 'perimeters';
+
+  required: Set<StaticMigrable> = new Set();
+  sheetOptions: StreamDataOptions;
+  filepaths: string[] = [];
 
   get table(): string {
     return (this.constructor as StaticAbstractDataset).table;
   }
 
-  constructor(protected connection: Pool) {}
+  get tableWithSchema(): string {
+    return `${this.targetSchema}.${this.table}`;
+  }
 
-  async validate(done: Set<Migrable>): Promise<void> {
+  constructor(protected connection: Pool, protected file: FileProvider, protected targetSchema: string = 'public') {}
+
+  async validate(done: Set<StaticMigrable>): Promise<void> {
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
     if (difference.size > 0) {
       throw new ValidationError(
@@ -41,7 +55,22 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   async before(): Promise<void> {
     try {
-      const sql = await loadSqlFile(this.beforeSqlPath);
+      const generatedSql = `
+        CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (
+          id SERIAL PRIMARY KEY,
+          ${[...this.rows].map(([k, v]) => `${k} ${v[1]}`).join(',\n')}
+        );
+        ${
+          this.tableIndex
+            ? `
+          CREATE INDEX IF NOT EXISTS ${this.tableWithSchema.replace('.', '_')}
+            ON ${this.tableWithSchema} USING btree(${this.tableIndex});`
+            : ''
+        }
+        ${this.extraBeforeSql || ''}
+      `;
+      const sql = this.beforeSqlPath ? await loadFileAsString(this.beforeSqlPath) : generatedSql;
+      console.debug(sql);
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
@@ -51,9 +80,9 @@ export abstract class AbstractDataset implements DatasetInterface {
   async download(): Promise<void> {
     try {
       const filepaths: string[] = [];
-      const filepath = await downloadFile(this.url);
+      const filepath = await this.file.download(this.url);
       if (this.fileArchiveType !== ArchiveFileTypeEnum.None) {
-        filepaths.push(...(await decompressFile(filepath, this.fileArchiveType, this.fileType)));
+        filepaths.push(...(await this.file.decompress(filepath, this.fileArchiveType, this.fileType)));
       } else {
         filepaths.push(filepath);
       }
@@ -80,7 +109,7 @@ export abstract class AbstractDataset implements DatasetInterface {
             console.debug(`Batch ${i}`);
             const query = {
               text: `
-                        INSERT INTO ${this.table} (
+                        INSERT INTO ${this.tableWithSchema} (
                             ${[...this.rows.keys()].join(', \n')}
                         )
                         SELECT *
@@ -115,7 +144,8 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   async after(): Promise<void> {
     try {
-      const sql = await loadSqlFile(this.afterSqlPath);
+      const generatedSql = `DROP TABLE IF EXISTS ${this.tableWithSchema}`;
+      const sql = this.afterSqlPath ? await loadFileAsString(this.afterSqlPath) : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);

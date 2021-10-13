@@ -1,18 +1,20 @@
 import { Pool } from 'pg';
+import { FileProvider } from '../providers/FileProvider';
 
-export interface Migrable {
+export interface StaticMigrable {
   readonly uuid: string;
-  readonly table: string;
-  new (connection: Pool): DatasetInterface;
+  table: string;
+  new (connection: Pool, file: FileProvider, targetSchema: string): DatasetInterface;
 }
-export interface StaticAbstractDataset extends Migrable {
+
+export interface StaticAbstractDataset extends StaticMigrable {
   readonly producer: string;
   readonly dataset: string;
   readonly year: number;
 }
 
 export interface DatasetInterface {
-  validate(done: Set<Migrable>): Promise<void>;
+  validate(done: Set<StaticMigrable>): Promise<void>;
   before(): Promise<void>;
   download(): Promise<void>;
   transform(): Promise<void>;

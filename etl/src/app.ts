@@ -1,12 +1,13 @@
-import { Migrator, MigratorConfig } from './common/Migrator';
-import { datasets } from './datasets';
-import { bootstrap, createPool, getLogger } from './helpers';
+import { Migrator } from './common/Migrator';
+import { ConfigInterface } from './interfaces';
+import { bootstrap, createPool, createLogger, createFileProvider } from './helpers';
 
-export function prepare(config: Partial<MigratorConfig> = {}): Migrator {
-  const logger = getLogger();
-  const pool = config.pool || createPool();
+export function prepare(config: ConfigInterface): Migrator {
+  const logger = createLogger(config.logger);
+  const fileProvider = createFileProvider(config.file);
+  const pool = createPool(config.pool);
   bootstrap(logger, [async () => pool.end()]);
-  const migrator = new Migrator({ pool, migrations: datasets, ...config });
+  const migrator = new Migrator(pool, fileProvider, config.app);
   return migrator;
 }
 
