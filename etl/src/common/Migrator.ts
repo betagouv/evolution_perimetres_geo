@@ -57,6 +57,7 @@ export class Migrator {
       await migrableInstance.import();
       console.debug(`${migrable.uuid} : after`);
       await migrableInstance.after();
+      await this.state.set(migrable.uuid);
       console.info(`${migrable.uuid} : done`);
     } catch (e) {
       console.error(`${migrable.uuid} : ${(e as Error).message}`);
@@ -68,7 +69,6 @@ export class Migrator {
     const migrables = await this.todo();
     for await (const migrable of migrables) {
       await this.process(migrable);
-      await this.state.set(migrable.uuid);
     }
   }
 }
