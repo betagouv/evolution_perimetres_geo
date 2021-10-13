@@ -68,6 +68,7 @@ export class Migrator {
     const migrables = await this.todo();
     for await (const migrable of migrables) {
       await this.process(migrable);
+      await this.state.set(migrable.uuid);
     }
   }
 }
