@@ -26,9 +26,9 @@ export class InseeDep2021 extends AbstractDataset {
   sheetOptions = {};
 
   readonly importSql = `
-    UPDATE ${this.targetTable} a
-      SET a.l_dep = b.libelle
-    FROM ${this.table} b
-    WHERE a.dep = b.dep;
+    UPDATE ${this.targetTable} 
+    SET l_dep = t.libelle
+    FROM ${this.table} AS t
+    WHERE dep = t.dep;
   `;
 }

@@ -35,7 +35,9 @@ export class InseePays2021 extends AbstractDataset {
       centroid,
       geom,
       geom_simple,
+      surface,
       arr,
+      l_arr,
       country,
       l_country
     ) SELECT
@@ -43,7 +45,9 @@ export class InseePays2021 extends AbstractDataset {
       ST_PointOnSurface(st_transform(b.geom,2154)) as centroid,
       st_transform(b.geom,2154) as geom,
       st_transform(b.geom,2154) as geom_simple,
+      st_area(geom) as surface,
       a.cog,
+      a.libcog,
       a.cog,
       a.libcog
     FROM ${this.table} a

@@ -29,14 +29,14 @@ export class InseePerim2021 extends AbstractDataset {
   };
 
   readonly importSql = `
-    UPDATE ${this.targetTable} a SET
-      a.com = b.codgeo,
-      a.l_com = b.libgeo,
-      a.epci = b.epci,
-      a.l_epci = b.l_epci,
-      a.dep = b.dep,
-      a.reg = b.reg
-    FROM ${this.table} b
+    UPDATE ${this.targetTable} SET
+      com = t.codgeo,
+      l_com = t.libgeo,
+      epci = t.epci,
+      l_epci = t.libepci,
+      dep = t.dep,
+      reg = t.reg
+    FROM ${this.table} AS t
     WHERE a.year = 2021;
   `;
 }

@@ -21,9 +21,9 @@ test.before(async (t) => {
 });
 
 test.after.always(async (t) => {
-  await t.context.connection.query(`
+  /*await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.dataset.table}
-    `);
+    `);*/
 });
 
 test.serial('should validate', async (t) => {

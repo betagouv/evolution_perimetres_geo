@@ -42,8 +42,8 @@ export class EurostatCountries2020 extends AbstractDataset {
                   json_to_recordset($1)
                   as tmp(type varchar, properties json,geometry json)
                 )
-                SELECT ${[...this.rows.values()].map((r) => `(properties->>'${r[0]}')::${r[1]}`).join(', \n')},
-                st_multi(st_geomfromgeojson(geometry)) as geom 
+                SELECT ${[...this.rows].map(([k, r]) => `(properties->>'${r[0]}')::${r[1]} AS ${k}`).join(', \n')},
+                st_transform(st_multi(st_geomfromgeojson(geometry)),2154) as geom 
                 FROM tmp
               `,
               values: [JSON.stringify(results.value).replace(/'/g, "''")],
@@ -59,9 +59,5 @@ export class EurostatCountries2020 extends AbstractDataset {
       connection.release();
       throw e;
     }
-  }
-
-  async import(): Promise<void> {
-    // TODO
   }
 }
