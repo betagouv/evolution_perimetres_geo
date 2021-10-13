@@ -1,11 +1,11 @@
 import path from 'path';
 import { hash, randomString } from '.';
-import { temporaryDirectory } from '../config';
+import { config as defaultConfig } from '../config';
 
-export function getTemporaryDirectoryPath(name?: string): string {
-  return name ? path.join(temporaryDirectory, name) : getTemporaryFilePath();
+export function getTemporaryDirectoryPath(name?: string, tmpPath: string = defaultConfig.temporaryDirectory): string {
+  return name ? path.join(tmpPath, name) : getTemporaryFilePath(undefined, tmpPath);
 }
 
-export function getTemporaryFilePath(data?: string): string {
-  return path.join(temporaryDirectory, data ? hash(data) : randomString());
+export function getTemporaryFilePath(data?: string, tmpPath: string = defaultConfig.temporaryDirectory): string {
+  return path.join(tmpPath, data ? hash(data) : randomString());
 }
