@@ -20,7 +20,7 @@ export class InseePerim2020 extends AbstractDataset {
   ]);
   readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} 
     ALTER COLUMN codgeo SET NOT NULL,
-    ADD CONSTRAINT codgeo_unique UNIQUE (codgeo);
+    ADD CONSTRAINT ${this.table}_codgeo_unique UNIQUE (codgeo);
   `;
 
   fileType: FileTypeEnum = FileTypeEnum.Xls;
