@@ -1,48 +1,35 @@
 import { Pool } from 'pg';
 import { FileProvider } from '../providers/FileProvider';
-import { StaticMigrable, AppConfigInterface } from '../interfaces';
-import { MigratorState } from './MigratorState';
+import { StaticMigrable, AppConfigInterface, StateManagerInterface } from '../interfaces';
+import { DatabaseStateManager } from '../providers/DatabaseStateManager';
+import { MemoryStateManager } from 'src/providers/MemoryStateManager';
 
 export class Migrator {
-  protected state: MigratorState;
-
-  readonly migrations: Map<string, StaticMigrable>;
+  protected dbStateManager: DatabaseStateManager;
+  protected runStateManager: StateManagerInterface;
 
   constructor(readonly pool: Pool, readonly file: FileProvider, readonly config: AppConfigInterface) {
-    this.state = new MigratorState(this.pool, this.config.targetSchema);
-    this.migrations = new Map([...this.config.migrations].map((m) => [m.uuid, m]));
+    this.dbStateManager = new DatabaseStateManager(this.pool, this.config);
+    this.runStateManager = new MemoryStateManager();
   }
 
   async prepare(): Promise<void> {
     console.info(`Connecting to database`);
     await this.pool.connect();
     console.info(`Connected!`);
-    await this.state.install();
-  }
-
-  async getState(): Promise<Set<StaticMigrable>> {
-    const stateUuid = await this.state.get();
-    const state: Set<StaticMigrable> = new Set();
-    for (const uuid of stateUuid) {
-      const migration = this.migrations.get(uuid);
-      if (!migration) {
-        throw new Error(`Migration not found ${uuid}`);
-      }
-      state.add(migration);
-    }
-    return state;
+    await this.dbStateManager.install();
   }
 
   async todo(): Promise<Set<StaticMigrable>> {
-    const done = await this.state.get();
-    return new Set([...this.migrations.values()].filter((m) => !done.has(m.uuid)));
+    const done = await this.dbStateManager.get();
+    return new Set([...this.config.migrations].filter((m) => !done.has(m)));
   }
 
   async process(migrable: StaticMigrable): Promise<void> {
     try {
       console.info(`${migrable.uuid} : start processing`);
-      const state = await this.getState();
-      const migrableInstance = new migrable(this.pool, this.file, this.config.targetSchema);
+      const state = await this.runStateManager.get();
+      const migableInstance = new migrable(this.pool, this.file, this.config.targetSchema);
       console.debug(`${migrable.uuid} : validation`);
       await migrableInstance.validate(state);
       console.debug(`${migrable.uuid} : before`);
@@ -69,6 +56,7 @@ export class Migrator {
     const migrables = await this.todo();
     for await (const migrable of migrables) {
       await this.process(migrable);
+      await this.dbStateManager.set(migrable);
     }
   }
 }
