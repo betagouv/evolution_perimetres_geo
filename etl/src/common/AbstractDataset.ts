@@ -118,7 +118,7 @@ export abstract class AbstractDataset implements DatasetInterface {
                           ${[...this.rows.values()].map((r) => `"${r[0]}" ${r[1]}`).join(', \n')}
                           )
                       `,
-              values: [JSON.stringify(results.value).replace(/'/g, "''")],
+              values: [JSON.stringify(results.value)],
             };
             await connection.query(query);
           }
