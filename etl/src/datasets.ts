@@ -15,6 +15,7 @@ import { CeremaAom2020 } from './datasets/cerema/aom/2020/CeremaAom2020';
 import { CeremaAom2021 } from './datasets/cerema/aom/2021/CeremaAom2021';
 import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom2021';
 import { StaticMigrable } from './interfaces';
+import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
 
 export const datasets: Set<StaticMigrable> = new Set([
   CreateGeoTable,
@@ -23,6 +24,7 @@ export const datasets: Set<StaticMigrable> = new Set([
   IgnAe2020,
   IgnAe2021,
   EurostatCountries2020,
+  InseeCom2021,
   InseePerim2019,
   InseePerim2020,
   InseePerim2021,

@@ -1,7 +1,7 @@
-import { AbstractDataset } from '../../../../common/AbstractDataset';
-import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
+import { FileTypeEnum } from '../../../../interfaces';
+import { InseePerimDataset } from '../common/InseePerimDataset';
 
-export class InseePerim2020 extends AbstractDataset {
+export class InseePerim2020 extends InseePerimDataset {
   static producer = 'insee';
   static dataset = 'perim';
   static year = 2020;
@@ -9,19 +9,6 @@ export class InseePerim2020 extends AbstractDataset {
 
   readonly url: string =
     'https://www.insee.fr/fr/statistiques/fichier/2510634/Intercommunalite_Metropole_au_01-01-2020_v1.zip';
-  readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
-  readonly rows: Map<string, [string, string]> = new Map([
-    ['codgeo', ['CODGEO', 'varchar(5)']],
-    ['libgeo', ['LIBGEO', 'varchar']],
-    ['epci', ['EPCI', 'varchar(9)']],
-    ['libepci', ['LIBEPCI', 'varchar']],
-    ['dep', ['DEP', 'varchar(3)']],
-    ['reg', ['REG', 'varchar(2)']],
-  ]);
-  readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} 
-    ALTER COLUMN codgeo SET NOT NULL,
-    ADD CONSTRAINT ${this.table}_codgeo_unique UNIQUE (codgeo);
-  `;
 
   fileType: FileTypeEnum = FileTypeEnum.Xls;
   sheetOptions = {
@@ -40,5 +27,16 @@ export class InseePerim2020 extends AbstractDataset {
       reg = t.reg
     FROM ${this.tableWithSchema} t
     WHERE year = 2020 AND arr = t.codgeo;
+  `;
+
+  readonly extraImportSql = `
+    UPDATE ${this.targetTable} SET
+      l_com = t.libgeo,
+      epci = t.epci,
+      l_epci = t.libepci,
+      dep = t.dep,
+      reg = t.reg
+    FROM ${this.tableWithSchema} t
+    WHERE year = 2020 AND l_com IS NULL AND com = t.codgeo;
   `;
 }
