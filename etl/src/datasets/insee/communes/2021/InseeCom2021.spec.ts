@@ -22,8 +22,8 @@ test.before(async (t) => {
 
 test.after.always(async (t) => {
   await t.context.connection.query(`
-      DROP TABLE IF EXISTS ${t.context.dataset.tableWithSchema}
-    `);
+    DROP TABLE IF EXISTS ${t.context.dataset.tableWithSchema}
+  `);
 });
 
 test.serial('should validate', async (t) => {
@@ -57,7 +57,7 @@ test.serial('should load', async (t) => {
   t.is(response.rows[0].count, '37742');
 });
 
-test.serial('should cleanup', async (t) => {
+test.serial.skip('should cleanup', async (t) => {
   await t.context.dataset.after();
   const query = `SELECT * FROM ${t.context.dataset.tableWithSchema}`;
   await t.throwsAsync(() => t.context.connection.query(query));

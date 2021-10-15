@@ -1,6 +1,6 @@
-import { AbstractDataset } from "src/common/AbstractDataset";
-import { SqlError } from "src/errors";
-import { ArchiveFileTypeEnum } from "src/interfaces";
+import { AbstractDataset } from "../../../../common/AbstractDataset";
+import { SqlError } from "../../../../errors";
+import { ArchiveFileTypeEnum } from "../../../../interfaces";
 
 export abstract class InseePerimDataset extends AbstractDataset {
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;

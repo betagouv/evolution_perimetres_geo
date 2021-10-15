@@ -12,7 +12,7 @@ export class InseeCom2021 extends AbstractDataset {
   readonly rows: Map<string, [string, string]> = new Map([
     ['typecom', ['0', 'varchar(4)']],
     ['arr', ['1', 'varchar(5)']],
-    ['libelle', ['10', 'varchar']],
+    ['libelle', ['9', 'varchar']],
     ['com', ['11', 'varchar(5)']],
   ]);
 
