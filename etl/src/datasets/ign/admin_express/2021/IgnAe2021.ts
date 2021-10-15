@@ -8,31 +8,37 @@ export class IgnAe2021 extends IgnDataset {
   static year = 2021;
   static table = 'ign_ae_2021';
 
+  readonly rows: Map<string, [string, string]> = new Map([
+    ['arr', ['INSEE_ARM', 'varchar']],
+    ['com', ['INSEE_COM', 'varchar']],
+    ['pop', ['POPULATION', 'integer']],
+  ]);
+
   readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string =
     // eslint-disable-next-line max-len
-    'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_3-0__SHP__FRA_L93_2021-05-19.7z';
+    'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG-CARTO_3-0__SHP__FRA_WM_2021-05-19.7z';
 
   readonly transformations: Array<[string, Partial<TransformationParamsInterface>]> = [
-    ['SHP_LAMB93_FR/COMMUNE', { key: 'geom' }],
-    ['SHP_LAMB93_FR/ARRONDISSEMENT_MUNICIPAL', { key: 'geom' }],
+    ['SHP_WGS84G_FRA/COMMUNE', { key: 'geom' }],
+    ['SHP_WGS84G_FRA/ARRONDISSEMENT_MUNICIPAL', { key: 'geom' }],
     [
-      'SHP_LAMB93_FR/COMMUNE',
+      'SHP_WGS84G_FRA/COMMUNE',
       {
         key: 'geom_simple',
         simplify: ['-simplify 60% keep-shapes', '-simplify 50% keep-shapes', '-simplify 40% keep-shapes'],
       },
     ],
     [
-      'SHP_LAMB93_FR/ARRONDISSEMENT_MUNICIPAL',
+      'SHP_WGS84G_FRA/ARRONDISSEMENT_MUNICIPAL',
       {
         key: 'geom_simple',
         simplify: ['-simplify 60% keep-shapes', '-simplify 50% keep-shapes', '-simplify 40% keep-shapes'],
       },
     ],
-    ['SHP_LAMB93_FR/CHFLIEU_COMMUNE', { key: 'centroid' }],
-    ['SHP_LAMB93_FR/CHFLIEU_ARRONDISSEMENT_MUNICIPAL', { key: 'centroid' }],
+    ['SHP_WGS84G_FRA/CHEF_LIEU_CARTO', { key: 'centroid' }],
+    ['SHP_WGS84G_FRA/CHFLIEU_ARRONDISSEMENT_MUNICIPAL', { key: 'centroid' }],
   ];
 
   readonly importSql = `
@@ -48,12 +54,12 @@ export class IgnAe2021 extends IgnDataset {
       l_country
     ) SELECT
       ${(this.constructor as StaticAbstractDataset).year} as year,
-      centroid,
-      geom,
-      geom_simple,
+      centroid as centroid,
+      geom as geom,
+      geom_simple as geom_simple,
       st_area(geom) as surface,
-      com,
-      pop,
+      CASE WHEN arr IS NOT NULL THEN arr ELSE com END as arr,
+      pop as pop,
       'XXXXX' as country,
       'France' as l_country
     FROM ${this.tableWithSchema};

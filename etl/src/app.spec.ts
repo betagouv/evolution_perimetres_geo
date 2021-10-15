@@ -71,10 +71,10 @@ test.serial('should do migration IgnAe2019', async (t) => {
   t.is(first.rows[0].arr, '01001');
   t.is(first.rows[0].pop, 767);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr desc limit 1`);
-  t.is(last.rows[0].arr, '95690');
-  t.is(last.rows[0].pop, 335);
+  t.is(last.rows[0].arr, '97617');
+  t.is(last.rows[0].pop, 13934);
   const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where year = 2019`);
-  t.is(count.rows[0].count, '34886');
+  t.is(count.rows[0].count, '35015');
 });
 
 test.serial('should do migration IgnAe2020', async (t) => {
@@ -83,10 +83,10 @@ test.serial('should do migration IgnAe2020', async (t) => {
   t.is(first.rows[0].arr, '01001');
   t.is(first.rows[0].pop, 776);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr desc limit 1`);
-  t.is(last.rows[0].arr, '95690');
-  t.is(last.rows[0].pop, 333);
+  t.is(last.rows[0].arr, '97617');
+  t.is(last.rows[0].pop, 13934);
   const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where year = 2020`);
-  t.is(count.rows[0].count, '34884');
+  t.is(count.rows[0].count, '35013');
 });
 
 test.serial('should do migration IgnAe2021', async (t) => {
@@ -95,10 +95,10 @@ test.serial('should do migration IgnAe2021', async (t) => {
   t.is(first.rows[0].arr, '01001');
   t.is(first.rows[0].pop, 771);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr desc limit 1`);
-  t.is(last.rows[0].arr, '95690');
-  t.is(last.rows[0].pop, 332);
+  t.is(last.rows[0].arr, '97617');
+  t.is(last.rows[0].pop, 13934);
   const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where year = 2021`);
-  t.is(count.rows[0].count, '34881');
+  t.is(count.rows[0].count, '35010');
 });
 
 test.serial.skip('should do migration EurostatCountries2020', async (t) => {
@@ -119,10 +119,10 @@ test.serial('should do migration InseePerim2019', async (t) => {
   t.is(first.rows[0].dep, '01');
   t.is(first.rows[0].epci, '200069193');
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr desc limit 1`);
-  t.is(last.rows[0].dep, '95');
-  t.is(last.rows[0].epci, '249500513');
+  t.is(last.rows[0].dep, '976');
+  t.is(last.rows[0].epci, '200059871');
   const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2019`);
-  t.is(count.rows[0].count, '34886');
+  t.is(count.rows[0].count, '35015');
 });
 
 test.serial('should do migration InseePerim2020', async (t) => {
@@ -131,10 +131,10 @@ test.serial('should do migration InseePerim2020', async (t) => {
   t.is(first.rows[0].dep, '01');
   t.is(first.rows[0].epci, '200069193');
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr desc limit 1`);
-  t.is(last.rows[0].dep, '95');
-  t.is(last.rows[0].epci, '249500513');
+  t.is(last.rows[0].dep, '976');
+  t.is(last.rows[0].epci, '200059871');
   const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2020`);
-  t.is(count.rows[0].count, '34884');
+  t.is(count.rows[0].count, '35013');
 });
 
 test.serial('should do migration InseePerim2021', async (t) => {
@@ -143,10 +143,10 @@ test.serial('should do migration InseePerim2021', async (t) => {
   t.is(first.rows[0].dep, '01');
   t.is(first.rows[0].epci, '200069193');
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr desc limit 1`);
-  t.is(last.rows[0].dep, '95');
-  t.is(last.rows[0].epci, '249500513');
+  t.is(last.rows[0].dep, '976');
+  t.is(last.rows[0].epci, '200059871');
   const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2021`);
-  t.is(count.rows[0].count, '34881');
+  t.is(count.rows[0].count, '35010');
 });
 
 test.serial('should do migration InseeDep2021', async (t) => {
@@ -154,9 +154,9 @@ test.serial('should do migration InseeDep2021', async (t) => {
   const first = await t.context.connection.query(`SELECT * FROM perimeters order by arr asc limit 1`);
   t.is(first.rows[0].l_dep, "Ain");
   const last = await t.context.connection.query(`SELECT * FROM perimeters order by arr desc limit 1`);
-  t.is(last.rows[0].l_dep, "Val-d'Oise");
+  t.is(last.rows[0].l_dep, "Mayotte");
   const count = await t.context.connection.query(`SELECT count(distinct l_dep) FROM perimeters`);
-  t.is(count.rows[0].count, '96');
+  t.is(count.rows[0].count, '101');
 });
 
 test.serial('should do migration InseeReg2021', async (t) => {
@@ -164,9 +164,9 @@ test.serial('should do migration InseeReg2021', async (t) => {
   const first = await t.context.connection.query(`SELECT * FROM perimeters order by arr asc limit 1`);
   t.is(first.rows[0].l_reg, "Auvergne-Rhône-Alpes");
   const last = await t.context.connection.query(`SELECT * FROM perimeters order by arr desc limit 1`);
-  t.is(last.rows[0].l_reg, "Île-de-France");
+  t.is(last.rows[0].l_reg, "Mayotte");
   const count = await t.context.connection.query(`SELECT count(distinct l_reg) FROM perimeters`);
-  t.is(count.rows[0].count, '13');
+  t.is(count.rows[0].count, '18');
 });
 
 test.serial('should do migration CeremaAom2019', async (t) => {
@@ -174,9 +174,9 @@ test.serial('should do migration CeremaAom2019', async (t) => {
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr asc limit 1`);
   t.is(first.rows[0].aom, null);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr desc limit 1`);
-  t.is(last.rows[0].aom, '232');
+  t.is(last.rows[0].aom, null);
   const count = await t.context.connection.query(`SELECT count(distinct l_aom) FROM perimeters`);
-  t.is(count.rows[0].count, '323');
+  t.is(count.rows[0].count, '336');
 });
 
 test.serial('should do migration CeremaAom2020', async (t) => {
@@ -184,9 +184,9 @@ test.serial('should do migration CeremaAom2020', async (t) => {
    const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr asc limit 1`);
   t.is(first.rows[0].aom, null);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr desc limit 1`);
-  t.is(last.rows[0].aom, '232');
+  t.is(last.rows[0].aom, null);
   const count = await t.context.connection.query(`SELECT count(distinct l_aom) FROM perimeters`);
-  t.is(count.rows[0].count, '327');
+  t.is(count.rows[0].count, '273');
 });
 
 test.serial('should do migration CeremaAom2021', async (t) => {
@@ -194,9 +194,9 @@ test.serial('should do migration CeremaAom2021', async (t) => {
    const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr asc limit 1`);
   t.is(first.rows[0].aom, null);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr desc limit 1`);
-  t.is(last.rows[0].aom, '232');
+  t.is(last.rows[0].aom, null);
   const count = await t.context.connection.query(`SELECT count(distinct l_aom) FROM perimeters`);
-  t.is(count.rows[0].count, '325');
+  t.is(count.rows[0].count, '334');
 });
 
 test.serial.skip('should import', async (t) => {

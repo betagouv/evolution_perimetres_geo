@@ -12,12 +12,12 @@ export class IgnAe2019 extends IgnDataset {
   readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
   readonly url: string =
     // eslint-disable-next-line max-len
-    'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-0__SHP__FRA_L93_2019-09-24.7z';
+    'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-0__SHP__FRA_WGS84G_2019-09-24.7z';
 
   readonly transformations: Array<[string, Partial<TransformationParamsInterface>]> = [
-    ['SHP_LAMB93_FR/COMMUNE.shp', { key: 'geom' }],
-    ['SHP_LAMB93_FR/COMMUNE_CARTO.shp', { key: 'geom_simple', simplify: ['-simplify dp interval=100 keep-shapes'] }],
-    ['SHP_LAMB93_FR/CHEF_LIEU_CARTO.shp', { key: 'centroid' }],
+    ['SHP_WGS84_FR/COMMUNE.shp', { key: 'geom' }],
+    ['SHP_WGS84_FR/COMMUNE_CARTO.shp', { key: 'geom_simple', simplify: ['-simplify dp interval=100 keep-shapes'] }],
+    ['SHP_WGS84_FR/CHEF_LIEU_CARTO.shp', { key: 'centroid' }],
   ];
 
   readonly importSql = `

@@ -100,7 +100,7 @@ export abstract class IgnDataset extends AbstractDataset {
                       SELECT ${[...this.rows]
                         .map(([k, r]) => `(properties->>'${r[0]}')::${r[1]} AS ${k}`)
                         .join(', \n')},
-                      st_multi(ST_SetSRID(st_geomfromgeojson(geometry),2154)) as ${key} 
+                      st_multi(ST_SetSRID(st_geomfromgeojson(geometry),4326)) as ${key} 
                       FROM tmp 
                     `,
                     values,
@@ -110,7 +110,7 @@ export abstract class IgnDataset extends AbstractDataset {
                   await connection.query({
                     text: `
                       UPDATE ${this.tableWithSchema}
-                      SET ${key} = st_multi(ST_SetSRID(st_geomfromgeojson(tt.geometry),2154))
+                      SET ${key} = st_multi(ST_SetSRID(st_geomfromgeojson(tt.geometry),4326))
                       FROM (
                         SELECT * FROM
                         json_to_recordset($1)
@@ -125,7 +125,7 @@ export abstract class IgnDataset extends AbstractDataset {
                   await connection.query({
                     text: `
                       UPDATE ${this.tableWithSchema}
-                      SET ${key} = ST_SetSRID(st_geomfromgeojson(tt.geometry),2154)
+                      SET ${key} = ST_SetSRID(st_geomfromgeojson(tt.geometry),4326)
                       FROM (
                         SELECT * FROM
                         json_to_recordset($1)

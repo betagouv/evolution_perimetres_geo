@@ -9,9 +9,9 @@ export class CreateGeoTable extends AbstractDatastructure {
       CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (
           id SERIAL PRIMARY KEY,
           year SMALLINT NOT NULL,
-          centroid GEOMETRY(POINT, 2154) NOT NULL,
-          geom GEOMETRY(MULTIPOLYGON, 2154) NOT NULL,
-          geom_simple GEOMETRY(MULTIPOLYGON, 2154) NOT NULL,
+          centroid GEOMETRY(POINT, 4326) NOT NULL,
+          geom GEOMETRY(MULTIPOLYGON, 4326) NOT NULL,
+          geom_simple GEOMETRY(MULTIPOLYGON, 4326) NOT NULL,
           l_arr VARCHAR(256),
           arr VARCHAR(5),
           l_com VARCHAR(256),
