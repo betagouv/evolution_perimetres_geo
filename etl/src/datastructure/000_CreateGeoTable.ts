@@ -29,9 +29,9 @@ export class CreateGeoTable extends AbstractDatastructure {
           pop INT,
           surface FLOAT(4)
       );
-      CREATE INDEX ${this.indexWithSchema}_id_index ON ${this.tableWithSchema} USING btree (id);
-      CREATE INDEX ${this.indexWithSchema}_centroid_index ON ${this.tableWithSchema} USING gist (centroid);
-      CREATE INDEX ${this.indexWithSchema}_geom_index ON ${this.tableWithSchema} USING gist (geom);
-      CREATE INDEX ${this.indexWithSchema}_geom_simple_index ON ${this.tableWithSchema} USING gist (geom_simple);
+      CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_id_index ON ${this.tableWithSchema} USING btree (id);
+      CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_centroid_index ON ${this.tableWithSchema} USING gist (centroid);
+      CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_geom_index ON ${this.tableWithSchema} USING gist (geom);
+      CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_geom_simple_index ON ${this.tableWithSchema} USING gist (geom_simple);
     `;
 }

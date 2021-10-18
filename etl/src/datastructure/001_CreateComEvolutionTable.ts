@@ -12,7 +12,7 @@ export class CreateComEvolutionTable extends AbstractDatastructure {
           mod SMALLINT,
           l_mod VARCHAR
       );
-      CREATE INDEX ${this.indexWithSchema}_old_com_index ON ${this.tableWithSchema} USING btree (old_com);
-      CREATE INDEX ${this.indexWithSchema}_new_com_index ON ${this.tableWithSchema} USING btree (new_com);
+      CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_old_com_index ON ${this.tableWithSchema} USING btree (old_com);
+      CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_new_com_index ON ${this.tableWithSchema} USING btree (new_com);
     `;
 }
