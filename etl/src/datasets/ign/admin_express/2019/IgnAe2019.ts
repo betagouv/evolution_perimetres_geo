@@ -36,7 +36,7 @@ export class IgnAe2019 extends IgnDataset {
       centroid,
       geom,
       geom_simple,
-      st_area(geom) as surface,
+      st_area(geom::geography)/1000000 as surface,
       com,
       pop,
       'XXXXX' as country,

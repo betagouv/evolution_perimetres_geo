@@ -21,6 +21,7 @@ import { CreateComEvolutionTable } from './datastructure/001_CreateComEvolutionT
 import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom2021';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
 import { MemoryStateManager } from './providers/MemoryStateManager';
+import { InseePays2021 } from './datasets/insee/pays/2021/InseePays2021';
 
 interface TestContext {
   connection: Pool;
@@ -102,11 +103,18 @@ test.serial('should do migration IgnAe2021', async (t) => {
   t.is(count.rows[0].count, '35010');
 });
 
-test.serial.skip('should do migration EurostatCountries2020', async (t) => {
+test.serial('should do migration EurostatCountries2020', async (t) => {
   await t.context.migrator.process(EurostatCountries2020, new MemoryStateManager());
   const count = await t.context.connection.query(`SELECT count(*) FROM eurostat_countries_2020`);
   t.is(count.rows[0].count, '257');
 });
+
+test.serial('should do migration InseePays2021', async (t) => {
+  await t.context.migrator.process(InseePays2021, new MemoryStateManager());
+  const count = await t.context.connection.query(`SELECT count(distinct country) FROM public.perimeters`);
+  t.is(count.rows[0].count, '208');
+});
+
 
 test.serial('should do migration Inseecom2021', async (t) => {
   await t.context.migrator.process(InseeCom2021, new MemoryStateManager());

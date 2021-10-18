@@ -57,7 +57,7 @@ export class IgnAe2021 extends IgnDataset {
       centroid as centroid,
       geom as geom,
       geom_simple as geom_simple,
-      st_area(geom) as surface,
+      st_area(geom::geography)/1000000 as surface,
       CASE WHEN arr IS NOT NULL THEN arr ELSE com END as arr,
       pop as pop,
       'XXXXX' as country,

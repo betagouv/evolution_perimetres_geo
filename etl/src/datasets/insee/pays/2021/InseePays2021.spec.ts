@@ -8,7 +8,7 @@ import { InseePays2021 as Dataset } from './InseePays2021';
 import { Migrator } from '../../../../common/Migrator';
 import { CreateGeoTable } from '../../../../datastructure/000_CreateGeoTable';
 import { CreateComEvolutionTable } from '../../../../datastructure/001_CreateComEvolutionTable';
-import { CeremaAom2019 } from '../../../cerema/aom/2019/CeremaAom2019';
+import { EurostatCountries2020 } from '../../../eurostat/countries/2020/EurostatCountries2020';
 
 interface TestContext {
   migrator: Migrator;
@@ -22,7 +22,7 @@ test.before(async (t) => {
   t.context.connection = createPool();
   t.context.migrator = new Migrator(t.context.connection, createFileProvider(), {
     targetSchema: 'public',
-    migrations: new Set([CreateGeoTable, CreateComEvolutionTable, Dataset, CeremaAom2019]),
+    migrations: new Set([CreateGeoTable, CreateComEvolutionTable, EurostatCountries2020, Dataset]),
   });
   t.context.dataset = new Dataset(t.context.connection, createFileProvider());
   await t.context.connection.query(`
@@ -67,11 +67,11 @@ test.serial('should transform', async (t) => {
 });
 
 test.serial('should load', async (t) => {
-  await t.context.migrator.run([CreateGeoTable, CreateComEvolutionTable, Dataset, CeremaAom2019]);
+  await t.context.migrator.run([CreateGeoTable, CreateComEvolutionTable, EurostatCountries2020, Dataset]);
   const response = await t.context.connection.query(`
       SELECT count(distinct country) FROM public.perimeters
     `);
-  t.is(response.rows[0].count, '282');
+  t.is(response.rows[0].count, '208');
 });
 
 test.serial('should cleanup', async (t) => {

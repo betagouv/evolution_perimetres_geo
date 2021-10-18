@@ -15,7 +15,7 @@ export class EurostatCountries2020 extends AbstractDataset {
     ['codeiso3', ['properties->>ISO3_CODE', 'varchar']],
     ['geom', ['geometry', 'geometry(MULTIPOLYGON,4326)']],
   ]);
-
+  readonly dropTable: boolean = false;
   fileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {
     filter: 'features',
@@ -47,7 +47,7 @@ export class EurostatCountries2020 extends AbstractDataset {
                   st_multi(st_geomfromgeojson(geometry)) as geom
                 FROM tmp
               `,
-              values: [JSON.stringify(results.value).replace(/'/g, "''")],
+              values: [JSON.stringify(results.value.map((r) => r.value))],
             };
             await connection.query(query);
           }
