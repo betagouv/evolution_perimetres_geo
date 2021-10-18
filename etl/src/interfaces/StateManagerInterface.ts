@@ -1,6 +1,16 @@
 import { StaticMigrable } from '.';
 
 export interface StateManagerInterface {
-  get(): Promise<Set<StaticMigrable>>;
-  set(key: StaticMigrable): Promise<void>;
+  get(state?: State): Set<StaticMigrable>;
+  set(key: StaticMigrable, state?: State): void;
+}
+
+export enum State {
+  Validated,
+  Created,
+  Downloaded,
+  Transformed,
+  Loaded,
+  Imported,
+  Done,
 }

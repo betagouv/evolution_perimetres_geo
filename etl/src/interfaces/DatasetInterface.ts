@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import { StateManagerInterface } from '.';
 import { FileProvider } from '../providers/FileProvider';
 
 export interface StaticMigrable {
@@ -14,7 +15,7 @@ export interface StaticAbstractDataset extends StaticMigrable {
 }
 
 export interface DatasetInterface {
-  validate(done: Set<StaticMigrable>): Promise<void>;
+  validate(state: StateManagerInterface): Promise<void>;
   before(): Promise<void>;
   download(): Promise<void>;
   transform(): Promise<void>;

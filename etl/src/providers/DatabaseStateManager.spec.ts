@@ -38,7 +38,9 @@ test.serial('should install', async (t) => {
 });
 
 test.serial('should set key', async (t) => {
-  await t.context.migrator.set(FakeMigrable);
+  const state = await t.context.migrator.toMemory();
+  state.set(FakeMigrable);
+  await t.context.migrator.fromMemory(state);
   const query = `SELECT key FROM ${t.context.migrator.table}`;
   t.log(query);
   const result = await t.context.connection.query(query);
@@ -46,7 +48,9 @@ test.serial('should set key', async (t) => {
 });
 
 test.serial('should do nothing if conflict', async (t) => {
-  await t.context.migrator.set(FakeMigrable);
+  const state = await t.context.migrator.toMemory();
+  state.set(FakeMigrable);
+  await t.context.migrator.fromMemory(state);
   const query = `SELECT key FROM ${t.context.migrator.table}`;
   t.log(query);
   const result = await t.context.connection.query(query);
@@ -54,6 +58,7 @@ test.serial('should do nothing if conflict', async (t) => {
 });
 
 test.serial('should get keys', async (t) => {
-  const result = await t.context.migrator.get();
+  const state = await t.context.migrator.toMemory();
+  const result = state.get();
   t.deepEqual(result, new Set([FakeMigrable]));
 });

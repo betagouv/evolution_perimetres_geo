@@ -20,6 +20,7 @@ import { config } from './config';
 import { CreateComEvolutionTable } from './datastructure/001_CreateComEvolutionTable';
 import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom2021';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
+import { MemoryStateManager } from './providers/MemoryStateManager';
 
 interface TestContext {
   connection: Pool;
@@ -33,7 +34,7 @@ test.before(async (t) => {
   t.context.migrator = prepare(config);
   await t.context.migrator.prepare();
   t.context.connection = t.context.migrator.pool;
-  for await (const migrable of t.context.migrator.migrations.values()) {
+  for await (const migrable of t.context.migrator.config.migrations) {
     await t.context.connection.query(`
         DROP TABLE IF EXISTS ${config.app.targetSchema}.${migrable.table}
       `);
@@ -48,25 +49,25 @@ test.after.always(async (t) => {
   }
 });
 test.serial('should create com_evolution table', async (t) => {
-  await t.context.migrator.process(CreateComEvolutionTable);
+  await t.context.migrator.process(CreateComEvolutionTable, new MemoryStateManager());
   const count = await t.context.connection.query(`SELECT count(*) FROM com_evolution`);
   t.is(count.rows[0].count, '0');
 });
 
 test.serial('should do migration InseeMvtcom2021', async (t) => {
-  await t.context.migrator.process(InseeMvtcom2021);
+  await t.context.migrator.process(InseeMvtcom2021, new MemoryStateManager());
   const count = await t.context.connection.query(`SELECT count(*) FROM com_evolution`);
   t.is(count.rows[0].count, '638');
 });
 
 test.serial('should create perimeters table', async (t) => {
-  await t.context.migrator.process(CreateGeoTable);
+  await t.context.migrator.process(CreateGeoTable, new MemoryStateManager());
   const count = await t.context.connection.query(`SELECT count(*) FROM perimeters`);
   t.is(count.rows[0].count, '0');
 });
 
 test.serial('should do migration IgnAe2019', async (t) => {
-  await t.context.migrator.process(IgnAe2019);
+  await t.context.migrator.process(IgnAe2019, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr asc limit 1`);
   t.is(first.rows[0].arr, '01001');
   t.is(first.rows[0].pop, 767);
@@ -78,7 +79,7 @@ test.serial('should do migration IgnAe2019', async (t) => {
 });
 
 test.serial('should do migration IgnAe2020', async (t) => {
-  await t.context.migrator.process(IgnAe2020);
+  await t.context.migrator.process(IgnAe2020, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr asc limit 1`);
   t.is(first.rows[0].arr, '01001');
   t.is(first.rows[0].pop, 776);
@@ -90,7 +91,7 @@ test.serial('should do migration IgnAe2020', async (t) => {
 });
 
 test.serial('should do migration IgnAe2021', async (t) => {
-  await t.context.migrator.process(IgnAe2021);
+  await t.context.migrator.process(IgnAe2021, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr asc limit 1`);
   t.is(first.rows[0].arr, '01001');
   t.is(first.rows[0].pop, 771);
@@ -102,19 +103,19 @@ test.serial('should do migration IgnAe2021', async (t) => {
 });
 
 test.serial.skip('should do migration EurostatCountries2020', async (t) => {
-  await t.context.migrator.process(EurostatCountries2020);
+  await t.context.migrator.process(EurostatCountries2020, new MemoryStateManager());
   const count = await t.context.connection.query(`SELECT count(*) FROM eurostat_countries_2020`);
   t.is(count.rows[0].count, '257');
 });
 
 test.serial('should do migration Inseecom2021', async (t) => {
-  await t.context.migrator.process(InseeCom2021);
+  await t.context.migrator.process(InseeCom2021, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where arr='75101' order by arr asc limit 1`);
   t.is(first.rows[0].com, '75056');
 });
 
 test.serial('should do migration InseePerim2019', async (t) => {
-  await t.context.migrator.process(InseePerim2019);
+  await t.context.migrator.process(InseePerim2019, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr asc limit 1`);
   t.is(first.rows[0].dep, '01');
   t.is(first.rows[0].epci, '200069193');
@@ -128,7 +129,7 @@ test.serial('should do migration InseePerim2019', async (t) => {
 });
 
 test.serial('should do migration InseePerim2020', async (t) => {
-  await t.context.migrator.process(InseePerim2020);
+  await t.context.migrator.process(InseePerim2020, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr asc limit 1`);
   t.is(first.rows[0].dep, '01');
   t.is(first.rows[0].epci, '200069193');
@@ -142,7 +143,7 @@ test.serial('should do migration InseePerim2020', async (t) => {
 });
 
 test.serial('should do migration InseePerim2021', async (t) => {
-  await t.context.migrator.process(InseePerim2021);
+  await t.context.migrator.process(InseePerim2021, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr asc limit 1`);
   t.is(first.rows[0].dep, '01');
   t.is(first.rows[0].epci, '200069193');
@@ -156,7 +157,7 @@ test.serial('should do migration InseePerim2021', async (t) => {
 });
 
 test.serial('should do migration InseeDep2021', async (t) => {
-  await t.context.migrator.process(InseeDep2021);
+  await t.context.migrator.process(InseeDep2021, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters order by arr asc limit 1`);
   t.is(first.rows[0].l_dep, 'Ain');
   const last = await t.context.connection.query(`SELECT * FROM perimeters order by arr desc limit 1`);
@@ -166,7 +167,7 @@ test.serial('should do migration InseeDep2021', async (t) => {
 });
 
 test.serial('should do migration InseeReg2021', async (t) => {
-  await t.context.migrator.process(InseeReg2021);
+  await t.context.migrator.process(InseeReg2021, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters order by arr asc limit 1`);
   t.is(first.rows[0].l_reg, 'Auvergne-Rhône-Alpes');
   const last = await t.context.connection.query(`SELECT * FROM perimeters order by arr desc limit 1`);
@@ -176,7 +177,7 @@ test.serial('should do migration InseeReg2021', async (t) => {
 });
 
 test.serial('should do migration CeremaAom2019', async (t) => {
-  await t.context.migrator.process(CeremaAom2019);
+  await t.context.migrator.process(CeremaAom2019, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr asc limit 1`);
   t.is(first.rows[0].aom, null);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr desc limit 1`);
@@ -186,7 +187,7 @@ test.serial('should do migration CeremaAom2019', async (t) => {
 });
 
 test.serial('should do migration CeremaAom2020', async (t) => {
-  await t.context.migrator.process(CeremaAom2020);
+  await t.context.migrator.process(CeremaAom2020, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr asc limit 1`);
   t.is(first.rows[0].aom, null);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr desc limit 1`);
@@ -196,7 +197,7 @@ test.serial('should do migration CeremaAom2020', async (t) => {
 });
 
 test.serial('should do migration CeremaAom2021', async (t) => {
-  await t.context.migrator.process(CeremaAom2021);
+  await t.context.migrator.process(CeremaAom2021, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr asc limit 1`);
   t.is(first.rows[0].aom, null);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr desc limit 1`);

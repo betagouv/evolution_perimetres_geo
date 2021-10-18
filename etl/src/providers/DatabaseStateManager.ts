@@ -1,7 +1,8 @@
 import { Pool } from 'pg';
-import { StateManagerInterface, AppConfigInterface, StaticMigrable } from '../interfaces';
+import { StateManagerInterface, AppConfigInterface, StaticMigrable, State } from '../interfaces';
+import { MemoryStateManager } from './MemoryStateManager';
 
-export class DatabaseStateManager implements StateManagerInterface {
+export class DatabaseStateManager {
   readonly table: string = 'dataset_migration';
   readonly migrations: Map<string, StaticMigrable>;
   readonly targetSchema: string;
@@ -24,7 +25,7 @@ export class DatabaseStateManager implements StateManagerInterface {
     `);
   }
 
-  async get(): Promise<Set<StaticMigrable>> {
+  async toMemory(): Promise<StateManagerInterface> {
     const result = await this.connection.query(`
       SELECT key FROM ${this.tableWithSchema} ORDER BY datetime ASC
     `);
@@ -38,17 +39,18 @@ export class DatabaseStateManager implements StateManagerInterface {
       setResult.add(migrable);
     }
 
-    return setResult;
+    return new MemoryStateManager(setResult);
   }
 
-  async set(key: StaticMigrable): Promise<void> {
+  async fromMemory(state: StateManagerInterface): Promise<void> {
+    const data = state.get(State.Done);
     const query = {
       text: `
         INSERT INTO ${this.tableWithSchema} (key)
-          VALUES ($1)
+        SELECT * FROM UNNEST ($1::varchar[])
         ON CONFLICT DO NOTHING
       `,
-      values: [key.uuid],
+      values: [[...data].map((d) => d.uuid)],
     };
     await this.connection.query(query);
   }

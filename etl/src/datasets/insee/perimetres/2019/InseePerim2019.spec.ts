@@ -1,6 +1,7 @@
 import anyTest, { TestInterface } from 'ava';
 import { access } from 'fs/promises';
 import { Pool } from 'pg';
+import { MemoryStateManager } from '../../../../providers/MemoryStateManager';
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { createPool, createFileProvider } from '../../../../helpers';
 import { InseePerim2019 as Dataset } from './InseePerim2019';
@@ -27,7 +28,7 @@ test.after.always(async (t) => {
 });
 
 test.serial('should validate', async (t) => {
-  await t.notThrowsAsync(() => t.context.dataset.validate(new Set()));
+  await t.notThrowsAsync(() => t.context.dataset.validate(new MemoryStateManager()));
 });
 
 test.serial('should prepare', async (t) => {

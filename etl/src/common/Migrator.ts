@@ -1,16 +1,13 @@
 import { Pool } from 'pg';
 import { FileProvider } from '../providers/FileProvider';
-import { StaticMigrable, AppConfigInterface, StateManagerInterface } from '../interfaces';
+import { StaticMigrable, AppConfigInterface, State, StateManagerInterface } from '../interfaces';
 import { DatabaseStateManager } from '../providers/DatabaseStateManager';
-import { MemoryStateManager } from 'src/providers/MemoryStateManager';
 
 export class Migrator {
   protected dbStateManager: DatabaseStateManager;
-  protected runStateManager: StateManagerInterface;
 
   constructor(readonly pool: Pool, readonly file: FileProvider, readonly config: AppConfigInterface) {
     this.dbStateManager = new DatabaseStateManager(this.pool, this.config);
-    this.runStateManager = new MemoryStateManager();
   }
 
   async prepare(): Promise<void> {
@@ -20,31 +17,36 @@ export class Migrator {
     await this.dbStateManager.install();
   }
 
-  async todo(): Promise<Set<StaticMigrable>> {
-    const done = await this.dbStateManager.get();
+  async todo(state: StateManagerInterface): Promise<Set<StaticMigrable>> {
+    const done = state.get(State.Done);
     return new Set([...this.config.migrations].filter((m) => !done.has(m)));
   }
 
-  async process(migrable: StaticMigrable): Promise<void> {
+  async process(migrable: StaticMigrable, state: StateManagerInterface): Promise<void> {
     try {
       console.info(`${migrable.uuid} : start processing`);
-      const state = await this.runStateManager.get();
       const migableInstance = new migrable(this.pool, this.file, this.config.targetSchema);
       console.debug(`${migrable.uuid} : validation`);
-      await migrableInstance.validate(state);
+      await migableInstance.validate(state);
+      state.set(migrable, State.Validated);
       console.debug(`${migrable.uuid} : before`);
-      await migrableInstance.before();
+      await migableInstance.before();
+      state.set(migrable, State.Created);
       console.debug(`${migrable.uuid} : download`);
-      await migrableInstance.download();
+      await migableInstance.download();
+      state.set(migrable, State.Downloaded);
       console.debug(`${migrable.uuid} : transform`);
-      await migrableInstance.transform();
+      await migableInstance.transform();
+      state.set(migrable, State.Transformed);
       console.debug(`${migrable.uuid} : load`);
-      await migrableInstance.load();
+      await migableInstance.load();
+      state.set(migrable, State.Loaded);
       console.debug(`${migrable.uuid} : import`);
-      await migrableInstance.import();
+      await migableInstance.import();
+      state.set(migrable, State.Imported);
       console.debug(`${migrable.uuid} : after`);
-      await migrableInstance.after();
-      await this.state.set(migrable.uuid);
+      await migableInstance.after();
+      state.set(migrable, State.Done);
       console.info(`${migrable.uuid} : done`);
     } catch (e) {
       console.error(`${migrable.uuid} : ${(e as Error).message}`);
@@ -53,10 +55,11 @@ export class Migrator {
   }
 
   async run(): Promise<void> {
-    const migrables = await this.todo();
+    const state = await this.dbStateManager.toMemory();
+    const migrables = await this.todo(state);
     for await (const migrable of migrables) {
-      await this.process(migrable);
-      await this.dbStateManager.set(migrable);
+      await this.process(migrable, state);
     }
+    await this.dbStateManager.fromMemory(state);
   }
 }

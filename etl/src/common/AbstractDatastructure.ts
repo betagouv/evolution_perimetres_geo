@@ -1,4 +1,4 @@
-import { DatasetInterface, StaticMigrable, StaticAbstractDataset } from '../interfaces';
+import { DatasetInterface, StaticMigrable, StaticAbstractDataset, StateManagerInterface, State } from '../interfaces';
 import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
 import { FileProvider } from 'src/providers/FileProvider';
@@ -17,7 +17,8 @@ export abstract class AbstractDatastructure implements DatasetInterface {
 
   constructor(protected connection: Pool, protected file: FileProvider, protected targetSchema: string = 'public') {}
 
-  async validate(done: Set<StaticMigrable>): Promise<void> {
+  async validate(state: StateManagerInterface): Promise<void> {
+    const done = state.get(State.Done);
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
     if (difference.size > 0) {
       throw new ValidationError(
