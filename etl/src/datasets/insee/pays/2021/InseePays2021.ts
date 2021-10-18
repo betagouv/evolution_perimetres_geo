@@ -1,5 +1,13 @@
+import { EurostatCountries2020 } from '../../../eurostat/countries/2020/EurostatCountries2020';
 import { AbstractDataset } from '../../../../common/AbstractDataset';
-import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
+import {
+  ArchiveFileTypeEnum,
+  StaticMigrable,
+  FileTypeEnum,
+  State,
+  StateManagerInterface,
+} from '../../../../interfaces';
+import { ValidationError } from '../../../../errors';
 
 export class InseePays2021 extends AbstractDataset {
   static producer = 'insee';
@@ -52,4 +60,13 @@ export class InseePays2021 extends AbstractDataset {
     LEFT JOIN  eurostat_countries_2020 t
     ON a.codeiso3 = t.codeiso3;
   `;
+
+  async validate(state: StateManagerInterface) {
+    if (!state.get(State.Imported).has(EurostatCountries2020)) {
+      throw new ValidationError(
+        this,
+        `Cant process ${(this.constructor as StaticMigrable).uuid}: missing ${EurostatCountries2020.uuid} data`,
+      );
+    }
+  }
 }
