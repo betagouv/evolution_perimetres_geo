@@ -40,9 +40,9 @@ export class InseePays2021 extends AbstractDataset {
       l_country
     ) SELECT
       2021 as year,
-      ST_PointOnSurface(st_transform(t.geom,2154)) as centroid,
-      st_transform(t.geom,2154) as geom,
-      st_transform(t.geom,2154) as geom_simple,
+      ST_PointOnSurface(t.geom) as centroid,
+      geom,
+      geom as geom_simple,
       st_area(geom) as surface,
       a.cog,
       a.libcog,

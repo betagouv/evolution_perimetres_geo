@@ -29,7 +29,7 @@ export abstract class AbstractDatastructure implements DatasetInterface {
 
   async before(): Promise<void> {
     try {
-      console.debug(this.sql)
+      console.debug(this.sql);
       await this.connection.query(this.sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
