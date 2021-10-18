@@ -3,7 +3,7 @@ import { AbstractDatastructure } from '../common/AbstractDatastructure';
 export class CreateGeoTable extends AbstractDatastructure {
   static uuid = 'create_geo_table';
   static table = 'perimeters';
-  readonly indexWithSchema = this.tableWithSchema.replace('.', '_')
+  readonly indexWithSchema = this.tableWithSchema.replace('.', '_');
   readonly sql = `
       CREATE EXTENSION IF NOT EXISTS postgis;
       CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (

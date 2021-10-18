@@ -121,7 +121,9 @@ test.serial('should do migration InseePerim2019', async (t) => {
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2019 order by arr desc limit 1`);
   t.is(last.rows[0].dep, '976');
   t.is(last.rows[0].epci, '200059871');
-  const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2019`);
+  const count = await t.context.connection.query(
+    `SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2019`,
+  );
   t.is(count.rows[0].count, '35015');
 });
 
@@ -133,7 +135,9 @@ test.serial('should do migration InseePerim2020', async (t) => {
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr desc limit 1`);
   t.is(last.rows[0].dep, '976');
   t.is(last.rows[0].epci, '200059871');
-  const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2020`);
+  const count = await t.context.connection.query(
+    `SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2020`,
+  );
   t.is(count.rows[0].count, '35013');
 });
 
@@ -145,16 +149,18 @@ test.serial('should do migration InseePerim2021', async (t) => {
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr desc limit 1`);
   t.is(last.rows[0].dep, '976');
   t.is(last.rows[0].epci, '200059871');
-  const count = await t.context.connection.query(`SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2021`);
+  const count = await t.context.connection.query(
+    `SELECT count(*) FROM perimeters where l_arr IS NOT NULL AND year = 2021`,
+  );
   t.is(count.rows[0].count, '35010');
 });
 
 test.serial('should do migration InseeDep2021', async (t) => {
   await t.context.migrator.process(InseeDep2021);
   const first = await t.context.connection.query(`SELECT * FROM perimeters order by arr asc limit 1`);
-  t.is(first.rows[0].l_dep, "Ain");
+  t.is(first.rows[0].l_dep, 'Ain');
   const last = await t.context.connection.query(`SELECT * FROM perimeters order by arr desc limit 1`);
-  t.is(last.rows[0].l_dep, "Mayotte");
+  t.is(last.rows[0].l_dep, 'Mayotte');
   const count = await t.context.connection.query(`SELECT count(distinct l_dep) FROM perimeters`);
   t.is(count.rows[0].count, '101');
 });
@@ -162,9 +168,9 @@ test.serial('should do migration InseeDep2021', async (t) => {
 test.serial('should do migration InseeReg2021', async (t) => {
   await t.context.migrator.process(InseeReg2021);
   const first = await t.context.connection.query(`SELECT * FROM perimeters order by arr asc limit 1`);
-  t.is(first.rows[0].l_reg, "Auvergne-Rhône-Alpes");
+  t.is(first.rows[0].l_reg, 'Auvergne-Rhône-Alpes');
   const last = await t.context.connection.query(`SELECT * FROM perimeters order by arr desc limit 1`);
-  t.is(last.rows[0].l_reg, "Mayotte");
+  t.is(last.rows[0].l_reg, 'Mayotte');
   const count = await t.context.connection.query(`SELECT count(distinct l_reg) FROM perimeters`);
   t.is(count.rows[0].count, '18');
 });
@@ -181,7 +187,7 @@ test.serial('should do migration CeremaAom2019', async (t) => {
 
 test.serial('should do migration CeremaAom2020', async (t) => {
   await t.context.migrator.process(CeremaAom2020);
-   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr asc limit 1`);
+  const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr asc limit 1`);
   t.is(first.rows[0].aom, null);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2020 order by arr desc limit 1`);
   t.is(last.rows[0].aom, null);
@@ -191,7 +197,7 @@ test.serial('should do migration CeremaAom2020', async (t) => {
 
 test.serial('should do migration CeremaAom2021', async (t) => {
   await t.context.migrator.process(CeremaAom2021);
-   const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr asc limit 1`);
+  const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr asc limit 1`);
   t.is(first.rows[0].aom, null);
   const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr desc limit 1`);
   t.is(last.rows[0].aom, null);
