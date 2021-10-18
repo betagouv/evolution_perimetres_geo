@@ -62,8 +62,5 @@ export class EurostatCountries2020 extends AbstractDataset {
     }
   }
 
-  // TODO index
-  async import(): Promise<void> {
-    // TODO
-  }
+  async import(): Promise<void> {}
 }

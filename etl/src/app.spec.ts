@@ -42,7 +42,7 @@ test.before(async (t) => {
 });
 
 test.after.always(async (t) => {
-  for await (const migrable of t.context.migrator.migrations.values()) {
+  for await (const migrable of t.context.migrator.config.migrations.values()) {
     await t.context.connection.query(`
       DROP TABLE IF EXISTS ${config.app.targetSchema}.${migrable.table}
     `);

@@ -1,13 +1,6 @@
 import { EurostatCountries2020 } from '../../../eurostat/countries/2020/EurostatCountries2020';
 import { AbstractDataset } from '../../../../common/AbstractDataset';
-import {
-  ArchiveFileTypeEnum,
-  StaticMigrable,
-  FileTypeEnum,
-  State,
-  StateManagerInterface,
-} from '../../../../interfaces';
-import { ValidationError } from '../../../../errors';
+import { ArchiveFileTypeEnum, FileTypeEnum, StateManagerInterface } from '../../../../interfaces';
 
 export class InseePays2021 extends AbstractDataset {
   static producer = 'insee';
@@ -49,24 +42,19 @@ export class InseePays2021 extends AbstractDataset {
     ) SELECT
       2021 as year,
       ST_PointOnSurface(t.geom) as centroid,
-      geom,
-      geom as geom_simple,
-      st_area(geom) as surface,
+      t.geom,
+      t.geom as geom_simple,
+      st_area(t.geom) as surface,
       a.cog,
       a.libcog,
       a.cog,
       a.libcog
-    FROM ${this.tableWithSchema} a
-    LEFT JOIN  eurostat_countries_2020 t
+    FROM ${this.tableWithSchema} AS a
+    JOIN eurostat_countries_2020 AS t
     ON a.codeiso3 = t.codeiso3;
   `;
 
   async validate(state: StateManagerInterface) {
-    if (!state.get(State.Imported).has(EurostatCountries2020)) {
-      throw new ValidationError(
-        this,
-        `Cant process ${(this.constructor as StaticMigrable).uuid}: missing ${EurostatCountries2020.uuid} data`,
-      );
-    }
+    state.plan([EurostatCountries2020]);
   }
 }

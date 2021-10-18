@@ -1,4 +1,4 @@
-import { StateManagerInterface, StaticMigrable, State } from '../interfaces';
+import { StateManagerInterface, StaticMigrable, State, flow } from '../interfaces';
 
 export class MemoryStateManager implements StateManagerInterface {
   protected state: Map<StaticMigrable, State> = new Map();
@@ -6,6 +6,26 @@ export class MemoryStateManager implements StateManagerInterface {
   constructor(done: Set<StaticMigrable> = new Set()) {
     for (const migrable of done) {
       this.state.set(migrable, State.Done);
+    }
+  }
+
+  plan(migrables: StaticMigrable[]): void {
+    for (const mig of migrables) {
+      this.state.set(mig, State.Planned);
+    }
+  }
+
+  *todo(): Iterator<[StaticMigrable, State]> {
+    const fl = [...flow];
+    fl.pop();
+    for (const state of [...fl]) {
+      let data: Set<StaticMigrable>;
+      do {
+        data = this.get(state);
+        if (data.size > 0) {
+          yield [[...data][0], state];
+        }
+      } while (data.size > 0);
     }
   }
 
