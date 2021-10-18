@@ -7,7 +7,7 @@ import {
   StaticMigrable,
 } from '../interfaces';
 import { Pool } from 'pg';
-import { StreamDataOptions } from '../interfaces/StreamDataOptions';
+import { StreamDataOptions, StateManagerInterface, State } from '../interfaces';
 import { DownloadError, SqlError, ValidationError } from '../errors';
 import { FileProvider } from '../providers/FileProvider';
 
@@ -43,7 +43,8 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   constructor(protected connection: Pool, protected file: FileProvider, protected targetSchema: string = 'public') {}
 
-  async validate(done: Set<StaticMigrable>): Promise<void> {
+  async validate(state: StateManagerInterface): Promise<void> {
+    const done = state.get(State.Done);
     const difference = new Set([...this.required].filter((x) => !done.has(x)));
     if (difference.size > 0) {
       throw new ValidationError(
