@@ -1,6 +1,6 @@
 module.exports = {
     extensions: ['ts'],
     require: ['ts-node/register'],
-    timeout: '1m',
-    files: ['src/**/*.spec.ts'],
+    timeout: '10m',
+    files: ['src/**/*.spec.ts','!src/**/*.integration.spec.ts'],
 };
