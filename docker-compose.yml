@@ -1,4 +1,8 @@
 version: '3.5'
+volumes:
+  pgdata:
+    name: pgdata
+
 services:
   postgres:
     build:
@@ -15,8 +19,7 @@ services:
       POSTGRES_DB: 'local'
       PGDATA: '/var/lib/postgresql/data/pgdata'
     volumes:
-      - ./db/postgres:/var/lib/postgresql/data/pgdata
-      - ./etl/assets:/etl/assets
+      - pgdata:/var/lib/postgresql/data/pgdata
 
   etl:
     build:
@@ -29,6 +32,8 @@ services:
       - postgres
     volumes:
       - ./etl:/etl
+    environment:
+      POSTGRES_HOST: postgres
 
 networks:
   back:

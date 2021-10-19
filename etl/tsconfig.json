@@ -6,16 +6,14 @@
     "strict": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "rootDir": ".",
+    "rootDir": "src",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "sourceMap": true,
     "lib": ["esnext"],
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }, 
+    "paths": {}, 
     "noImplicitAny": false,
   }
 }
