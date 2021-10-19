@@ -34,9 +34,10 @@ export class DatabaseStateManager {
     for (const { key } of result.rows) {
       const migrable = this.migrations.get(key);
       if (!migrable) {
-        throw new Error(`Migration ${key} is not found`);
+        console.error(`Migration ${key} is not found`);
+      } else {
+        setResult.add(migrable);
       }
-      setResult.add(migrable);
     }
 
     return new MemoryStateManager(setResult);
