@@ -27,15 +27,15 @@ export class InseeMvtcom2021 extends AbstractDataset {
   readonly importSql = `
     INSERT INTO ${this.targetTable} (
       year,
+      mod,
       old_com,
       new_com,
-      mod,
       l_mod
     ) SELECT
       date_part('year',date_eff::date)::int as year,
+      mod,
       com_av,
       com_ap,
-      mod,
       CASE WHEN mod = 20 THEN 'création'
       WHEN mod = 21 THEN 'rétablissement'
       WHEN mod = 30 THEN 'suppression'

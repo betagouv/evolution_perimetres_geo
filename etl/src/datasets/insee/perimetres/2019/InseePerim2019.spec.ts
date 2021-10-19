@@ -52,10 +52,20 @@ test.serial('should transform', async (t) => {
 
 test.serial('should load', async (t) => {
   await t.context.dataset.load();
-  const response = await t.context.connection.query(`
-      SELECT count(*) FROM ${t.context.dataset.tableWithSchema}
-    `);
-  t.is(response.rows[0].count, '34970');
+  const first = await t.context.connection.query(`
+    SELECT * FROM ${t.context.dataset.tableWithSchema} order by codgeo asc limit 1
+  `);
+  t.is(first.rows[0].dep, '01');
+  t.is(first.rows[0].epci, '200069193');
+  const last = await t.context.connection.query(`
+    SELECT * FROM ${t.context.dataset.tableWithSchema} order by codgeo desc limit 1
+  `);
+  t.is(last.rows[0].dep, '976');
+  t.is(last.rows[0].epci, '200059871');
+  const count = await t.context.connection.query(`
+    SELECT count(*) FROM ${t.context.dataset.tableWithSchema}
+  `);
+  t.is(count.rows[0].count, '34970');
 });
 
 test.serial('should cleanup', async (t) => {
