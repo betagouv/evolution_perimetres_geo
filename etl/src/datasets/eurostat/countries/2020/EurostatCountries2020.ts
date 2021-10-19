@@ -15,7 +15,7 @@ export class EurostatCountries2020 extends AbstractDataset {
     ['codeiso3', ['properties->>ISO3_CODE', 'varchar']],
     ['geom', ['geometry', 'geometry(MULTIPOLYGON,4326)']],
   ]);
-  readonly dropTable: boolean = false;
+
   fileType: FileTypeEnum = FileTypeEnum.Geojson;
   sheetOptions = {
     filter: 'features',

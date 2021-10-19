@@ -26,10 +26,8 @@ export abstract class AbstractDataset implements DatasetInterface {
   readonly beforeSqlPath: string | undefined;
   readonly extraBeforeSql: string | undefined;
   readonly afterSqlPath: string | undefined;
-  readonly extraAfterSql: string | undefined;
   readonly importSql: string = '';
   readonly targetTable: string = 'perimeters';
-  readonly dropTable: boolean = true;
 
   required: Set<StaticMigrable> = new Set();
   sheetOptions: StreamDataOptions;
@@ -147,8 +145,7 @@ export abstract class AbstractDataset implements DatasetInterface {
 
   async after(): Promise<void> {
     try {
-      const generatedSql = `${this.dropTable ? `DROP TABLE IF EXISTS ${this.tableWithSchema};` : ''}
-      ${this.extraAfterSql || ''}`;
+      const generatedSql = `DROP TABLE IF EXISTS ${this.tableWithSchema}`;
       const sql = this.afterSqlPath ? await loadFileAsString(this.afterSqlPath) : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
