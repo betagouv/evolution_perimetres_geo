@@ -115,7 +115,6 @@ test.serial('should do migration InseePays2021', async (t) => {
   t.is(count.rows[0].count, '208');
 });
 
-
 test.serial('should do migration Inseecom2021', async (t) => {
   await t.context.migrator.process(InseeCom2021, new MemoryStateManager());
   const first = await t.context.connection.query(`SELECT * FROM perimeters where arr='75101' order by arr asc limit 1`);
