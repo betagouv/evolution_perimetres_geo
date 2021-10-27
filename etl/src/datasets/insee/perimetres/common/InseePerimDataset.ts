@@ -14,6 +14,7 @@ export abstract class InseePerimDataset extends AbstractDataset {
   ]);
   readonly extraBeforeSql = `ALTER TABLE ${this.tableWithSchema} 
     ALTER COLUMN codgeo SET NOT NULL,
+    DROP CONSTRAINT IF EXISTS ${this.table}_codgeo_unique,
     ADD CONSTRAINT ${this.table}_codgeo_unique UNIQUE (codgeo);
   `;
   readonly extraImportSql: string = '';
