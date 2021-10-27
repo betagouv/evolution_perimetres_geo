@@ -1,5 +1,4 @@
 import { IgnDataset, TransformationParamsInterface } from '../../common/IgnDataset';
-import path from 'path';
 import { StaticAbstractDataset } from '../../../../interfaces';
 
 export class IgnAe2021 extends IgnDataset {
@@ -14,8 +13,22 @@ export class IgnAe2021 extends IgnDataset {
     ['pop', ['POPULATION', 'integer']],
   ]);
 
-  readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
-  readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
+  readonly beforeSql: string = `
+    CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (
+      id SERIAL PRIMARY KEY,
+      arr varchar(5),
+      com varchar(5) NOT NULL,
+      pop integer,
+      geom geometry(MULTIPOLYGON,4326),
+      centroid GEOMETRY(POINT, 4326),
+      geom_simple GEOMETRY(MULTIPOLYGON, 4326)
+    );
+    CREATE INDEX ign_ae_2021_id_index ON ${this.tableWithSchema} USING btree (id);
+    CREATE INDEX ign_ae_2021_geom_index ON ${this.tableWithSchema} USING gist (geom);
+    CREATE INDEX ign_ae_2021_centroid_index ON ${this.tableWithSchema} USING gist (centroid);
+    CREATE INDEX ign_ae_2021_geom_simple_index ON ${this.tableWithSchema} USING gist (geom_simple);
+  `;
+
   readonly url: string =
     // eslint-disable-next-line max-len
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG-CARTO_3-0__SHP__FRA_WM_2021-05-19.7z';

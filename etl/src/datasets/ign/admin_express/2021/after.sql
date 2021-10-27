@@ -1,1 +1,0 @@
-Drop TABLE IF EXISTS ign_ae_2021;
