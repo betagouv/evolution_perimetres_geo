@@ -1,0 +1,9 @@
+# Dependency directories
+node_modules
+src
+# Environment variables
+assets
+.env
+yarn-error.log
+.nyc_output
+package-lock.json
