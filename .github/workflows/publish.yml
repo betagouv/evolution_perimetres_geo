@@ -2,9 +2,15 @@ name: Publish
 on:
   release:
     types: [created]
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: node:14.18-bullseye
     steps:
       - uses: actions/checkout@v2
       - name: Cache Node.js modules
@@ -16,11 +22,6 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
-       # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-          registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         run: apt-get update && apt-get install -y p7zip-full && yarn --frozen-lockfile
         working-directory: etl
