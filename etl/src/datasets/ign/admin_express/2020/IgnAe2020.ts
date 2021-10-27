@@ -16,10 +16,10 @@ export class IgnAe2020 extends IgnDataset {
       centroid GEOMETRY(POINT, 4326),
       geom_simple GEOMETRY(MULTIPOLYGON, 4326)
     );
-    CREATE INDEX IF NOT EXITS ign_ae_2020_id_index ON ${this.tableWithSchema} USING btree (id);
-    CREATE INDEX IF NOT EXITS ign_ae_2020_geom_index ON ${this.tableWithSchema} USING gist (geom);
-    CREATE INDEX IF NOT EXITS ign_ae_2020_centroid_index ON ${this.tableWithSchema} USING gist (centroid);
-    CREATE INDEX IF NOT EXITS ign_ae_2020_geom_simple_index ON ${this.tableWithSchema} USING gist (geom_simple);
+    CREATE INDEX IF NOT EXISTS ign_ae_2020_id_index ON ${this.tableWithSchema} USING btree (id);
+    CREATE INDEX IF NOT EXISTS ign_ae_2020_geom_index ON ${this.tableWithSchema} USING gist (geom);
+    CREATE INDEX IF NOT EXISTS ign_ae_2020_centroid_index ON ${this.tableWithSchema} USING gist (centroid);
+    CREATE INDEX IF NOT EXISTS ign_ae_2020_geom_simple_index ON ${this.tableWithSchema} USING gist (geom_simple);
   `;
 
   readonly url: string =
