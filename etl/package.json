@@ -4,7 +4,7 @@
   "author": "Beta Gouv <contact@covoiturage.beta.gouv.fr>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/betagouv/ilos.git",
+    "url": "https://github.com/betagouv/evolution_perimetres_geo.git",
     "directory": "etl"
   },
   "publishConfig": {
