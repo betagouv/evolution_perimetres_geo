@@ -23,8 +23,10 @@ export abstract class AbstractDataset implements DatasetInterface {
   abstract readonly rows: Map<string, [string, string]>;
 
   readonly tableIndex: string | undefined;
+  readonly beforeSql: string | undefined;
   readonly beforeSqlPath: string | undefined;
   readonly extraBeforeSql: string | undefined;
+  readonly afterSql: string | undefined;
   readonly afterSqlPath: string | undefined;
   readonly importSql: string = '';
   readonly targetTable: string = 'perimeters';
@@ -70,7 +72,11 @@ export abstract class AbstractDataset implements DatasetInterface {
         }
         ${this.extraBeforeSql || ''}
       `;
-      const sql = this.beforeSqlPath ? await loadFileAsString(this.beforeSqlPath) : generatedSql;
+      const sql = this.beforeSql
+        ? this.beforeSql
+        : this.beforeSqlPath
+        ? await loadFileAsString(this.beforeSqlPath)
+        : generatedSql;
       console.debug(sql);
       await this.connection.query(sql);
     } catch (e) {
@@ -146,7 +152,11 @@ export abstract class AbstractDataset implements DatasetInterface {
   async after(): Promise<void> {
     try {
       const generatedSql = `DROP TABLE IF EXISTS ${this.tableWithSchema}`;
-      const sql = this.afterSqlPath ? await loadFileAsString(this.afterSqlPath) : generatedSql;
+      const sql = this.afterSql
+        ? this.afterSql
+        : this.afterSqlPath
+        ? await loadFileAsString(this.afterSqlPath)
+        : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);

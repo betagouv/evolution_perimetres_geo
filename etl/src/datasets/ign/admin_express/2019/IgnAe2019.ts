@@ -1,5 +1,4 @@
 import { IgnDataset, TransformationParamsInterface } from '../../common/IgnDataset';
-import path from 'path';
 import { StaticAbstractDataset } from '../../../../interfaces';
 
 export class IgnAe2019 extends IgnDataset {
@@ -8,8 +7,21 @@ export class IgnAe2019 extends IgnDataset {
   static year = 2019;
   static table = 'ign_ae_2019';
 
-  readonly beforeSqlPath: string = path.join(__dirname, 'before.sql');
-  readonly afterSqlPath: string = path.join(__dirname, 'after.sql');
+  readonly beforeSql: string = `
+    CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (
+      id SERIAL PRIMARY KEY,
+      com varchar(5) NOT NULL,
+      pop integer,
+      geom geometry(MULTIPOLYGON,4326),
+      centroid GEOMETRY(POINT, 4326),
+      geom_simple GEOMETRY(MULTIPOLYGON, 4326)
+    );
+    CREATE INDEX ign_ae_2019_id_index ON ${this.tableWithSchema} USING btree (id);
+    CREATE INDEX ign_ae_2019_geom_index ON ${this.tableWithSchema} USING gist (geom);
+    CREATE INDEX ign_ae_2019_centroid_index ON ${this.tableWithSchema} USING gist (centroid);
+    CREATE INDEX ign_ae_2019_geom_simple_index ON ${this.tableWithSchema} USING gist (geom_simple);
+  `;
+
   readonly url: string =
     // eslint-disable-next-line max-len
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG_2-0__SHP__FRA_WGS84G_2019-09-24.7z';

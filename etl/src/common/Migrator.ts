@@ -20,7 +20,11 @@ export class Migrator {
 
   async prepare(): Promise<void> {
     console.info(`Connecting to database`);
-    await this.pool.connect();
+
+    const client = await this.pool.connect();
+    await client.query(`CREATE SCHEMA IF NOT EXISTS ${this.config.targetSchema}`);
+    client.release();
+
     console.info(`Connected!`);
     await this.dbStateManager.install();
   }
