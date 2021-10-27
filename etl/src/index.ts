@@ -1,5 +1,7 @@
-import { prepare, run } from './app';
-import { config } from './config';
-
-const migrator = prepare(config);
-run(migrator);
+export * from './interfaces';
+export * from './app';
+export * from './common';
+export { config as defaultConfig } from './config';
+export * as helpers from './helpers';
+export * as providers from './providers';
+export * as datasets from './datasets';

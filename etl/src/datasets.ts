@@ -17,6 +17,26 @@ import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom
 import { StaticMigrable } from './interfaces';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
 
+export {
+  CreateGeoTable,
+  CreateComEvolutionTable,
+  IgnAe2019,
+  IgnAe2020,
+  IgnAe2021,
+  EurostatCountries2020,
+  InseeCom2021,
+  InseePerim2019,
+  InseePerim2020,
+  InseePerim2021,
+  InseeDep2021,
+  InseeReg2021,
+  InseePays2021,
+  CeremaAom2019,
+  CeremaAom2020,
+  CeremaAom2021,
+  InseeMvtcom2021,
+};
+
 export const datasets: Set<StaticMigrable> = new Set([
   CreateGeoTable,
   CreateComEvolutionTable,

@@ -1,17 +1,31 @@
 {
-  "name": "etl_perimetres_geo",
-  "version": "1.0.0",
+  "name": "@betagouvpdc/perimeters",
   "description": "Programme d'etl pour importer les données necessaires pour suivre l'évolution des pèrimètres géographique français depuis 2019",
   "author": "Beta Gouv <contact@covoiturage.beta.gouv.fr>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/betagouv/evolution_perimetres_geo.git",
+    "directory": "etl"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "contributors": [
     "Ludovic Delhomme <ludovic.delhomme@beta.gouv.fr>",
     "Nicolas Mérigot <nicolas.merigot@beta.gouv.fr>"
   ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": "dist/cli.js",
+  "engines": {
+    "node": ">=14"
+  },
   "license": "Apache-2.0",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint src --ext .ts",
     "test": "ava --config ava.cjs",
     "coverage": "nyc --nycrc-path ./nyc.cjs --reporter=text ava --config ava.cjs"
   },

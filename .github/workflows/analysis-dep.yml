@@ -19,6 +19,7 @@ jobs:
           node-version: '14.x'
       - name: Install dependencies
         run: yarn --frozen-lockfile
+        working-directory: etl
       - name: 'Audit API dependencies'
         run: yarn audit --level moderate --groups dependencies && exit 0 || $([[ $? -ge 8 ]] && exit 1 || exit 0)
         working-directory: etl
