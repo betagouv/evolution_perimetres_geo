@@ -40,7 +40,7 @@ export abstract class AbstractDataset implements DatasetInterface {
   }
 
   get targetTableWithSchema(): string {
-    return `${this.targetSchema}.perimeters`;
+    return `${this.targetSchema}.${this.targetTable}`;
   }
 
   get tableWithSchema(): string {
