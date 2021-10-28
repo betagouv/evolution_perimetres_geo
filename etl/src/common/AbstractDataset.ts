@@ -39,6 +39,10 @@ export abstract class AbstractDataset implements DatasetInterface {
     return (this.constructor as StaticAbstractDataset).table;
   }
 
+  get targetTableWithSchema(): string {
+    return `${this.targetSchema}.perimeters`;
+  }
+
   get tableWithSchema(): string {
     return `${this.targetSchema}.${this.table}`;
   }

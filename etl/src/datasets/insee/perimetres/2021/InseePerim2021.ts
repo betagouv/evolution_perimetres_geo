@@ -17,7 +17,7 @@ export class InseePerim2021 extends InseePerimDataset {
   };
 
   readonly importSql = `
-    UPDATE ${this.targetTable} SET
+    UPDATE ${this.targetTableWithSchema} SET
       l_arr = t.libgeo,
       com = t.codgeo,
       l_com = t.libgeo,
@@ -30,7 +30,7 @@ export class InseePerim2021 extends InseePerimDataset {
   `;
 
   readonly extraImportSql = `
-    UPDATE ${this.targetTable} SET
+    UPDATE ${this.targetTableWithSchema} SET
       l_com = t.libgeo,
       epci = t.epci,
       l_epci = t.libepci,
