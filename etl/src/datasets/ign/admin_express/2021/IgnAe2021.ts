@@ -55,7 +55,7 @@ export class IgnAe2021 extends IgnDataset {
   ];
 
   readonly importSql = `
-    INSERT INTO ${this.targetTable} (
+    INSERT INTO ${this.targetTableWithSchema} (
       year,
       centroid,
       geom,

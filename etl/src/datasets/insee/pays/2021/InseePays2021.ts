@@ -29,7 +29,7 @@ export class InseePays2021 extends AbstractDataset {
   sheetOptions = {};
 
   readonly importSql = `
-    INSERT INTO ${this.targetTable} (
+    INSERT INTO ${this.targetTableWithSchema} (
       year,
       centroid,
       geom,
