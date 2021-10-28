@@ -112,8 +112,15 @@ export class Migrator {
       }
       if (value) {
         const [migrableCtor, migrableState] = value;
-        const migrable = this.getInstance(migrableCtor);
-        await this.do(migrable, migrableState, state);
+        try {
+          const migrable = this.getInstance(migrableCtor);
+          await this.do(migrable, migrableState, state);
+        } catch (e) {
+          console.error(`Error during processing ${migrableCtor.uuid} - ${migrableState} : ${(e as Error).message}`);
+          state.set(migrableCtor, State.Failed);
+          const migrablesToUnplan = state.get(migrableState);
+          [...migrablesToUnplan].map((mc) => state.set(mc, State.Unplanned));
+        }
       }
     } while (!done);
     await this.dbStateManager.fromMemory(state);
