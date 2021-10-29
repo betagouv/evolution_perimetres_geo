@@ -9,16 +9,16 @@ export interface StateManagerInterface {
 }
 
 export enum State {
-  Planned,
-  Validated,
-  Created,
-  Downloaded,
-  Transformed,
-  Loaded,
-  Imported,
-  Done,
-  Failed,
-  Unplanned,
+  Planned = 'planned',
+  Validated = 'validated',
+  Created = 'created',
+  Downloaded = 'downloaded',
+  Transformed = 'transformed',
+  Loaded = 'loaded',
+  Imported = 'imported',
+  Done = 'done',
+  Failed = 'failed',
+  Unplanned = 'unplanned',
 }
 
 export const flow = [
