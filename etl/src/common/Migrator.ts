@@ -10,9 +10,9 @@ import {
 } from '../interfaces';
 import { DatabaseStateManager } from '../providers/DatabaseStateManager';
 import { createStateManager } from '../helpers';
+import { EventEmitter } from 'stream';
 
-export class Migrator {
-  protected dbStateManager: DatabaseStateManager;
+export class Migrator extends EventEmitter {
   protected migrableInstances: Map<StaticMigrable, DatasetInterface> = new Map();
 
   constructor(
@@ -21,6 +21,7 @@ export class Migrator {
     readonly config: AppConfigInterface,
     readonly dbStateManager: DatabaseStateManager = createStateManager(pool, config),
   ) {
+    super();
   }
 
   async prepare(): Promise<void> {
@@ -54,47 +55,54 @@ export class Migrator {
 
   async do(migrable: DatasetInterface, migrableState: State, stateManager: StateManagerInterface): Promise<void> {
     const migrableCtor = migrable.constructor as StaticMigrable;
-    switch (migrableState) {
-      case State.Planned:
-        console.info(`${migrableCtor.uuid} : start processing`);
-        await migrable.validate(stateManager);
-        stateManager.set(migrableCtor, State.Validated);
-        break;
-      case State.Validated:
-        console.debug(`${migrableCtor.uuid} : before`);
-        await migrable.before();
-        stateManager.set(migrableCtor, State.Created);
-        break;
-      case State.Created:
-        console.debug(`${migrableCtor.uuid} : download`);
-        await migrable.download();
-        stateManager.set(migrableCtor, State.Downloaded);
-        break;
-      case State.Downloaded:
-        console.debug(`${migrableCtor.uuid} : transform`);
-        await migrable.transform();
-        stateManager.set(migrableCtor, State.Transformed);
-        break;
-      case State.Transformed:
-        console.debug(`${migrableCtor.uuid} : load`);
-        await migrable.load();
-        stateManager.set(migrableCtor, State.Loaded);
-        break;
-      case State.Loaded:
-        console.debug(`${migrableCtor.uuid} : import`);
-        await migrable.import();
-        stateManager.set(migrableCtor, State.Imported);
-        break;
-      case State.Imported:
-        console.debug(`${migrableCtor.uuid} : after`);
-        await migrable.after();
-        stateManager.set(migrableCtor, State.Done);
-        break;
-      case State.Done:
-        console.info(`${migrableCtor.uuid} : done`);
-        break;
-      default:
-        throw new Error();
+    this.emit('start', { state: migrableState, uuid: migrableCtor.uuid });
+    try {
+      switch (migrableState) {
+        case State.Planned:
+          console.debug(`${migrableCtor.uuid} : start processing`);
+          await migrable.validate(stateManager);
+          stateManager.set(migrableCtor, State.Validated);
+          break;
+        case State.Validated:
+          console.debug(`${migrableCtor.uuid} : before`);
+          await migrable.before();
+          stateManager.set(migrableCtor, State.Created);
+          break;
+        case State.Created:
+          console.debug(`${migrableCtor.uuid} : download`);
+          await migrable.download();
+          stateManager.set(migrableCtor, State.Downloaded);
+          break;
+        case State.Downloaded:
+          console.debug(`${migrableCtor.uuid} : transform`);
+          await migrable.transform();
+          stateManager.set(migrableCtor, State.Transformed);
+          break;
+        case State.Transformed:
+          console.debug(`${migrableCtor.uuid} : load`);
+          await migrable.load();
+          stateManager.set(migrableCtor, State.Loaded);
+          break;
+        case State.Loaded:
+          console.debug(`${migrableCtor.uuid} : import`);
+          await migrable.import();
+          stateManager.set(migrableCtor, State.Imported);
+          break;
+        case State.Imported:
+          console.debug(`${migrableCtor.uuid} : after`);
+          await migrable.after();
+          stateManager.set(migrableCtor, State.Done);
+          break;
+        case State.Done:
+          console.debug(`${migrableCtor.uuid} : done`);
+          break;
+        default:
+          throw new Error();
+      }
+      this.emit('end', { state: migrableState, uuid: migrableCtor.uuid });
+    } catch (e) {
+      this.emit('error', { state: migrableState, uuid: migrableCtor.uuid });
+      throw e;
     }
   }
 
