@@ -102,6 +102,7 @@ export abstract class IgnDataset extends AbstractDataset {
                         .join(', \n')},
                       st_multi(ST_SetSRID(st_geomfromgeojson(geometry),4326)) as ${key} 
                       FROM tmp 
+                      ON CONFLICT DO NOTHING
                     `,
                     values,
                   });

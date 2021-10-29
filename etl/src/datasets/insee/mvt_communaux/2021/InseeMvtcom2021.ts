@@ -50,6 +50,7 @@ export class InseeMvtcom2021 extends AbstractDataset {
     AND mod in (20,21,30,31,32,33,41,50)
     AND typecom_ap = 'COM'
     AND typecom_av = 'COM'
-    ORDER BY date_eff,com_ap;
+    ORDER BY date_eff,com_ap
+    ON CONFLICT DO NOTHING;
   `;
 }

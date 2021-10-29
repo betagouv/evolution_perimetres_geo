@@ -128,6 +128,7 @@ export abstract class AbstractDataset implements DatasetInterface {
                           AS tmp (
                           ${[...this.rows.values()].map((r) => `"${r[0]}" ${r[1]}`).join(', \n')}
                           )
+                        ON CONFLICT DO NOTHING
                       `,
               values: [JSON.stringify(results.value)],
             };

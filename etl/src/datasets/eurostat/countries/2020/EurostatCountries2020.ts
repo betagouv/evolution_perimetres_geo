@@ -46,6 +46,7 @@ export class EurostatCountries2020 extends AbstractDataset {
                   (properties->>'ISO3_CODE')::varchar as codeiso3,
                   ST_SetSRID(st_multi(st_geomfromgeojson(geometry)),4326) as geom
                 FROM tmp
+                ON CONFLICT DO NOTHING
               `,
               values: [JSON.stringify(results.value.map((r) => r.value))],
             };
