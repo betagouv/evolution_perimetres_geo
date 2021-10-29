@@ -42,8 +42,13 @@ export class Migrator {
     return this.migrableInstances.get(ctor) as DatasetInterface;
   }
 
-  getTodo(state: StateManagerInterface): StaticMigrable[] {
-    const done = state.get(State.Done);
+  async getDone(state?: StateManagerInterface): Promise<StaticMigrable[]> {
+    const done = (state ?? (await this.dbStateManager.toMemory())).get(State.Done);
+    return [...done];
+  }
+
+  async getTodo(state?: StateManagerInterface): Promise<StaticMigrable[]> {
+    const done = (state ?? (await this.dbStateManager.toMemory())).get(State.Done);
     return [...this.config.migrations].filter((m) => !done.has(m));
   }
 
@@ -107,7 +112,7 @@ export class Migrator {
 
   async run(todo?: StaticMigrable[]): Promise<void> {
     const state = await this.dbStateManager.toMemory();
-    state.plan(todo || this.getTodo(state));
+    state.plan(todo || (await this.getTodo(state)));
     const iter = state.todo();
     let done = false;
     do {
