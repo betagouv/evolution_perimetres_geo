@@ -4,5 +4,6 @@ export * from './file';
 export * from './createFileProvider';
 export * from './createLogger';
 export * from './createPool';
+export * from './createStateManager';
 export * from './getDatasetUuid';
 export * from './randomString';

@@ -51,7 +51,8 @@ export class InseePays2021 extends AbstractDataset {
       a.libcog
     FROM ${this.tableWithSchema} AS a
     JOIN ${this.targetSchema}.${EurostatCountries2020.table} AS t
-    ON a.codeiso3 = t.codeiso3;
+    ON a.codeiso3 = t.codeiso3
+    ON CONFLICT DO NOTHING;
   `;
 
   async validate(state: StateManagerInterface) {

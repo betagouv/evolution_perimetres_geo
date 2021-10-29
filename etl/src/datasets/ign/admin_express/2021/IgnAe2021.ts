@@ -75,6 +75,7 @@ export class IgnAe2021 extends IgnDataset {
       pop as pop,
       'XXXXX' as country,
       'France' as l_country
-    FROM ${this.tableWithSchema};
+    FROM ${this.tableWithSchema}
+    ON CONFLICT DO NOTHING;
   `;
 }

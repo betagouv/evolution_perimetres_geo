@@ -19,3 +19,10 @@ export interface ConfigInterface {
   file: FileProviderConfigInterface;
   app: AppConfigInterface;
 }
+
+export interface PartialConfigInterface {
+  pool: Partial<PoolConfig>;
+  logger: Partial<LoggerConfigInterface>;
+  file: Partial<FileProviderConfigInterface>;
+  app: Partial<AppConfigInterface>;
+}
