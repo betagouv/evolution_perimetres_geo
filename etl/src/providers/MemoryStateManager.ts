@@ -1,23 +1,28 @@
 import { StateManagerInterface, StaticMigrable, State, flow } from '../interfaces';
 
 export class MemoryStateManager implements StateManagerInterface {
-  protected state: Map<StaticMigrable, State> = new Map();
+  protected migrableOrder: Array<StaticMigrable> = [];
+  protected migrableState: Map<StaticMigrable, State> = new Map();
 
   constructor(done: Set<StaticMigrable> = new Set()) {
     for (const migrable of done) {
-      this.state.set(migrable, State.Done);
+      this.migrableOrder.push(migrable);
+      this.migrableState.set(migrable, State.Done);
     }
   }
 
-  plan(migrables: StaticMigrable[]): void {
-    for (const mig of migrables) {
-      this.state.set(mig, State.Planned);
-    }
+  plan(migrables: StaticMigrable[], before?: StaticMigrable): void {
+    this.batchSet(migrables, State.Planned, before);
   }
 
-  *todo(): Iterator<[StaticMigrable, State]> {
-    const fl = [...flow];
-    fl.pop();
+  unplanAfter(after: StaticMigrable): void {
+    const index = this.migrableOrder.indexOf(after);
+    const unplanned = this.migrableOrder.filter((_, i) => i > index);
+    this.batchSet(unplanned, State.Unplanned);
+  }
+
+  *todo(excludeStates: State[] = [State.Done, State.Failed, State.Unplanned]): Iterator<[StaticMigrable, State]> {
+    const fl = [...flow].filter((s) => !excludeStates.includes(s));
     for (const state of [...fl]) {
       let data: Set<StaticMigrable>;
       do {
@@ -30,16 +35,29 @@ export class MemoryStateManager implements StateManagerInterface {
   }
 
   get(state: State = State.Done): Set<StaticMigrable> {
-    const result: Set<StaticMigrable> = new Set();
-    for (const [migrable, migrableState] of this.state) {
-      if (migrableState === state) {
-        result.add(migrable);
-      }
-    }
-    return result;
+    return new Set(
+      [...this.migrableState.entries()]
+        .filter(([_, migrableState]) => migrableState === state)
+        .sort(([migrableA], [migrableB]) =>
+          this.migrableOrder.indexOf(migrableA) >= this.migrableOrder.indexOf(migrableB) ? 1 : -1,
+        )
+        .map(([migrable]) => migrable),
+    );
   }
 
-  set(key: StaticMigrable, state: State = State.Done): void {
-    this.state.set(key, state);
+  protected batchSet(migrables: StaticMigrable[], state: State, before?: StaticMigrable): void {
+    const beforeIndex = before ? this.migrableOrder.indexOf(before) : -1;
+    for (const mig of migrables) {
+      this.migrableState.set(mig, state);
+      const index = this.migrableOrder.indexOf(mig);
+      if (index !== -1) {
+        this.migrableOrder.splice(index, 1);
+      }
+      this.migrableOrder.splice(beforeIndex > -1 ? beforeIndex : index, 0, mig);
+    }
+  }
+
+  set(migrable: StaticMigrable, state: State = State.Done): void {
+    this.batchSet([migrable], state);
   }
 }

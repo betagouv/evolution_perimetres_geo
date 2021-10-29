@@ -2,7 +2,8 @@ import { StaticMigrable } from '.';
 
 export interface StateManagerInterface {
   plan(migrables: StaticMigrable[]): void;
-  todo(): Iterator<[StaticMigrable, State]>;
+  unplanAfter(after: StaticMigrable): void;
+  todo(excludeStates?: State[]): Iterator<[StaticMigrable, State]>;
   get(state?: State): Set<StaticMigrable>;
   set(key: StaticMigrable, state?: State): void;
 }
@@ -16,6 +17,8 @@ export enum State {
   Loaded,
   Imported,
   Done,
+  Failed,
+  Unplanned,
 }
 
 export const flow = [
