@@ -14,7 +14,7 @@ export const config: ConfigInterface = {
     level: process.env.LOG_LEVEL || 'debug',
   },
   file: {
-    basePath: process.env.TEMPORARY_DIRECTORY || os.tmpdir(),
+    basePath: process.env.DOWNLOAD_DIRECTORY || os.tmpdir(),
   },
   app: {
     targetSchema: process.env.POSTGRES_SCHEMA || 'public',
