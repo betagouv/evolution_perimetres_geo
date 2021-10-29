@@ -1,17 +1,15 @@
 import { Migrator } from './common/Migrator';
-import { ConfigInterface } from './interfaces';
-import { bootstrap, createPool, createLogger, createFileProvider } from './helpers';
+import { PartialConfigInterface } from './interfaces';
+import { config as defaultConfig } from './config';
+import { bootstrap, createPool, createLogger, createFileProvider, createStateManager } from './helpers';
 
-export function prepare(config: ConfigInterface): Migrator {
-  const logger = createLogger(config.logger);
-  const fileProvider = createFileProvider(config.file);
-  const pool = createPool(config.pool);
+export function buildApp(userConfig: Partial<PartialConfigInterface>): Migrator {
+  const logger = createLogger({ ...defaultConfig.logger, ...userConfig.logger });
+  const fileProvider = createFileProvider({ ...defaultConfig.file, ...userConfig.file });
+  const pool = createPool({ ...defaultConfig.pool, ...userConfig.pool });
+  const appConfig = { ...defaultConfig.app, ...userConfig.app };
+  const stateManager = createStateManager(pool, appConfig);
   bootstrap(logger, [async () => pool.end()]);
-  const migrator = new Migrator(pool, fileProvider, config.app);
+  const migrator = new Migrator(pool, fileProvider, appConfig, stateManager);
   return migrator;
-}
-
-export async function run(migrator: Migrator) {
-  await migrator.prepare();
-  await migrator.run();
 }
