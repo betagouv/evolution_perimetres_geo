@@ -51,7 +51,6 @@ async function getMigrator(options: Partial<Options>): Promise<Migrator> {
     },
   };
   const migrator = buildApp(config);
-  console.debug(config);
   await migrator.prepare();
   return migrator;
 }
