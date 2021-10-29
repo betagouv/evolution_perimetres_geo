@@ -9,13 +9,18 @@ import {
   flow,
 } from '../interfaces';
 import { DatabaseStateManager } from '../providers/DatabaseStateManager';
+import { createStateManager } from '../helpers';
 
 export class Migrator {
   protected dbStateManager: DatabaseStateManager;
   protected migrableInstances: Map<StaticMigrable, DatasetInterface> = new Map();
 
-  constructor(readonly pool: Pool, readonly file: FileProvider, readonly config: AppConfigInterface) {
-    this.dbStateManager = new DatabaseStateManager(this.pool, this.config);
+  constructor(
+    readonly pool: Pool,
+    readonly file: FileProvider,
+    readonly config: AppConfigInterface,
+    readonly dbStateManager: DatabaseStateManager = createStateManager(pool, config),
+  ) {
   }
 
   async prepare(): Promise<void> {
