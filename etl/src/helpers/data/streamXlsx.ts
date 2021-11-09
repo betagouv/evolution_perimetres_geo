@@ -2,7 +2,7 @@ import xlsx from 'xlsx';
 import { XlsxOptions } from '../../interfaces';
 
 export async function* streamXlsx<T>(filepath: string, sheetOptions: XlsxOptions, chunkSize = 100): AsyncIterable<T[]> {
-  const file = xlsx.readFile(filepath);
+  const file = xlsx.readFile(filepath,{cellDates:true});
   const options = {
     name: 0,
     startRow: 0,
