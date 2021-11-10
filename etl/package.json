@@ -2,6 +2,7 @@
   "name": "@betagouvpdc/perimeters",
   "description": "Programme d'etl pour importer les données necessaires pour suivre l'évolution des pèrimètres géographique français depuis 2019",
   "author": "Beta Gouv <contact@covoiturage.beta.gouv.fr>",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/betagouv/evolution_perimetres_geo.git",
