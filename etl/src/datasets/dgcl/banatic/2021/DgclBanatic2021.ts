@@ -1,29 +1,27 @@
-import { AbstractDataset } from '../../../../common/AbstractDataset';
+import { DgclBanaticDataset } from '../common/DgclBanaticDataset';
 import { CeremaAom2021 } from '../../../../datasets';
-import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
+import { FileTypeEnum, StateManagerInterface } from '../../../../interfaces';
 
-export class DgclBanatic2021 extends AbstractDataset {
+export class DgclBanatic2021 extends DgclBanaticDataset {
   static producer = 'dgcl';
   static dataset = 'banatic';
   static year = 2021;
   static table = 'dgcl_banatic_2021';
 
-  readonly url: string = 'https://www.banatic.interieur.gouv.fr/V5/fichiers-en-telechargement/telecharger.php?zone=N&date=01/10/2021&format=C';
-  readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
-  readonly rows: Map<string, [string, string]> = new Map([
-    ['siren', ['N° SIREN', 'varchar']],
-    ['nom', ['Nom du groupement', 'varchar']],
-    ['nature', ['Nature juridique', 'varchar']],
-    ['date_creation', ['Date de création', 'date']],
-    ['date_effet', ['Date d\'effet', 'date']],
-    ['competence', ['C4530', 'boolean']],
-  ]);
+  readonly url: string =
+    // eslint-disable-next-line max-len
+    'https://www.banatic.interieur.gouv.fr/V5/fichiers-en-telechargement/telecharger.php?zone=N&date=01/10/2021&format=C';
 
   fileType: FileTypeEnum = FileTypeEnum.Xls;
   sheetOptions = {
     name: 'Sheet1',
     startRow: 0,
   };
+
+  async validate(state: StateManagerInterface) {
+    state.plan([CeremaAom2021]);
+  }
+
   readonly importSql = `
     UPDATE ${this.targetTableWithSchema} AS a
       SET l_aom = t.nom, aom = t.siren
@@ -35,5 +33,29 @@ export class DgclBanatic2021 extends AbstractDataset {
       WHERE a.siren_aom is null AND b.competence is true
     ) t
     WHERE  a.com = t.com AND a.year = 2021;
+  `;
+  readonly extraImportSql = `
+    UPDATE ${this.targetTableWithSchema} SET 
+      aom = CASE WHEN reg = '84' THEN '200053767'
+        WHEN reg = '27' THEN '200053726'
+        WHEN reg = '53' THEN '233500016'
+        WHEN reg = '24' THEN '234500023'
+        WHEN reg = '94' THEN '232000018'
+        WHEN reg = '44' THEN '200052264'
+        WHEN reg = '32' THEN '200053742'
+        WHEN reg = '11' THEN '237500079'
+        WHEN reg = '28' THEN '200053403'
+        WHEN reg = '75' THEN '200053759'
+        WHEN reg = '76' THEN '200053791'
+        WHEN reg = '52' THEN '234400034'
+        WHEN reg = '93' THEN '231300021'
+        WHEN reg = '01' THEN '239710015'
+        WHEN reg = '02' THEN '239720014'
+        WHEN reg = '03' THEN '239730013'
+        WHEN reg = '04' THEN '239740012'
+        WHEN reg = '06' THEN '229850003'
+      END,
+      l_aom = l_reg
+    WHERE aom is null AND year = 2021;
   `;
 }
