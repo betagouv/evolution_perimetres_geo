@@ -17,7 +17,7 @@ export class CeremaAom2021 extends AbstractDataset {
     ['forme_juridique_aom', ['Forme juridique de l’AOM', 'varchar']],
     ['region', ['Région siège', 'varchar']],
     ['departement', ['Département siège', 'varchar']],
-    ['siren_group', ['N° SIREN du groupement', 'varchar']],
+    ['siren_group', ['N° SIREN groupement', 'varchar']],
     ['lien_banatic', ['Lien Banatic', 'varchar']],
     ['nom_group', ['Nom du groupement', 'varchar']],
     ['forme_juridique_group', ['Nature juridique du groupement', 'varchar']],
@@ -42,8 +42,10 @@ export class CeremaAom2021 extends AbstractDataset {
   readonly tableIndex = 'com';
   readonly importSql = `
     UPDATE ${this.targetTableWithSchema} AS a SET
-      aom = t.id_reseau,
-      l_aom = t.nom_aom
+      aom = t.siren_aom,
+      l_aom = t.nom_aom,
+      reseau = t.id_reseau::integer,
+      l_reseau = t.nom_reseau
     FROM ${this.tableWithSchema} t
     WHERE a.com = t.com AND year = 2021;
   `;

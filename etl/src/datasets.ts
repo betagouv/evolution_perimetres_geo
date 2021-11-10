@@ -13,6 +13,7 @@ import { InseePays2021 } from './datasets/insee/pays/2021/InseePays2021';
 import { CeremaAom2019 } from './datasets/cerema/aom/2019/CeremaAom2019';
 import { CeremaAom2020 } from './datasets/cerema/aom/2020/CeremaAom2020';
 import { CeremaAom2021 } from './datasets/cerema/aom/2021/CeremaAom2021';
+import { DgclBanatic2021 } from './datasets/dgcl/banatic/2021/DgclBanatic2021';
 import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom2021';
 import { StaticMigrable } from './interfaces';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
@@ -34,6 +35,7 @@ export {
   CeremaAom2019,
   CeremaAom2020,
   CeremaAom2021,
+  DgclBanatic2021,
   InseeMvtcom2021,
 };
 
@@ -54,5 +56,6 @@ export const datasets: Set<StaticMigrable> = new Set([
   CeremaAom2019,
   CeremaAom2020,
   CeremaAom2021,
+  DgclBanatic2021,
   InseeMvtcom2021,
 ]);

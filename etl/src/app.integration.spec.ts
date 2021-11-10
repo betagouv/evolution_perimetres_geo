@@ -16,6 +16,7 @@ import { InseeReg2021 } from './datasets/insee/regions/2021/InseeReg2021';
 import { CeremaAom2019 } from './datasets/cerema/aom/2019/CeremaAom2019';
 import { CeremaAom2020 } from './datasets/cerema/aom/2020/CeremaAom2020';
 import { CeremaAom2021 } from './datasets/cerema/aom/2021/CeremaAom2021';
+import { DgclBanatic2021 } from './datasets/dgcl/banatic/2021/DgclBanatic2021';
 import { config } from './config';
 import { CreateComEvolutionTable } from './datastructure/001_CreateComEvolutionTable';
 import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom2021';
@@ -211,6 +212,16 @@ test.serial('should do migration CeremaAom2021', async (t) => {
   t.is(last.rows[0].aom, null);
   const count = await t.context.connection.query(`SELECT count(distinct l_aom) FROM perimeters`);
   t.is(count.rows[0].count, '334');
+});
+
+test.serial('should do migration DgclBanatic2021', async (t) => {
+  await t.context.migrator.process(DgclBanatic2021, new MemoryStateManager());
+  const first = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr asc limit 1`);
+  t.is(first.rows[0].aom, '200053767');
+  const last = await t.context.connection.query(`SELECT * FROM perimeters where year = 2021 order by arr desc limit 1`);
+  t.is(last.rows[0].aom, '229850003');
+  const count = await t.context.connection.query(`SELECT count(distinct l_aom) FROM perimeters where year = 2021`);
+  t.is(count.rows[0].count, '739');
 });
 
 test.serial.skip('should import', async (t) => {

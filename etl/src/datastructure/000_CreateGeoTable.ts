@@ -26,6 +26,8 @@ export class CreateGeoTable extends AbstractDatastructure {
           country VARCHAR(5),
           l_aom VARCHAR(256),
           aom VARCHAR(9),
+          l_reseau VARCHAR(256),
+          reseau INT,
           pop INT,
           surface FLOAT(4)
       );
