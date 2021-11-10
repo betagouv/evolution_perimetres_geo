@@ -34,6 +34,8 @@ export class DgclBanatic2021 extends DgclBanaticDataset {
     ) t
     WHERE  a.com = t.com AND a.year = 2021;
   `;
+  /* Attribution des code aom région (identique au code siren de la région) pour les communes
+  n'ayant pas pris la compétence */
   readonly extraImportSql = `
     UPDATE ${this.targetTableWithSchema} SET 
       aom = CASE WHEN reg = '84' THEN '200053767'
