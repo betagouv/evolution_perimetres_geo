@@ -1,7 +1,7 @@
 import { DatasetInterface, StaticMigrable, StaticAbstractDataset, StateManagerInterface, State } from '../interfaces';
 import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
-import { FileProvider } from 'src/providers/FileProvider';
+import { FileProvider } from '../providers/FileProvider';
 
 export abstract class AbstractDatastructure implements DatasetInterface {
   abstract readonly sql: string;
