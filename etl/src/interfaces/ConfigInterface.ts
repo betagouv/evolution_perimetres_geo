@@ -3,6 +3,7 @@ import { StaticMigrable } from '.';
 
 export interface AppConfigInterface {
   targetSchema: string;
+  noCleanup: boolean;
   migrations: Set<StaticMigrable>;
 }
 

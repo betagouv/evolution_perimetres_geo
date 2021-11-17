@@ -17,6 +17,7 @@ export const config: ConfigInterface = {
     basePath: process.env.DOWNLOAD_DIRECTORY || os.tmpdir(),
   },
   app: {
+    noCleanup: false,
     targetSchema: process.env.POSTGRES_SCHEMA || 'public',
     migrations: datasets,
   },

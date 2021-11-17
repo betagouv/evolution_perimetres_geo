@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command, InvalidArgumentError } from 'commander';
 import { Console } from 'console';
-import { buildMigrator, defaultConfig, Migrator, State } from '.';
+import { buildMigrator, defaultConfig, Migrator, PartialConfigInterface, State } from '.';
 
 interface Options {
   user: string;
@@ -32,7 +32,7 @@ function parseInteger(value: string): number {
 }
 
 async function getMigrator(options: Partial<Options>): Promise<Migrator> {
-  const config = {
+  const config: Partial<PartialConfigInterface> = {
     pool: {
       user: options.user,
       password: options.password || defaultConfig.pool.password,
@@ -45,6 +45,7 @@ async function getMigrator(options: Partial<Options>): Promise<Migrator> {
     },
     app: {
       targetSchema: options.schema,
+      noCleanup: !options.cleanup,
     },
     file: {
       basePath: options.directory,
