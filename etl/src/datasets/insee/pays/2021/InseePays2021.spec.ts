@@ -22,6 +22,7 @@ test.before(async (t) => {
   t.context.migrator = new Migrator(t.context.connection, createFileProvider(), {
     targetSchema: 'public',
     migrations: new Set([CreateGeoTable, CreateComEvolutionTable, Dataset]),
+    noCleanup: false,
   });
   t.context.dataset = new Dataset(t.context.connection, createFileProvider());
   await t.context.connection.query(`
