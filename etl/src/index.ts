@@ -1,5 +1,5 @@
 export * from './interfaces';
-export * from './app';
+export * from './buildMigrator';
 export * from './common';
 export { config as defaultConfig } from './config';
 export * as helpers from './helpers';
