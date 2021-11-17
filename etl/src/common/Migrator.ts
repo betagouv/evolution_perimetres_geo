@@ -90,7 +90,7 @@ export class Migrator extends EventEmitter {
           break;
         case State.Imported:
           console.debug(`${migrableCtor.uuid} : after`);
-          if(!this.config.noCleanup) {
+          if (!this.config.noCleanup) {
             await migrable.after();
           }
           stateManager.set(migrableCtor, State.Done);
