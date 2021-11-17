@@ -18,6 +18,7 @@ test.before(async (t) => {
   t.context.migrator = new StateManager(t.context.connection, {
     targetSchema: 'public',
     migrations: new Set([FakeMigrable]),
+    noCleanup: false,
   });
   await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.migrator.table}
