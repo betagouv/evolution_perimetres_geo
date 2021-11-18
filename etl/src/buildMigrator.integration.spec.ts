@@ -1,6 +1,6 @@
 import anyTest, { TestInterface } from 'ava';
 import { Pool } from 'pg';
-import { buildApp } from './app';
+import { buildMigrator } from './buildMigrator';
 import { Migrator } from './common/Migrator';
 import { EurostatCountries2020 } from './datasets/eurostat/countries/2020/EurostatCountries2020';
 import { InseePerim2019 } from './datasets/insee/perimetres/2019/InseePerim2019';
@@ -33,7 +33,7 @@ const test = anyTest as TestInterface<TestContext>;
 
 test.before(async (t) => {
   t.context.connection = createPool();
-  t.context.migrator = buildApp(config);
+  t.context.migrator = buildMigrator(config);
   await t.context.migrator.prepare();
   t.context.connection = t.context.migrator.pool;
   for await (const migrable of t.context.migrator.config.migrations) {

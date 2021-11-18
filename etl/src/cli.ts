@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command, InvalidArgumentError } from 'commander';
 import { Console } from 'console';
-import { buildApp, defaultConfig, Migrator, PartialConfigInterface, State } from '.';
+import { buildMigrator, defaultConfig, Migrator, PartialConfigInterface, State } from '.';
 
 interface Options {
   user: string;
@@ -51,7 +51,7 @@ async function getMigrator(options: Partial<Options>): Promise<Migrator> {
       basePath: options.directory,
     },
   };
-  const migrator = buildApp(config);
+  const migrator = buildMigrator(config);
   await migrator.prepare();
   return migrator;
 }
