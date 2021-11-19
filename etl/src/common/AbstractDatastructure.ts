@@ -1,7 +1,7 @@
 import { DatasetInterface, StaticMigrable, StaticAbstractDataset, StateManagerInterface, State } from '../interfaces';
 import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
-import { FileProvider } from '../providers/FileProvider';
+import { FileManager } from '../providers';
 
 export abstract class AbstractDatastructure implements DatasetInterface {
   abstract readonly sql: string;
@@ -15,7 +15,7 @@ export abstract class AbstractDatastructure implements DatasetInterface {
 
   required: Set<StaticMigrable> = new Set();
 
-  constructor(protected connection: Pool, protected file: FileProvider, protected targetSchema: string = 'public') {}
+  constructor(protected connection: Pool, protected file: FileManager, protected targetSchema: string = 'public') {}
 
   async validate(state: StateManagerInterface): Promise<void> {
     const done = state.get(State.Done);

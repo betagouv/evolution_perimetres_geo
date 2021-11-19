@@ -9,7 +9,7 @@ import {
 import { Pool } from 'pg';
 import { StreamDataOptions, StateManagerInterface, State } from '../interfaces';
 import { DownloadError, SqlError, ValidationError } from '../errors';
-import { FileProvider } from '../providers/FileProvider';
+import { FileManager } from '../providers';
 
 export abstract class AbstractDataset implements DatasetInterface {
   static get uuid(): string {
@@ -47,7 +47,7 @@ export abstract class AbstractDataset implements DatasetInterface {
     return `${this.targetSchema}.${this.table}`;
   }
 
-  constructor(protected connection: Pool, protected file: FileProvider, protected targetSchema: string = 'public') {}
+  constructor(protected connection: Pool, protected file: FileManager, protected targetSchema: string = 'public') {}
 
   async validate(state: StateManagerInterface): Promise<void> {
     const done = state.get(State.Done);

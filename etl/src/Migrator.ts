@@ -1,7 +1,6 @@
 import { Pool } from 'pg';
-import { FileProvider } from './providers/FileProvider';
+import { FileManager, DatabaseStateManager } from './providers';
 import { StaticMigrable, AppConfigInterface, State, StateManagerInterface, DatasetInterface, flow } from './interfaces';
-import { DatabaseStateManager } from './providers/DatabaseStateManager';
 import { createStateManager } from './helpers';
 import { EventEmitter } from 'stream';
 
@@ -10,7 +9,7 @@ export class Migrator extends EventEmitter {
 
   constructor(
     readonly pool: Pool,
-    readonly file: FileProvider,
+    readonly file: FileManager,
     readonly config: AppConfigInterface,
     readonly dbStateManager: DatabaseStateManager = createStateManager(pool, config),
   ) {

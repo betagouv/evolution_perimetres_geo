@@ -3,7 +3,7 @@ import { access } from 'fs/promises';
 import { Pool } from 'pg';
 import { MemoryStateManager } from '../../../../providers/MemoryStateManager';
 import { AbstractDataset } from '../../../../common/AbstractDataset';
-import { createPool, createFileProvider } from '../../../../helpers';
+import { createPool, createFileManager } from '../../../../helpers';
 import { InseePays2021 as Dataset } from './InseePays2021';
 import { Migrator } from '../../../../Migrator';
 import { CreateGeoTable } from '../../../../datastructure/000_CreateGeoTable';
@@ -19,12 +19,12 @@ const test = anyTest as TestInterface<TestContext>;
 
 test.before(async (t) => {
   t.context.connection = createPool();
-  t.context.migrator = new Migrator(t.context.connection, createFileProvider(), {
+  t.context.migrator = new Migrator(t.context.connection, createFileManager(), {
     targetSchema: 'public',
     migrations: new Set([CreateGeoTable, CreateComEvolutionTable, Dataset]),
     noCleanup: false,
   });
-  t.context.dataset = new Dataset(t.context.connection, createFileProvider());
+  t.context.dataset = new Dataset(t.context.connection, createFileManager());
   await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.dataset.tableWithSchema}
     `);
