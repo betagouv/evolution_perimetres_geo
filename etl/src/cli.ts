@@ -82,7 +82,7 @@ async function statusAction(opts: Partial<Options>) {
 async function main(): Promise<void> {
   const command = new Command();
   command
-    .name('MyGeo')
+    .name('EvolutionGeo')
     .description('Importe les datasets géographique par millésime')
     .option('-u, --user <user>', 'Postgresql user, default to env POSTGRES_USER', defaultConfig.pool.user)
     .option('-W, --password <password>', 'Postgresql password, default to env POSTGRES_PASSWORD')
