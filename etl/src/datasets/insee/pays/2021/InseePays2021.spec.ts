@@ -5,7 +5,7 @@ import { MemoryStateManager } from '../../../../providers/MemoryStateManager';
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { createPool, createFileProvider } from '../../../../helpers';
 import { InseePays2021 as Dataset } from './InseePays2021';
-import { Migrator } from '../../../../common/Migrator';
+import { Migrator } from '../../../../Migrator';
 import { CreateGeoTable } from '../../../../datastructure/000_CreateGeoTable';
 import { CreateComEvolutionTable } from '../../../../datastructure/001_CreateComEvolutionTable';
 

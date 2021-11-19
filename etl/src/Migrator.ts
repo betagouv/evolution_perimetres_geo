@@ -1,15 +1,8 @@
 import { Pool } from 'pg';
-import { FileProvider } from '../providers/FileProvider';
-import {
-  StaticMigrable,
-  AppConfigInterface,
-  State,
-  StateManagerInterface,
-  DatasetInterface,
-  flow,
-} from '../interfaces';
-import { DatabaseStateManager } from '../providers/DatabaseStateManager';
-import { createStateManager } from '../helpers';
+import { FileProvider } from './providers/FileProvider';
+import { StaticMigrable, AppConfigInterface, State, StateManagerInterface, DatasetInterface, flow } from './interfaces';
+import { DatabaseStateManager } from './providers/DatabaseStateManager';
+import { createStateManager } from './helpers';
 import { EventEmitter } from 'stream';
 
 export class Migrator extends EventEmitter {

@@ -1,4 +1,4 @@
-import { Migrator } from './common/Migrator';
+import { Migrator } from './Migrator';
 import { PartialConfigInterface } from './interfaces';
 import { config as defaultConfig } from './config';
 import { bootstrap, createPool, createLogger, createFileProvider, createStateManager } from './helpers';

@@ -1,7 +1,7 @@
 import anyTest, { TestInterface } from 'ava';
 import { Pool } from 'pg';
 import { buildMigrator } from './buildMigrator';
-import { Migrator } from './common/Migrator';
+import { Migrator } from './Migrator';
 import { EurostatCountries2020 } from './datasets/eurostat/countries/2020/EurostatCountries2020';
 import { InseePerim2019 } from './datasets/insee/perimetres/2019/InseePerim2019';
 import { IgnAe2019 } from './datasets/ign/admin_express/2019/IgnAe2019';
