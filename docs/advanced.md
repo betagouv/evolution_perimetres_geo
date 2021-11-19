@@ -11,7 +11,7 @@ interface DatasetInterface {
   // la table intermédiaire du dataset
   static readonly table: string;
   // pour construire la classe, elle reçoit une connexion pool Postgresql, un file provider et un schema sql sur lequel se positionner
-  static new (connection: Pool, file: FileProvider, targetSchema: string): DatasetInterface;
+  static new (connection: Pool, file: FileManager, targetSchema: string): DatasetInterface;
   // permet de planifier des datasets dépendants les uns des autres
   validate(state: StateManagerInterface): Promise<void>;
   // permet de créer les table intermédiaire
