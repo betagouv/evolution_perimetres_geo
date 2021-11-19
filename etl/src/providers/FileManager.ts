@@ -14,9 +14,9 @@ import {
   getFileExtensions,
 } from '../helpers';
 
-import { FileManagerConfigInterface, ArchiveFileTypeEnum, FileTypeEnum } from '../interfaces';
+import { FileManagerInterface, FileManagerConfigInterface, ArchiveFileTypeEnum, FileTypeEnum } from '../interfaces';
 
-export class FileManager {
+export class FileManager implements FileManagerInterface {
   readonly basePath: string;
   constructor(config: FileManagerConfigInterface) {
     this.basePath = config.basePath;
