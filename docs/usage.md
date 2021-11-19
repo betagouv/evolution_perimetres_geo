@@ -1,11 +1,11 @@
 # Utilisation en ligne de commande
 
-L'utilisation de base du paquet se fait via un script npm :
+L'utilisation de base du paquet se fait en ajoutant un script npm dans le fichier package.json de son projet :
 ```json
 {
-    "scripts": {
-        "evolution-geo": "evolution-geo"
-    }
+  "scripts": {
+    "evolution-geo": "evolution-geo"
+  }
 }
 ```
 
