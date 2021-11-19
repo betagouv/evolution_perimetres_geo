@@ -1,6 +1,11 @@
 # Utilisation en ligne de commande
+L'utilisation du programme en ligne de commande peut se faire de deux façons :
+- Si vous avez cloner le projet, il suffit d'utiliser la ligne de commande 
+```shell
+  yarn start [options] [commande]
+```
 
-L'utilisation de base du paquet se fait en ajoutant un script npm dans le fichier package.json de son projet :
+Si vous utilisez le paquet comme dépendance de votre projet, il suffit d'ajouter un script npm dans votre fichier package.json de la façon suivante  :
 ```json
 {
   "scripts": {
@@ -9,26 +14,25 @@ L'utilisation de base du paquet se fait en ajoutant un script npm dans le fichie
 }
 ```
 
-Maintenant, via la ligne de commande :
+Maintenant, vous pouvez utiliser le programme avec la ligne de commande :
 ```shell
-  yarn evolution-geo --help
   yarn evolution-geo [options] [commande]
 ```
 
 ## Options communes
-- `-v, --verbose <level>`: Verbosity, default to env LOG_LEVEL (default: "error")
-- `-h, --help` : display help for command
+- `-v, --verbose <level>`: Mode verbeux, prend pour valeur la variable d'environnement LOG_LEVEL ou la valeur par défaut: "error"
+- `-h, --help` : Affiche l'aide des commandes
 
 ### Connection à la base de données
-- `-u, --user <user>` : Postgresql user, default to env POSTGRES_USER (default: "postgres")
-- `-W, --password <password>` : Postgresql password, default to env POSTGRES_PASSWORD
-- `-H, --host <host>` : Postgresql host, default to env POSTGRES_HOST (default: "127.0.0.1")
-- `-p, --port <port>` : Postgresql port, default to env POSTGRES_PORT (default: 5432)
-- `-d, --database <database>` : Postgresql database, default to env POSTGRES_DB (default: "local")
-- `-S, --schema <schema>` : Postgresql schema, default to env POSTGRES_SCHEMA (default: "public")
+- `-u, --user <user>` : Postgresql user, prend pour valeur la variable d'environnement POSTGRES_USER ou la valeur par défaut: "postgres".
+- `-W, --password <password>` : Postgresql password, prend pour valeur la variable d'environnement POSTGRES_PASSWORD.
+- `-H, --host <host>` : Postgresql host, prend pour valeur la variable d'environnement POSTGRES_HOST ou la valeur par défaut: "127.0.0.1".
+- `-p, --port <port>` : Postgresql port, prend pour valeur la variable d'environnement POSTGRES_PORT ou la valeur par défaut: 5432.
+- `-d, --database <database>` : Postgresql database, prend pour valeur la variable d'environnement POSTGRES_DB ou la valeur par défaut: "local".
+- `-S, --schema <schema>` : Postgresql schema, prend pour valeur la variable d'environnement POSTGRES_SCHEMA ou la valeur par défaut: "public".
 
 ### Dossier de téléchargement
-- `-d, --directory <directory>` : Path to download directory, default to env DOWNLOAD_DIRECTORY or os temporary directory if env missing (default to os tmp dir)
+- `-d, --directory <directory>` : Chemin vers le répertoire de téléchargment, prend pour valeur la variable d'environnement DOWNLOAD_DIRECTORY ou le répertoire temporaire de l'os par défaut si la variable d'environnement est manquante.
 
 
 ## Commande `import`

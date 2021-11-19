@@ -2,7 +2,10 @@
 
 ## Objectifs
 
-Ce programme sert à agréger les données géographiques issues de différents producteurs de données afin d'obtenir une table postgresql de périmètres et de mailles géographiques françaises versionnées par année.
+Ce projet sert à construire un référentiel géographique versionné par année (depuis 2019) qui est composé :
+- des principales géographies administratives françaises (communes, arrondissements municipaux, epci, départements, régions, autorités organisatrices des mobilités).
+- des géographies des pays du monde.
+Le programme agrége des données issues de différents producteurs de données (INSEE, IGN, CEREMA, Commission européenne, Direction générale des collectivités locales) afin d'obtenir une base de données postgresql dont la structure est détaillée [ici](/docs/datastructure.md).
 
 Il est actuellement utilisé par deux projets Beta.gouv :
 - Le registre de preuve de covoiturage

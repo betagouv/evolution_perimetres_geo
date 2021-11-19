@@ -1,11 +1,14 @@
 # Structure des données
-Une fois le programme lancé, vous obtiendrez deux tables exploitables :
+Une fois le programme exécuté, vous obtiendrez trois tables :
 - perimeters
 - com_evolution
+- dataset_migration
+Seules les deux premières tables sont exploitables. 
+La table dataset_migration ne sert qu'à conserver l'historique des migrations déjà réalisés.
 
 ## Table `perimeters`
 
-La table principale :
+La table principale qui contient les géométries ainsi que les données attributaires versionnées par années pour chaque commune ou chaque pays:
 ```sql
   CREATE TABLE IF NOT EXISTS perimeters (
     id SERIAL PRIMARY KEY,
@@ -39,12 +42,9 @@ Les index sont les suivants :
   - geom
   - geom_simple
 
-Une ligne par commune / arrondissement ainsi qu'une ligne par pays est crée par année.
+## Table `com_evolution`
 
-
-## Table `com_evolutions`
-
-La table de passage :
+La table de passage qui permet de suivre l'historique des modifications apportés au Code officiel géographique de l'INSEE pour les communes françaises depuis 2019 :
 ```sql
   CREATE TABLE IF NOT EXISTS com_evolution (
     year SMALLINT NOT NULL, -- le millésime
@@ -60,6 +60,34 @@ Les index sont les suivants :
   - old_com
   - new_com
 
-Une ligne par changement est crée de la manière suivante :
+Une ligne correspond au changement de code INSEE d'une commune applicable au 1er janvier du millésime indiqué.
+Ainsi dans l'exemple ci-dessous:
+| year | mod | old_com  | new_com | l_mod                          |
+|------|-----|----------|---------|--------------------------------|
+| 2019 | 32  |	"01091" |	"01033" |	"création de commune nouvelle" |
 
-TODO
+La commune dont le code insee est 01091 (Châtillon-en-Michaille) à intégrée au 01/01/2019 la commune nouvelle dont le code insee est 01033 (Valserhône)
+
+Les différentes modalités de changement de code INSEE pour une commune sont : 
+| mod | l_mod                                                |
+|-----|------------------------------------------------------|
+| 20  | création                                             |
+| 21  | rétablissement                                       |
+| 30  | suppression                                          |
+| 31  | fusion simple                                        |
+| 32  | création de commune nouvelle                         |
+| 33  | fusion association                                   |
+| 41  | Changement de code dû à un changement de département |
+| 50  | Changement de code dû à un transfert de chef-lieu    |
+
+## Table `dataset_migration`
+
+La table qui contient l'historique des datasets dont la migration a déjà été réalisée.
+```sql
+CREATE TABLE IF NOT EXISTS dataset_migration
+(
+    key VARCHAR(128) NOT NULL, -- L'identifiant du dataset migré.
+    datetime timestamp without time zone NOT NULL DEFAULT now()
+)
+```
+Une ligne correspond à un dataset migré.

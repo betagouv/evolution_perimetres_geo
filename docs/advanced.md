@@ -29,7 +29,7 @@ interface DatasetInterface {
 }
 ```
 
-Pour faciliter l'implémentation, il existe une classe abstraite qui gère la plupart des cas, vous pouvez l'étendre, tel que :
+Pour faciliter l'implémentation, il existe une classe abstraite qui gère la plupart des cas, vous pouvez l'étendre en créant une nouvelle classe de la façon suivante :
 ```typescript=
 import { AbstractDataset, ArchiveFileTypeEnum, FileTypeEnum } from '@betagouvpdc/evolution-geo';
 
@@ -65,12 +65,12 @@ export class MyDataset extends AbstractDataset {
 
 ## Utiliser le nouveau dataset
 ```typescript=
-import { buildApp, datasets } from '@betagouvpdc/perimeters';
+import { buildMigrator, datasets } from '@betagouvpdc/perimeters';
 import { MyDataset } from './MyDataset';
 
 async function main(): Promise<void> {
-    datasets.add(MyDataset);
-    const migrator = buildApp({ app: { migrations: datasets }});
+    datasets.datasets.add(MyDataset);
+    const migrator = buildMigrator({ app: { migrations: datasets.datasets }});
     await migrator.prepare();
     await migrator.run();
 }
