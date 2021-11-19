@@ -1,8 +1,14 @@
 import { Pool } from 'pg';
-import { StateManagerInterface, AppConfigInterface, StaticMigrable, State } from '../interfaces';
+import {
+  DatabaseStateManagerInterface,
+  StateManagerInterface,
+  AppConfigInterface,
+  StaticMigrable,
+  State,
+} from '../interfaces';
 import { MemoryStateManager } from './MemoryStateManager';
 
-export class DatabaseStateManager {
+export class DatabaseStateManager implements DatabaseStateManagerInterface {
   readonly table: string = 'dataset_migration';
   readonly migrations: Map<string, StaticMigrable>;
   readonly targetSchema: string;
