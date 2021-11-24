@@ -56,7 +56,7 @@
 - le répertoire `etl/src/interfaces` contient les interfaces
 - le répertoire `etl/src/providers` contient les providers et notamment le DatabaseStateManager et le FileManager détaillé ci-après
 - enfin le fichier `etl/src/config.ts` contient la configuration par défaut de l'application
-- le `etl/src/Migrator.ts` est l'orchestrateur qui va jouer les différents datasets
+- le fichier `etl/src/Migrator.ts` est l'orchestrateur qui va jouer les différents datasets
 
 ## Librairies utilisées
 
@@ -75,7 +75,7 @@ Pour la manipulation de fichiers :
 - [xlsx](https://github.com/SheetJS/sheetjs) : pour les fichiers xlsx
 
 Pour la manipulation des données :
-- [mapshaper](https://github.com/mbloch/mapshaper) : pour simplifier les formes géométriques
+- [mapshaper](https://github.com/mbloch/mapshaper) : pour simplifier les formes géométriques et transformer les fichiers shp en geojson 
 
 ## Migrator
 
