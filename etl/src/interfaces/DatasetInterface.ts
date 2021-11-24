@@ -1,11 +1,10 @@
 import { Pool } from 'pg';
-import { StateManagerInterface } from '.';
-import { FileProvider } from '../providers/FileProvider';
+import { FileManagerInterface, StateManagerInterface } from '.';
 
 export interface StaticMigrable {
   readonly uuid: string;
-  table: string;
-  new (connection: Pool, file: FileProvider, targetSchema: string): DatasetInterface;
+  readonly table: string;
+  new (connection: Pool, file: FileManagerInterface, targetSchema: string): DatasetInterface;
 }
 
 export interface StaticAbstractDataset extends StaticMigrable {

@@ -7,7 +7,7 @@ export interface AppConfigInterface {
   migrations: Set<StaticMigrable>;
 }
 
-export interface FileProviderConfigInterface {
+export interface FileManagerConfigInterface {
   basePath: string;
 }
 
@@ -17,13 +17,13 @@ export interface LoggerConfigInterface {
 export interface ConfigInterface {
   pool: PoolConfig;
   logger: LoggerConfigInterface;
-  file: FileProviderConfigInterface;
+  file: FileManagerConfigInterface;
   app: AppConfigInterface;
 }
 
 export interface PartialConfigInterface {
   pool: Partial<PoolConfig>;
   logger: Partial<LoggerConfigInterface>;
-  file: Partial<FileProviderConfigInterface>;
+  file: Partial<FileManagerConfigInterface>;
   app: Partial<AppConfigInterface>;
 }

@@ -8,6 +8,12 @@ export interface StateManagerInterface {
   set(key: StaticMigrable, state?: State): void;
 }
 
+export interface DatabaseStateManagerInterface {
+  install(): Promise<void>;
+  toMemory(): Promise<StateManagerInterface>;
+  fromMemory(state: StateManagerInterface): Promise<void>;
+}
+
 export enum State {
   Planned = 'planned',
   Validated = 'validated',

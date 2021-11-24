@@ -3,7 +3,7 @@ import { access } from 'fs/promises';
 import { Pool } from 'pg';
 import { MemoryStateManager } from '../../../../providers/MemoryStateManager';
 import { AbstractDataset } from '../../../../common/AbstractDataset';
-import { createPool, createFileProvider } from '../../../../helpers';
+import { createPool, createFileManager } from '../../../../helpers';
 import { IgnAe2021 as Dataset } from './IgnAe2021';
 
 interface TestContext {
@@ -15,7 +15,7 @@ const test = anyTest as TestInterface<TestContext>;
 
 test.before(async (t) => {
   t.context.connection = createPool();
-  t.context.dataset = new Dataset(t.context.connection, createFileProvider());
+  t.context.dataset = new Dataset(t.context.connection, createFileManager());
   await t.context.connection.query(`
       DROP TABLE IF EXISTS ${t.context.dataset.tableWithSchema}
     `);

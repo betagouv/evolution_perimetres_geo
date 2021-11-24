@@ -14,11 +14,11 @@ import {
   getFileExtensions,
 } from '../helpers';
 
-import { FileProviderConfigInterface, ArchiveFileTypeEnum, FileTypeEnum } from '../interfaces';
+import { FileManagerInterface, FileManagerConfigInterface, ArchiveFileTypeEnum, FileTypeEnum } from '../interfaces';
 
-export class FileProvider {
+export class FileManager implements FileManagerInterface {
   readonly basePath: string;
-  constructor(config: FileProviderConfigInterface) {
+  constructor(config: FileManagerConfigInterface) {
     this.basePath = config.basePath;
   }
 

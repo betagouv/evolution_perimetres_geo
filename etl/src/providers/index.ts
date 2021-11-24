@@ -1,3 +1,3 @@
 export { DatabaseStateManager } from './DatabaseStateManager';
-export { FileProvider } from './FileProvider';
+export { FileManager } from './FileManager';
 export { MemoryStateManager } from './MemoryStateManager';

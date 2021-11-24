@@ -1,6 +1,6 @@
 {
-  "name": "@betagouvpdc/perimeters",
-  "description": "Programme d'etl pour importer les données necessaires pour suivre l'évolution des pèrimètres géographique français depuis 2019",
+  "name": "@betagouvpdc/evolution-geo",
+  "description": "Programme d'etl pour importer les données necessaires pour suivre l'évolution des mailles géographique français depuis 2019",
   "author": "Beta Gouv <contact@covoiturage.beta.gouv.fr>",
   "version": "1.0.0",
   "repository": {
@@ -39,8 +39,7 @@
     "node-7z": "^2.1.2",
     "pg": "^8.5.1",
     "stream-json": "^1.7.3",
-    "xlsx": "^0.17.2",
-    "zlib": "^1.0.5"
+    "xlsx": "^0.17.2"
   },
   "devDependencies": {
     "@types/node": "^14.17.19",
