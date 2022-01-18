@@ -10,7 +10,7 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: node:14.18-bullseye
+    container: node:16.13-bullseye
     steps:
       - uses: actions/checkout@v2
       - name: Cache Node.js modules

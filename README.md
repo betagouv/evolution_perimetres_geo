@@ -31,7 +31,7 @@ Le projet inclut une façon simple de déployer un environnement local en utilis
 Cet environnement est composé de deux services :
 | Service  | Dockerfile                                | WorkDir | Description                                            |
 |----------|-------------------------------------------|---------|--------------------------------------------------------|
-| etl      | [Dockerfile](/docker/etl/Dockerfile)      | /etl    | Node 14.16.1 avec 7zip et Evolution-geo installés      |
+| etl      | [Dockerfile](/docker/etl/Dockerfile)      | /etl    | Node 16 avec 7zip et Evolution-geo installés      |
 | postgres | [Dockerfile](/docker/postgres/Dockerfile) |    -    | Base de donnée Postgresql 13 avec postgis 3.1 installé |
 
 Pour déployer l'environnement, dans un terminal, se placer à la racine du projet et exécuter:
