@@ -20,7 +20,7 @@
   "types": "dist/index.d.ts",
   "bin": "dist/cli.js",
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "license": "Apache-2.0",
   "scripts": {
@@ -42,7 +42,7 @@
     "xlsx": "^0.17.2"
   },
   "devDependencies": {
-    "@types/node": "^14.17.19",
+    "@types/node": "^16.11.20",
     "@types/node-7z": "^2.1.0",
     "@types/pg": "^7.14.11",
     "@types/stream-json": "^1.7.1",
