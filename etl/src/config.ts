@@ -4,6 +4,7 @@ import { ConfigInterface } from './interfaces/ConfigInterface';
 
 export const config: ConfigInterface = {
   pool: {
+    connectionString: process.env.POSTGRES_URL || '',
     user: process.env.POSTGRES_USER || 'postgres',
     password: process.env.POSTGRES_PASSWORD || 'postgres',
     database: process.env.POSTGRES_DB || 'local',
