@@ -4,6 +4,7 @@ import { Console } from 'console';
 import { buildMigrator, defaultConfig, Migrator, PartialConfigInterface, State } from '.';
 
 interface Options {
+  url: string;
   user: string;
   password: string;
   host: string;
@@ -34,11 +35,23 @@ function parseInteger(value: string): number {
 async function getMigrator(options: Partial<Options>): Promise<Migrator> {
   const config: Partial<PartialConfigInterface> = {
     pool: {
-      user: options.user,
-      password: options.password || defaultConfig.pool.password,
-      host: options.host,
-      port: options.port,
-      database: options.database,
+      ...(options.url && options.url.length
+        ? {
+            connectionString: options.url,
+            user: undefined,
+            password: undefined,
+            host: undefined,
+            port: undefined,
+            database: undefined,
+          }
+        : {
+            connectionString: undefined,
+            user: options.user,
+            password: options.password || defaultConfig.pool.password,
+            host: options.host,
+            port: options.port,
+            database: options.database,
+          }),
     },
     logger: {
       level: options.verbose,
@@ -84,6 +97,7 @@ async function main(): Promise<void> {
   command
     .name('EvolutionGeo')
     .description('Importe les datasets géographique par millésime')
+    .option('--url <url>', 'Postgresql url, default to env POSTGRES_URL', defaultConfig.pool.connectionString)
     .option('-u, --user <user>', 'Postgresql user, default to env POSTGRES_USER', defaultConfig.pool.user)
     .option('-W, --password <password>', 'Postgresql password, default to env POSTGRES_PASSWORD')
     .option('-H, --host <host>', 'Postgresql host, default to env POSTGRES_HOST', defaultConfig.pool.host)

@@ -24,6 +24,7 @@ Maintenant, vous pouvez utiliser le programme avec la ligne de commande :
 - `-h, --help` : Affiche l'aide des commandes
 
 ### Connection à la base de données
+- `--url <url>` : Postgresql url, prend pour valeur la variable d'environnement POSTGRES_URL ou la valeur par défaut: "postgres://postgres:@127.0.0.1:5432/local".
 - `-u, --user <user>` : Postgresql user, prend pour valeur la variable d'environnement POSTGRES_USER ou la valeur par défaut: "postgres".
 - `-W, --password <password>` : Postgresql password, prend pour valeur la variable d'environnement POSTGRES_PASSWORD.
 - `-H, --host <host>` : Postgresql host, prend pour valeur la variable d'environnement POSTGRES_HOST ou la valeur par défaut: "127.0.0.1".
