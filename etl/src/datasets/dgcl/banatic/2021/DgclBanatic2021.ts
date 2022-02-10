@@ -24,7 +24,9 @@ export class DgclBanatic2021 extends DgclBanaticDataset {
 
   readonly importSql = `
     UPDATE ${this.targetTableWithSchema} AS a
-      SET l_aom = t.nom, aom = t.siren
+      SET l_aom = t.nom,
+        aom = t.siren,
+        updated_at = now()
     FROM (
       SELECT distinct a.com, b.siren, b.nom
       FROM ${this.targetSchema}.${CeremaAom2021.table} AS a

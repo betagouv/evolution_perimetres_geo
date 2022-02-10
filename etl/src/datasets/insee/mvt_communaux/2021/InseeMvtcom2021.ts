@@ -30,7 +30,8 @@ export class InseeMvtcom2021 extends AbstractDataset {
       mod,
       old_com,
       new_com,
-      l_mod
+      l_mod,
+      updated_at
     ) SELECT
       date_part('year',date_eff::date)::int as year,
       mod,
@@ -44,7 +45,8 @@ export class InseeMvtcom2021 extends AbstractDataset {
       WHEN mod = 33 THEN 'fusion association'
       WHEN mod = 41 THEN 'Changement de code dû à un changement de département'
       WHEN mod = 50 THEN 'Changement de code dû à un transfert de chef-lieu'
-      END::varchar as libelle_mod
+      END::varchar as libelle_mod,
+      now()
     FROM ${this.tableWithSchema} 
     WHERE (date_eff::date >= '2019-01-01')
     AND mod in (20,21,30,31,32,33,41,50)

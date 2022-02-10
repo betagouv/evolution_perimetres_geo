@@ -24,7 +24,8 @@ export class InseePerim2019 extends InseePerimDataset {
       epci = t.epci,
       l_epci = t.libepci,
       dep = t.dep,
-      reg = t.reg
+      reg = t.reg,
+      updated_at = now()
     FROM ${this.tableWithSchema} t
     WHERE year = 2019 AND arr = t.codgeo;
   `;
@@ -35,7 +36,8 @@ export class InseePerim2019 extends InseePerimDataset {
       epci = t.epci,
       l_epci = t.libepci,
       dep = t.dep,
-      reg = t.reg
+      reg = t.reg,
+      updated_at = now()
     FROM ${this.tableWithSchema} t
     WHERE year = 2019 AND l_com IS NULL AND com = t.codgeo;
   `;

@@ -41,7 +41,8 @@ export class CeremaAom2019 extends AbstractDataset {
       aom = t.siren_aom,
       l_aom = t.nom_aom,
       reseau = (CASE WHEN t.id_reseau = '/' THEN NULL ELSE t.id_reseau::integer END),
-      l_reseau = t.nom_reseau
+      l_reseau = t.nom_reseau,
+      updated_at = now()
     FROM ${this.tableWithSchema} t
     WHERE a.com = t.com AND year = 2019;
   `;

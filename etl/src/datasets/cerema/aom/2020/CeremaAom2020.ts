@@ -45,7 +45,8 @@ export class CeremaAom2020 extends AbstractDataset {
       aom = t.siren_aom,
       l_aom = t.nom_aom,
       reseau = t.id_reseau::integer,
-      l_reseau = t.nom_reseau
+      l_reseau = t.nom_reseau,
+      updated_at = now()
     FROM ${this.tableWithSchema} t
     WHERE a.com = t.com AND year = 2020;
   `;

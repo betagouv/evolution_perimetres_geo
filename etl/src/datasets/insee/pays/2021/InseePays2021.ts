@@ -38,8 +38,9 @@ export class InseePays2021 extends AbstractDataset {
       arr,
       l_arr,
       country,
-      l_country
-    ) SELECT
+      l_country,
+      updated_at
+    ) SELECT DISTINCT
       2021 as year,
       ST_PointOnSurface(t.geom) as centroid,
       t.geom,
@@ -48,11 +49,37 @@ export class InseePays2021 extends AbstractDataset {
       a.cog,
       a.libcog,
       a.cog,
-      a.libcog
+      a.libcog,
+      now()
     FROM ${this.tableWithSchema} AS a
     JOIN ${this.targetSchema}.${EurostatCountries2020.table} AS t
     ON a.codeiso3 = t.codeiso3
-    ON CONFLICT DO NOTHING;
+    WHERE a.actual = '1'
+    ON CONFLICT 
+    ON CONSTRAINT perimeters_year_arr_key 
+    DO UPDATE SET
+    ( year,
+      centroid,
+      geom,
+      geom_simple,
+      surface,
+      arr,
+      l_arr,
+      country,
+      l_country,
+      updated_at
+    ) = (
+      excluded.year,
+      excluded.centroid,
+      excluded.geom,
+      excluded.geom_simple,
+      excluded.surface,
+      excluded.arr,
+      excluded.l_arr,
+      excluded.country,
+      excluded.l_country,
+      now()
+    );
   `;
 
   async validate(state: StateManagerInterface) {
