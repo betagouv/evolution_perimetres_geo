@@ -59,7 +59,8 @@ export class DgclBanatic2021 extends DgclBanaticDataset {
         WHEN reg = '04' THEN '239740012'
         WHEN reg = '06' THEN '229850003'
       END,
-      l_aom = l_reg
+      l_aom = l_reg,
+      updated_at = now()
     WHERE aom is null AND year = 2021;
   `;
 }

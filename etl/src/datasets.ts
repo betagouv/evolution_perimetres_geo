@@ -17,6 +17,7 @@ import { DgclBanatic2021 } from './datasets/dgcl/banatic/2021/DgclBanatic2021';
 import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom2021';
 import { StaticMigrable } from './interfaces';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
+import { Perim2022 } from './datasets/custom/Perim2022';
 
 export {
   CreateGeoTable,
@@ -37,6 +38,7 @@ export {
   CeremaAom2021,
   DgclBanatic2021,
   InseeMvtcom2021,
+  Perim2022,
 };
 
 export const datasets: Set<StaticMigrable> = new Set([
@@ -58,4 +60,5 @@ export const datasets: Set<StaticMigrable> = new Set([
   CeremaAom2021,
   DgclBanatic2021,
   InseeMvtcom2021,
+  Perim2022,
 ]);

@@ -4,6 +4,7 @@ export enum FileTypeEnum {
   Xls = 'XLS',
   Geojson = 'GEOJSON',
   Shp = 'SHP',
+  None = 'NONE',
 }
 
 export enum ArchiveFileTypeEnum {

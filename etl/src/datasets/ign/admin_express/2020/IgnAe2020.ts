@@ -71,18 +71,30 @@ export class IgnAe2020 extends IgnDataset {
       'France' as l_country,
       now()
     FROM ${this.tableWithSchema}
-    ON CONFLICT DO UPDATE SET
-      year = ${(this.constructor as StaticAbstractDataset).year},
-      centroid = t.centroid,
-      geom = t.geom,
-      geom_simple = t.geom_simple,
-      surface =  st_area(t.geom::geography)/1000000,
-      arr = t.com,
-      pop = t.pop,
-      country = 'XXXXX',
-      l_country = 'France',
-      updated_at = now()
-    FROM ${this.tableWithSchema} t
-    ;
+    ON CONFLICT 
+    ON CONSTRAINT ${this.targetTable}_year_arr_key 
+    DO UPDATE SET
+    ( year,
+      centroid,
+      geom,
+      geom_simple,
+      surface,
+      arr,
+      pop,
+      country,
+      l_country,
+      updated_at
+    ) = (
+      excluded.year,
+      excluded.centroid,
+      excluded.geom,
+      excluded.geom_simple,
+      excluded.surface,
+      excluded.arr,
+      excluded.pop,
+      excluded.country,
+      excluded.l_country,
+      now()
+    );
   `;
 }

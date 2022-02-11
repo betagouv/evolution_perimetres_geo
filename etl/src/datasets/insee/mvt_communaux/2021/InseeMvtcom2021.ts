@@ -53,6 +53,22 @@ export class InseeMvtcom2021 extends AbstractDataset {
     AND typecom_ap = 'COM'
     AND typecom_av = 'COM'
     ORDER BY date_eff,com_ap
-    ON CONFLICT DO NOTHING;
+    ON CONFLICT
+    ON CONSTRAINT ${this.targetTable}_year_mod_old_com_new_com_key 
+    DO UPDATE SET
+    ( year,
+      mod,
+      old_com,
+      new_com,
+      l_mod,
+      updated_at
+    ) = (
+      excluded.year,
+      excluded.mod,
+      excluded.old_com,
+      excluded.new_com,
+      excluded.l_mod,
+      now()
+    );
   `;
 }

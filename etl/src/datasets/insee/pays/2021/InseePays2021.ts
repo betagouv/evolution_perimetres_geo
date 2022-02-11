@@ -56,7 +56,7 @@ export class InseePays2021 extends AbstractDataset {
     ON a.codeiso3 = t.codeiso3
     WHERE a.actual = '1'
     ON CONFLICT 
-    ON CONSTRAINT perimeters_year_arr_key 
+    ON CONSTRAINT ${this.targetTable}_year_arr_key 
     DO UPDATE SET
     ( year,
       centroid,
