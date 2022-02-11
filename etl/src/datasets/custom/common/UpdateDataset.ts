@@ -53,9 +53,9 @@ export abstract class UpdateDataset extends AbstractDataset {
           ;`;
         } else if (op === OperationEnum.Delete){
           const conditions:Array<string> = []
-          Object.values(values).forEach((k,v)=>{conditions.push(`${k} = ${v}`)})
+          Object.entries(values).forEach(([k,v])=>{conditions.push(`${k} = ${v}`)})
           query = `DELETE FROM  ${this.targetTableWithSchema}
-          WHERE ${Object.values(conditions).join('AND\n')};`
+          WHERE ${Object.values(conditions).join('\nAND\n')};`
         }
         await this.connection.query(query);
       }
