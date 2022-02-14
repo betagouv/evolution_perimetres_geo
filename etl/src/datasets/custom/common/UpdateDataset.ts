@@ -10,14 +10,13 @@ export enum OperationEnum {
 }
 
 export interface TransformationInterface {
-  op: OperationEnum,
-  values: {},
-  geometries?: {},
-  conditions?: {},
+  op: OperationEnum;
+  values: {};
+  geometries?: {};
+  conditions?: {};
 }
 
 export abstract class UpdateDataset extends AbstractDataset {
-
   fileType: FileTypeEnum = FileTypeEnum.None;
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly rows: Map<string, [string, string]> = new Map();
@@ -46,10 +45,10 @@ export abstract class UpdateDataset extends AbstractDataset {
   async load(): Promise<void> {}
 
   async import(): Promise<void> {
-    try{
+    try {
       let query = '';
-      for await (const {op, values, geometries, conditions} of this.transformations) {
-        if(op === OperationEnum.Insert){
+      for await (const { op, values, geometries, conditions } of this.transformations) {
+        if (op === OperationEnum.Insert) {
           query = `INSERT INTO ${this.targetTableWithSchema}(
             ${Object.keys(values).join(',\n')}
             ${geometries ? `,${Object.keys(geometries).join(',\n')}` : ''}
@@ -57,22 +56,46 @@ export abstract class UpdateDataset extends AbstractDataset {
           SELECT * FROM (VALUES(${Object.values(values).join(',\n')})) as t
           ${geometries ? `,${Object.values(geometries).join(',\n')}` : ''}
           ;`;
-        } else if (op === OperationEnum.Update){
-          const columns:Array<string> = []
-          
-          query = `UPDATE ${this.targetTableWithSchema} SET (
-            ${Object.keys(values).map(v=>{`${v} = new.${v}`}).join(',\n')}
-            ${geometries ? `, ${Object.keys(values).map(v=>{`${v} = new.${v}`}).join(',\n')}` : ''}
-          )
+        } else if (op === OperationEnum.Update) {
+          query = `UPDATE ${this.targetTableWithSchema} SET 
+            ${Object.keys(values)
+              .map((v) => {
+                return `${v} = new.${v}`;
+              })
+              .join(',\n')}
+            ${
+              geometries
+                ? `, ${Object.keys(geometries)
+                    .map((v) => {
+                      return `${v} = new.${v}`;
+                    })
+                    .join(',\n')}`
+                : ''
+            }
           FROM (
             SELECT * FROM (VALUES(${Object.values(values).join(',\n')})) as t(${Object.keys(values).join(',\n')})
             ${geometries ? `,${Object.values(geometries).join(',\n')}` : ''}
           ) AS new
-          ${conditions ? ` WHERE ${Object.entries(conditions).map(([k,v])=>{`${k} = ${v}`}).join('\nAND\n')}` : ''}
-          ;`;
-        } else if (op === OperationEnum.Delete){
+          ${
+            conditions
+              ? ` WHERE ${Object.entries(conditions)
+                  .map(([k, v]) => {
+                    return `${k} = ${v}`;
+                  })
+                  .join('\nAND\n')}`
+              : ''
+          };`;
+        } else if (op === OperationEnum.Delete) {
           query = `DELETE FROM  ${this.targetTableWithSchema}
-          ${conditions ? ` WHERE ${Object.entries(conditions).map(([k,v])=>{`${k} = ${v}`}).join('\nAND\n')}` : ''};`
+          ${
+            conditions
+              ? ` WHERE ${Object.entries(conditions)
+                  .map(([k, v]) => {
+                    return `${k} = ${v}`;
+                  })
+                  .join('\nAND\n')}`
+              : ''
+          };`;
         }
         console.debug(query);
         await this.connection.query(query);
