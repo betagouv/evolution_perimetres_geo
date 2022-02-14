@@ -1,6 +1,7 @@
 import { AbstractDataset } from '../../../common/AbstractDataset';
 import { SqlError } from '../../../errors';
 import { FileTypeEnum, ArchiveFileTypeEnum } from '../../../interfaces';
+import { loadFileAsString } from '../../../helpers';
 
 export enum OperationEnum {
   Insert = 'insert',
@@ -11,7 +12,8 @@ export enum OperationEnum {
 export interface TransformationInterface {
   op: OperationEnum,
   values: {},
-  geometries?:{},
+  geometries?: {},
+  conditions?: {},
 }
 
 export abstract class UpdateDataset extends AbstractDataset {
@@ -23,7 +25,19 @@ export abstract class UpdateDataset extends AbstractDataset {
 
   abstract readonly transformations: Array<TransformationInterface>;
 
-  async before(): Promise<void> {}
+  async before(): Promise<void> {
+    try {
+      const sql = this.beforeSql
+        ? this.beforeSql
+        : this.beforeSqlPath
+        ? await loadFileAsString(this.beforeSqlPath)
+        : '';
+      console.debug(sql);
+      await this.connection.query(sql);
+    } catch (e) {
+      throw new SqlError(this, (e as Error).message);
+    }
+  }
 
   async download(): Promise<void> {}
 
@@ -34,7 +48,7 @@ export abstract class UpdateDataset extends AbstractDataset {
   async import(): Promise<void> {
     try{
       let query = '';
-      for await (const {op, values, geometries} of this.transformations) {
+      for await (const {op, values, geometries, conditions} of this.transformations) {
         if(op === OperationEnum.Insert){
           query = `INSERT INTO ${this.targetTableWithSchema}(
             ${Object.keys(values).join(',\n')}
@@ -44,26 +58,27 @@ export abstract class UpdateDataset extends AbstractDataset {
           ${geometries ? `,${Object.values(geometries).join(',\n')}` : ''}
           ;`;
         } else if (op === OperationEnum.Update){
+          const columns:Array<string> = []
+          
           query = `UPDATE ${this.targetTableWithSchema} SET (
-            ${Object.keys(values).join(',\n')}
-            ${geometries ? `,${Object.values(geometries).join(',\n')}` : ''}
+            ${Object.keys(values).map(v=>{`${v} = new.${v}`}).join(',\n')}
+            ${geometries ? `, ${Object.keys(values).map(v=>{`${v} = new.${v}`}).join(',\n')}` : ''}
           )
-          SELECT * FROM (VALUES(${Object.values(values).join(',\n')})) as t
-          ${geometries ? `,${Object.values(geometries).join(',\n')}` : ''}
+          FROM (
+            SELECT * FROM (VALUES(${Object.values(values).join(',\n')})) as t(${Object.keys(values).join(',\n')})
+            ${geometries ? `,${Object.values(geometries).join(',\n')}` : ''}
+          ) AS new
+          ${conditions ? ` WHERE ${Object.entries(conditions).map(([k,v])=>{`${k} = ${v}`}).join('\nAND\n')}` : ''}
           ;`;
         } else if (op === OperationEnum.Delete){
-          const conditions:Array<string> = []
-          Object.entries(values).forEach(([k,v])=>{conditions.push(`${k} = ${v}`)})
           query = `DELETE FROM  ${this.targetTableWithSchema}
-          WHERE ${Object.values(conditions).join('\nAND\n')};`
+          ${conditions ? ` WHERE ${Object.entries(conditions).map(([k,v])=>{`${k} = ${v}`}).join('\nAND\n')}` : ''};`
         }
+        console.debug(query);
         await this.connection.query(query);
       }
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
     }
   }
-
-  async after(): Promise<void> {}
-
 }
