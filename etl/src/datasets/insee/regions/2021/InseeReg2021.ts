@@ -25,7 +25,8 @@ export class InseeReg2021 extends AbstractDataset {
   readonly tableIndex = 'reg';
   readonly importSql = `
     UPDATE ${this.targetTableWithSchema} AS a
-    SET l_reg = t.libelle
+    SET l_reg = t.libelle,
+    updated_at = now()
     FROM ${this.tableWithSchema} t
     WHERE a.reg = t.reg;
   `;

@@ -57,7 +57,8 @@ export class IgnAe2020 extends IgnDataset {
       arr,
       pop,
       country,
-      l_country
+      l_country,
+      updated_at
     ) SELECT
       ${(this.constructor as StaticAbstractDataset).year} as year,
       centroid as centroid,
@@ -67,8 +68,33 @@ export class IgnAe2020 extends IgnDataset {
       com,
       pop,
       'XXXXX' as country,
-      'France' as l_country
+      'France' as l_country,
+      now()
     FROM ${this.tableWithSchema}
-    ON CONFLICT DO NOTHING;
+    ON CONFLICT 
+    ON CONSTRAINT ${this.targetTable}_year_arr_key 
+    DO UPDATE SET
+    ( year,
+      centroid,
+      geom,
+      geom_simple,
+      surface,
+      arr,
+      pop,
+      country,
+      l_country,
+      updated_at
+    ) = (
+      excluded.year,
+      excluded.centroid,
+      excluded.geom,
+      excluded.geom_simple,
+      excluded.surface,
+      excluded.arr,
+      excluded.pop,
+      excluded.country,
+      excluded.l_country,
+      now()
+    );
   `;
 }

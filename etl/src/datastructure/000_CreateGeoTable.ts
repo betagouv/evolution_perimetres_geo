@@ -29,7 +29,9 @@ export class CreateGeoTable extends AbstractDatastructure {
           l_reseau VARCHAR(256),
           reseau INT,
           pop INT,
-          surface FLOAT(4)
+          surface FLOAT(4),
+          updated_at timestamp,
+          UNIQUE (year,arr)
       );
       CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_id_index 
       ON ${this.tableWithSchema} USING btree (id);

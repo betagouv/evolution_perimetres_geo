@@ -24,7 +24,9 @@ export class InseeCom2021 extends AbstractDataset {
   readonly tableIndex = 'arr';
   readonly importSql = `
     UPDATE ${this.targetTableWithSchema} AS a
-      SET l_arr = t.libelle, com = t.com
+      SET l_arr = t.libelle, 
+        com = t.com,
+        updated_at = now()
     FROM ${this.tableWithSchema} t
     WHERE a.arr = t.arr AND t.typecom = 'ARM';
   `;
