@@ -40,6 +40,8 @@ Pour déployer l'environnement, dans un terminal, se placer à la racine du proj
 3. `docker-compose up`
 4. Dans un nouveau terminal, se connecter au service etl par la commande `docker exec -it evolution_perimetres_geo_etl_1  /bin/bash`
 5. `npm run build`
+6. Importer les données dans la BDD postgres avec les paramètres par défault
+7. `npm start import`
 
 
 ## [Usage](/docs/usage.md)
