@@ -24,7 +24,7 @@
   },
   "license": "Apache-2.0",
   "scripts": {
-    "start": "node dist/cli.js",
+    "start": "chmod u+x node_modules/7zip-bin/linux/x64/7za && node dist/cli.js",
     "build": "tsc",
     "lint": "eslint src --ext .ts",
     "test": "ava --config ava.cjs",
