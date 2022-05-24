@@ -39,7 +39,7 @@ jobs:
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
       - name: Install dependencies
-        run: apt-get update && apt-get install -y p7zip-full && yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
         working-directory: etl
       - name: Lint
         run: yarn lint

@@ -4,6 +4,8 @@ L'utilisation du programme en ligne de commande peut se faire de deux façons :
 ```shell
   yarn start [options] [commande]
 ```
+Exemple: Importer les données dans la BDD postgres avec les paramètres par défault :
+`npm start import`
 
 Si vous utilisez le paquet comme dépendance de votre projet, il suffit d'ajouter un script npm dans votre fichier package.json de la façon suivante  :
 ```json

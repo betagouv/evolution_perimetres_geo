@@ -24,7 +24,6 @@ Deux possibilités pour installer le projet:
 ```
 
 Attention, le programme nécessite :
-- 7zip
 - une base de données postgresql >= 12 avec postgis >= 3
 
 Le projet inclut une façon simple de déployer un environnement local en utilisant Docker et Docker-compose.
@@ -38,10 +37,8 @@ Pour déployer l'environnement, dans un terminal, se placer à la racine du proj
 1. `cp etl/.env.example etl/.env`
 2. Editer le fichier `etl/.env` suivant sa convenance.
 3. `docker-compose up`
-4. Dans un nouveau terminal, se connecter au service etl par la commande `docker exec -it evolution_perimetres_geo_etl_1  /bin/bash`
+4. Dans un nouveau terminal, se connecter au service etl par la commande `docker exec -it evolution_perimetres_geo_etl_1 /bin/bash`
 5. `npm run build`
-6. Importer les données dans la BDD postgres avec les paramètres par défault
-7. `npm start import`
 
 
 ## [Usage](/docs/usage.md)
