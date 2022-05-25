@@ -27,7 +27,7 @@
     "start": "chmod u+x node_modules/7zip-bin/linux/x64/7za && node dist/cli.js",
     "build": "tsc",
     "lint": "eslint src --ext .ts",
-    "test": "ava --config ava.cjs",
+    "test": "chmod u+x node_modules/7zip-bin/linux/x64/7za && ava --config ava.cjs",
     "coverage": "nyc --nycrc-path ./nyc.cjs --reporter=text ava --config ava.cjs"
   },
   "dependencies": {
