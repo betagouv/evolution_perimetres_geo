@@ -10,7 +10,7 @@ export class DgclBanatic2021 extends DgclBanaticDataset {
 
   readonly url: string =
     // eslint-disable-next-line max-len
-    'https://www.banatic.interieur.gouv.fr/V5/fichiers-en-telechargement/telecharger.php?zone=N&date=01/10/2021&format=C';
+    'https://www.banatic.interieur.gouv.fr/V5/fichiers-en-telechargement/telecharger.php?zone=N&date=01/04/2022&format=E';
 
   fileType: FileTypeEnum = FileTypeEnum.Xls;
   sheetOptions = {
