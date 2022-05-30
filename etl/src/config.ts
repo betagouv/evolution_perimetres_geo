@@ -21,5 +21,6 @@ export const config: ConfigInterface = {
     noCleanup: false,
     targetSchema: process.env.POSTGRES_SCHEMA || 'public',
     migrations: datasets,
+    sevenZipBinPath: process.env.SEVEN_ZIP_BIN_PATH,
   },
 };
