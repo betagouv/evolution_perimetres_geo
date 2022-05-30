@@ -5,6 +5,7 @@ export interface AppConfigInterface {
   targetSchema: string;
   noCleanup: boolean;
   migrations: Set<StaticMigrable>;
+  sevenZipBinPath?: string;
 }
 
 export interface FileManagerConfigInterface {
