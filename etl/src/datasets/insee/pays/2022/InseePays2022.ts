@@ -3,14 +3,14 @@ import { EurostatSimplifiedCountries2020 } from '../../../eurostat/countries/202
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { ArchiveFileTypeEnum, FileTypeEnum, StateManagerInterface } from '../../../../interfaces';
 
-export class InseePays2021 extends AbstractDataset {
+export class InseePays2022 extends AbstractDataset {
   static producer = 'insee';
   static dataset = 'pays';
-  static year = 2021;
-  static table = 'insee_pays_2021';
+  static year = 2022;
+  static table = 'insee_pays_2022';
 
-  readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/pays2021-csv.zip';
-  readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
+  readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/6051727/pays_2022.csv';
+  readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly rows: Map<string, [string, string]> = new Map([
     ['cog', ['0', 'varchar(5)']],
     ['actual', ['1', 'varchar(1)']],
@@ -41,7 +41,7 @@ export class InseePays2021 extends AbstractDataset {
       country,
       l_country
     ) SELECT
-      2021 as year,
+      2022 as year,
       ST_PointOnSurface(t.geom) as centroid,
       t.geom,
       t2.geom_simple,

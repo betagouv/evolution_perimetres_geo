@@ -2,18 +2,18 @@ import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { streamData } from '../../../../helpers';
 import { ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 
-export class EurostatCountries2020 extends AbstractDataset {
+export class EurostatSimplifiedCountries2020 extends AbstractDataset {
   static producer = 'eurostat';
   static dataset = 'countries';
   static year = 2020;
   static table = 'eurostat_countries_2020';
 
   readonly url: string =
-    'https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_01M_2020_4326.geojson';
+    'https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_60M_2020_4326.geojson';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly rows: Map<string, [string, string]> = new Map([
     ['codeiso3', ['properties->>ISO3_CODE', 'varchar']],
-    ['geom', ['geometry', 'geometry(MULTIPOLYGON,4326)']],
+    ['geom_simple', ['geometry', 'geometry(MULTIPOLYGON,4326)']],
   ]);
 
   fileType: FileTypeEnum = FileTypeEnum.Geojson;
