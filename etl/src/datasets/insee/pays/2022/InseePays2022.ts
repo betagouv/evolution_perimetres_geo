@@ -44,16 +44,17 @@ export class InseePays2022 extends AbstractDataset {
       2022 as year,
       ST_PointOnSurface(t.geom) as centroid,
       t.geom,
-      t2.geom_simple,
+      t2.geom as geom_simple,
       st_area(t.geom::geography)/1000000 as surface,
       a.cog,
       a.libcog,
       a.cog,
       a.libcog
     FROM ${this.tableWithSchema} AS a
-    JOIN ${this.targetSchema}.${EurostatCountries2020.table} AS t
-    JOIN ${this.targetSchema}.${EurostatSimplifiedCountries2020.table} AS t2
+    JOIN ${this.targetSchema}.${EurostatCountries2020.table} AS t 
     ON a.codeiso3 = t.codeiso3
+    JOIN ${this.targetSchema}.${EurostatSimplifiedCountries2020.table} AS t2
+    ON a.codeiso3 = t2.codeiso3
     ON CONFLICT DO NOTHING;
   `;
 

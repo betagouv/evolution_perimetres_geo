@@ -1,7 +1,6 @@
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { StaticAbstractDataset, ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 
-
 export class InseeCom2021 extends AbstractDataset {
   static producer = 'insee';
   static dataset = 'com';
