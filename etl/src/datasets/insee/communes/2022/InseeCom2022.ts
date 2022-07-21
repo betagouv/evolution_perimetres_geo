@@ -1,14 +1,14 @@
 import { AbstractDataset } from '../../../../common/AbstractDataset';
 import { StaticAbstractDataset, ArchiveFileTypeEnum, FileTypeEnum } from '../../../../interfaces';
 
-export class InseeCom2021 extends AbstractDataset {
+export class InseeCom2022 extends AbstractDataset {
   static producer = 'insee';
   static dataset = 'com';
-  static year = 2021;
-  static table = 'insee_com_2021';
+  static year = 2022;
+  static table = 'insee_com_2022';
 
-  readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/commune2021-csv.zip';
-  readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
+  readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/6051727/commune_2022.csv';
+  readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly rows: Map<string, [string, string]> = new Map([
     ['typecom', ['0', 'varchar(4)']],
     ['arr', ['1', 'varchar(5)']],
