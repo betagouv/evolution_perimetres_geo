@@ -56,7 +56,7 @@ test.serial('should load', async (t) => {
     SELECT * FROM ${t.context.dataset.tableWithSchema} order by com asc limit 1
   `);
   t.is(first.rows[0].com, '01001');
-  t.is(first.rows[0].pop, 771);
+  t.is(first.rows[0].pop, 779);
   const last = await t.context.connection.query(`
     SELECT * FROM ${t.context.dataset.tableWithSchema} order by com desc limit 1
   `);
