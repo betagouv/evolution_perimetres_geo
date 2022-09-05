@@ -30,6 +30,6 @@ export class InseeDep2021 extends AbstractDataset {
       SET l_dep = t.libelle
     FROM ${this.tableWithSchema} t
     WHERE a.dep = t.dep
-    AND a.year = ${(this.constructor as StaticAbstractDataset).year};
+    AND a.year IN (2019,2020, ${(this.constructor as StaticAbstractDataset).year});
   `;
 }
