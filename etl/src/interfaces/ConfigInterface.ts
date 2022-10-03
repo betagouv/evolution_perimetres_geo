@@ -11,6 +11,7 @@ export interface AppConfigInterface {
 export interface FileManagerConfigInterface {
   basePath: string;
   downloadPath?: string;
+  mirrorUrl?: string;
 }
 
 export interface LoggerConfigInterface {

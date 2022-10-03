@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { access, mkdir } from 'fs/promises';
 import { Readable } from 'stream';
 import mapshaper from 'mapshaper';
@@ -19,10 +19,12 @@ import { FileManagerInterface, FileManagerConfigInterface, ArchiveFileTypeEnum, 
 export class FileManager implements FileManagerInterface {
   readonly basePath: string;
   readonly downloadPath: string;
+  readonly mirrorUrl: string | undefined;
 
   constructor(config: FileManagerConfigInterface) {
     this.basePath = config.basePath;
     this.downloadPath = config.downloadPath || join(config.basePath, 'download');
+    this.mirrorUrl = config.mirrorUrl;
   }
 
   protected getTemporaryDirectoryPath(name?: string): string {
@@ -31,6 +33,13 @@ export class FileManager implements FileManagerInterface {
 
   protected getTemporaryFilePath(data?: string, isDownload = false): string {
     return join(isDownload ? this.downloadPath : this.basePath, data ? hash(data) : randomString());
+  }
+
+  protected getMirrorUrl(url: string): string | undefined {
+    if (!this.mirrorUrl) {
+      return;
+    }
+    return `${this.mirrorUrl}/${hash(url)}`;
   }
 
   async decompress(filepath: string, archiveType: ArchiveFileTypeEnum, fileType: FileTypeEnum): Promise<string[]> {
@@ -73,8 +82,19 @@ export class FileManager implements FileManagerInterface {
       await access(filepath);
     } catch {
       // If file not found download it !
-      const response = await axios.get<Readable>(url, { responseType: 'stream' });
-      await writeFile(response.data, filepath);
+      try {
+        const response = await axios.get<Readable>(url, { responseType: 'stream' });
+        await writeFile(response.data, filepath);
+      } catch(e) {
+        // If not found and have mirror, try download
+        const mirrorUrl = this.getMirrorUrl(url);
+        if((e as AxiosError).isAxiosError && (e as AxiosError).code === '404' && mirrorUrl) {
+          const response = await axios.get<Readable>(mirrorUrl, { responseType: 'stream' });
+          await writeFile(response.data, filepath);
+        } else {
+          throw e;
+        }
+      }
     }
     return filepath;
   }

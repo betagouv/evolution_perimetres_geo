@@ -17,6 +17,7 @@ export const config: ConfigInterface = {
   file: {
     basePath: process.env.CACHE_DIRECTORY || os.tmpdir(),
     downloadPath: process.env.DOWNLOAD_DIRECTORY,
+    mirrorUrl: process.env.MIRROR_URL,
   },
   app: {
     noCleanup: false,
