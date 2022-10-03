@@ -28,8 +28,7 @@ export class IgnAe2022 extends IgnDataset {
     CREATE INDEX IF NOT EXISTS ign_ae_2021_centroid_index ON ${this.tableWithSchema} USING gist (centroid);
     CREATE INDEX IF NOT EXISTS ign_ae_2021_geom_simple_index ON ${this.tableWithSchema} USING gist (geom_simple);
   `;
-
-  readonly url: string =
+  static url: string =
     // eslint-disable-next-line max-len
     'http://files.opendatarchives.fr/professionnels.ign.fr/adminexpress/ADMIN-EXPRESS-COG-CARTO_3-1__SHP__FRA_WM_2022-04-15.7z';
 

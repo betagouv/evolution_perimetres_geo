@@ -6,8 +6,8 @@ export class InseeDep2021 extends AbstractDataset {
   static dataset = 'dep';
   static year = 2021;
   static table = 'insee_dep_2021';
+  static url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/departement2021-csv.zip';
 
-  readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/departement2021-csv.zip';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly rows: Map<string, [string, string]> = new Map([
     ['dep', ['0', 'varchar(3)']],

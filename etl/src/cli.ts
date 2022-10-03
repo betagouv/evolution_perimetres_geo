@@ -2,6 +2,7 @@
 import { Command, InvalidArgumentError } from 'commander';
 import { Console } from 'console';
 import { buildMigrator, defaultConfig, Migrator, PartialConfigInterface, State } from '.';
+import { hash } from './helpers';
 
 interface Options {
   url: string;
@@ -92,6 +93,15 @@ async function statusAction(opts: Partial<Options>) {
   ]);
 }
 
+async function getSourceAction(opts: Partial<Options>) {
+  const migrator = await getMigrator(opts);
+  const datasets = migrator.getDatasets();
+  const logger = new Console({ stdout: process.stdout, stderr: process.stderr });
+  logger.table(
+    datasets.map(d => ({ url: d.url, uuid: hash(d.url) })),
+  );
+}
+
 async function main(): Promise<void> {
   const command = new Command();
   command
@@ -130,6 +140,11 @@ async function main(): Promise<void> {
     .command('status')
     .description('Get import status')
     .action((localOpts) => statusAction({ ...localOpts, ...command.opts() }));
+
+  command
+    .command('source')
+    .description('Get import sources')
+    .action((localOpts) => getSourceAction({ ...localOpts, ...command.opts() }));
 
   command.parseAsync(process.argv);
 }

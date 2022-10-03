@@ -30,7 +30,7 @@ import { DgclBanatic2021 } from './datasets/dgcl/banatic/2021/DgclBanatic2021';
 import { DgclBanatic2022 } from './datasets/dgcl/banatic/2022/DgclBanatic2022';
 import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom2021';
 import { InseeMvtcom2022 } from './datasets/insee/mvt_communaux/2022/InseeMvtcom2022';
-import { StaticMigrable } from './interfaces';
+import { StaticAbstractDataset, StaticMigrable } from './interfaces';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
 import { InseeCom2022 } from './datasets/insee/communes/2022/InseeCom2022';
 
@@ -71,7 +71,7 @@ export {
   InseeMvtcom2022,
 };
 
-export const datasets: Set<StaticMigrable> = new Set([
+export const datastructures: Set<StaticMigrable> = new Set([
   CreateGeoTable,
   CreateComEvolutionTable,
   CreateGetLatestByPointFunction,
@@ -80,6 +80,9 @@ export const datasets: Set<StaticMigrable> = new Set([
   CreateGetByCodeFunction,
   CreateGetLatestMillesimeFunction,
   CreateGetLatestMillesimeOrFunction,
+]);
+
+export const datasets: Set<StaticAbstractDataset> = new Set([
   IgnAe2019,
   IgnAe2020,
   IgnAe2021,

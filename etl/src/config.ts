@@ -1,5 +1,5 @@
 import os from 'os';
-import { datasets } from './datasets';
+import { datasets, datastructures } from './datasets';
 import { ConfigInterface } from './interfaces/ConfigInterface';
 
 export const config: ConfigInterface = {
@@ -22,7 +22,8 @@ export const config: ConfigInterface = {
   app: {
     noCleanup: false,
     targetSchema: process.env.POSTGRES_SCHEMA || 'public',
-    migrations: datasets,
+    datasets,
+    datastructures,
     sevenZipBinPath: process.env.SEVEN_ZIP_BIN_PATH,
   },
 };

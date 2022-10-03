@@ -17,7 +17,6 @@ export abstract class AbstractDataset implements DatasetInterface {
     return getDatasetUuid(self.producer, self.dataset, self.year);
   }
 
-  abstract readonly url: string;
   abstract readonly fileArchiveType: ArchiveFileTypeEnum;
   abstract readonly fileType: FileTypeEnum;
   abstract readonly rows: Map<string, [string, string]>;
@@ -34,6 +33,10 @@ export abstract class AbstractDataset implements DatasetInterface {
   required: Set<StaticMigrable> = new Set();
   sheetOptions: StreamDataOptions;
   filepaths: string[] = [];
+
+  get url(): string {
+    return (this.constructor as StaticAbstractDataset).url;
+  }
 
   get table(): string {
     return (this.constructor as StaticAbstractDataset).table;

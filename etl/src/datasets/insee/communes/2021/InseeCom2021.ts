@@ -6,8 +6,8 @@ export class InseeCom2021 extends AbstractDataset {
   static dataset = 'com';
   static year = 2021;
   static table = 'insee_com_2021';
+  static url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/commune2021-csv.zip';
 
-  readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/commune2021-csv.zip';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly rows: Map<string, [string, string]> = new Map([
     ['typecom', ['0', 'varchar(4)']],

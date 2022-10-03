@@ -8,6 +8,7 @@ import {
   StateManagerInterface,
   DatasetInterface,
   flow,
+  StaticAbstractDataset,
 } from './interfaces';
 import { createStateManager } from './helpers';
 import { EventEmitter } from 'stream';
@@ -43,6 +44,10 @@ export class Migrator extends EventEmitter {
     return this.migrableInstances.get(ctor) as DatasetInterface;
   }
 
+  getDatasets(): Array<StaticAbstractDataset> {
+    return [ ...this.config.datasets];
+  }
+
   async getDone(state?: StateManagerInterface): Promise<StaticMigrable[]> {
     const done = (state ?? (await this.dbStateManager.toMemory())).get(State.Done);
     return [...done];
@@ -50,7 +55,7 @@ export class Migrator extends EventEmitter {
 
   async getTodo(state?: StateManagerInterface): Promise<StaticMigrable[]> {
     const done = (state ?? (await this.dbStateManager.toMemory())).get(State.Done);
-    return [...this.config.migrations].filter((m) => !done.has(m));
+    return [...this.config.datastructures, ...this.config.datasets].filter((m) => !done.has(m));
   }
 
   async do(migrable: DatasetInterface, migrableState: State, stateManager: StateManagerInterface): Promise<void> {
