@@ -10,6 +10,7 @@ export interface AppConfigInterface {
 
 export interface FileManagerConfigInterface {
   basePath: string;
+  downloadPath?: string;
 }
 
 export interface LoggerConfigInterface {

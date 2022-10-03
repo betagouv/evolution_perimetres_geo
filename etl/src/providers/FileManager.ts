@@ -18,16 +18,19 @@ import { FileManagerInterface, FileManagerConfigInterface, ArchiveFileTypeEnum, 
 
 export class FileManager implements FileManagerInterface {
   readonly basePath: string;
+  readonly downloadPath: string;
+
   constructor(config: FileManagerConfigInterface) {
     this.basePath = config.basePath;
+    this.downloadPath = config.downloadPath || join(config.basePath, 'download');
   }
 
   protected getTemporaryDirectoryPath(name?: string): string {
     return name ? join(this.basePath, name) : this.getTemporaryFilePath();
   }
 
-  protected getTemporaryFilePath(data?: string): string {
-    return join(this.basePath, data ? hash(data) : randomString());
+  protected getTemporaryFilePath(data?: string, isDownload = false): string {
+    return join(isDownload ? this.downloadPath : this.basePath, data ? hash(data) : randomString());
   }
 
   async decompress(filepath: string, archiveType: ArchiveFileTypeEnum, fileType: FileTypeEnum): Promise<string[]> {
@@ -65,7 +68,7 @@ export class FileManager implements FileManagerInterface {
   }
 
   async download(url: string): Promise<string> {
-    const filepath = this.getTemporaryFilePath(url);
+    const filepath = this.getTemporaryFilePath(url, true);
     try {
       await access(filepath);
     } catch {

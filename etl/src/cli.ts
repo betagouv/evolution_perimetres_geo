@@ -115,7 +115,7 @@ async function main(): Promise<void> {
     )
     .option(
       '-d, --directory <directory>',
-      'Path to download directory, default to env DOWNLOAD_DIRECTORY or os temporary directory if env missing',
+      'Path to download directory, default to env CACHE_DIRECTORY or os temporary directory if env missing',
       defaultConfig.file.basePath,
     )
     .option('-v, --verbose <level>', 'Verbosity, default to env LOG_LEVEL', verbosity, 'error');

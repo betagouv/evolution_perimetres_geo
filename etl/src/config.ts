@@ -15,7 +15,8 @@ export const config: ConfigInterface = {
     level: process.env.LOG_LEVEL || 'debug',
   },
   file: {
-    basePath: process.env.DOWNLOAD_DIRECTORY || os.tmpdir(),
+    basePath: process.env.CACHE_DIRECTORY || os.tmpdir(),
+    downloadPath: process.env.DOWNLOAD_DIRECTORY,
   },
   app: {
     noCleanup: false,
