@@ -7,8 +7,7 @@ export class EurostatCountries2020 extends AbstractDataset {
   static dataset = 'countries';
   static year = 2020;
   static table = 'eurostat_countries_2020';
-  static url: string =
-    'https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_01M_2020_4326.geojson';
+  static url = 'https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_RG_01M_2020_4326.geojson';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly rows: Map<string, [string, string]> = new Map([
     ['codeiso3', ['properties->>ISO3_CODE', 'varchar']],

@@ -6,7 +6,7 @@ export class InseeReg2021 extends AbstractDataset {
   static dataset = 'reg';
   static year = 2021;
   static table = 'insee_reg_2021';
-  static url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/region2021-csv.zip';
+  static url = 'https://www.insee.fr/fr/statistiques/fichier/5057840/region2021-csv.zip';
 
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly rows: Map<string, [string, string]> = new Map([

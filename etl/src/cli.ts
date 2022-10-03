@@ -97,9 +97,7 @@ async function getSourceAction(opts: Partial<Options>) {
   const migrator = await getMigrator(opts);
   const datasets = migrator.getDatasets();
   const logger = new Console({ stdout: process.stdout, stderr: process.stderr });
-  logger.table(
-    datasets.map(d => ({ url: d.url, uuid: hash(d.url) })),
-  );
+  datasets.map((d) => logger.info(`${hash(d.url)} : ${d.url}`));
 }
 
 async function main(): Promise<void> {

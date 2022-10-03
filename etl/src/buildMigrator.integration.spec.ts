@@ -46,7 +46,7 @@ test.before(async (t) => {
   t.context.migrator = buildMigrator(config);
   await t.context.migrator.prepare();
   t.context.connection = t.context.migrator.pool;
-  for await (const migrable of t.context.migrator.config.migrations) {
+  for await (const migrable of [...t.context.migrator.config.datastructures, ...t.context.migrator.config.datasets]) {
     await t.context.connection.query(`
         DROP TABLE IF EXISTS ${config.app.targetSchema}.${migrable.table}
       `);
@@ -54,7 +54,7 @@ test.before(async (t) => {
 });
 
 test.after.always(async (t) => {
-  for await (const migrable of t.context.migrator.config.migrations.values()) {
+  for await (const migrable of [...t.context.migrator.config.datastructures, ...t.context.migrator.config.datasets]) {
     await t.context.connection.query(`
       DROP TABLE IF EXISTS ${config.app.targetSchema}.${migrable.table}
     `);

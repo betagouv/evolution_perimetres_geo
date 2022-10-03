@@ -17,7 +17,8 @@ test.before(async (t) => {
   t.context.connection = createPool();
   t.context.migrator = new StateManager(t.context.connection, {
     targetSchema: 'public',
-    migrations: new Set([FakeMigrable]),
+    datastructures: new Set([FakeMigrable]),
+    datasets: new Set([]),
     noCleanup: false,
   });
   await t.context.connection.query(`

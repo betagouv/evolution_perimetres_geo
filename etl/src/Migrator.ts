@@ -45,7 +45,7 @@ export class Migrator extends EventEmitter {
   }
 
   getDatasets(): Array<StaticAbstractDataset> {
-    return [ ...this.config.datasets];
+    return [...this.config.datasets];
   }
 
   async getDone(state?: StateManagerInterface): Promise<StaticMigrable[]> {

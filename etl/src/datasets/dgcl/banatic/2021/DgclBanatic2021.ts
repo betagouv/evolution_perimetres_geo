@@ -7,7 +7,7 @@ export class DgclBanatic2021 extends DgclBanaticDataset {
   static dataset = 'banatic';
   static year = 2021;
   static table = 'dgcl_banatic_2021';
-  static url: string =
+  static url =
     // eslint-disable-next-line max-len
     'https://www.banatic.interieur.gouv.fr/V5/fichiers-en-telechargement/telecharger.php?zone=N&date=01/01/2022&format=C';
 

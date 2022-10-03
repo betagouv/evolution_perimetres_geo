@@ -15,7 +15,7 @@ export class DatabaseStateManager implements DatabaseStateManagerInterface {
 
   constructor(protected connection: Pool, config: AppConfigInterface) {
     this.targetSchema = config.targetSchema;
-    this.migrations = new Map([...config.migrations].map((m) => [m.uuid, m]));
+    this.migrations = new Map([...config.datastructures, ...config.datasets].map((m) => [m.uuid, m]));
   }
 
   get tableWithSchema(): string {
