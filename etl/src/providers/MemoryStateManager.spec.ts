@@ -1,4 +1,4 @@
-import anyTest, { TestInterface } from 'ava';
+import anyTest, { TestFn } from 'ava';
 import { StaticMigrable, State, flow } from '../interfaces';
 import { MemoryStateManager } from '.';
 
@@ -12,7 +12,7 @@ const migrable3 = Symbol('3') as unknown as StaticMigrable;
 const migrable4 = Symbol('4') as unknown as StaticMigrable;
 const migrable5 = Symbol('5') as unknown as StaticMigrable;
 
-const test = anyTest as TestInterface<TestContext>;
+const test = anyTest as TestFn<TestContext>;
 
 test.before((t) => {
   t.context.state = new MemoryStateManager(new Set([migrable1]));

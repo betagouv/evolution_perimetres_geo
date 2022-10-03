@@ -1,4 +1,4 @@
-import anyTest, { TestInterface } from 'ava';
+import anyTest, { TestFn } from 'ava';
 import { Pool } from 'pg';
 import { StaticMigrable } from '../interfaces';
 import { createPool } from '../helpers';
@@ -9,7 +9,7 @@ interface TestContext {
   migrator: StateManager;
 }
 
-const test = anyTest as TestInterface<TestContext>;
+const test = anyTest as TestFn<TestContext>;
 
 const FakeMigrable = { uuid: 'key' } as unknown as StaticMigrable;
 

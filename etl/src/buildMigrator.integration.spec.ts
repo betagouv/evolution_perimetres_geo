@@ -1,4 +1,4 @@
-import anyTest, { TestInterface } from 'ava';
+import anyTest, { TestFn } from 'ava';
 import { Pool } from 'pg';
 import { buildMigrator } from './buildMigrator';
 import { Migrator } from './Migrator';
@@ -39,7 +39,7 @@ interface TestContext {
   migrator: Migrator;
 }
 
-const test = anyTest as TestInterface<TestContext>;
+const test = anyTest as TestFn<TestContext>;
 
 test.before(async (t) => {
   t.context.connection = createPool();
