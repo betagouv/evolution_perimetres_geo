@@ -1,4 +1,4 @@
-import anyTest, { TestInterface } from 'ava';
+import anyTest, { TestFn } from 'ava';
 import { access } from 'fs/promises';
 import { Pool } from 'pg';
 import { AbstractDataset } from '../../../../common/AbstractDataset';
@@ -11,7 +11,7 @@ interface TestContext {
   dataset: AbstractDataset;
 }
 
-const test = anyTest as TestInterface<TestContext>;
+const test = anyTest as TestFn<TestContext>;
 
 test.before(async (t) => {
   t.context.connection = createPool();
