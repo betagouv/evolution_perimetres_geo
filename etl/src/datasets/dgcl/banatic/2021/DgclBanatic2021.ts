@@ -2,6 +2,8 @@ import { DgclBanaticDataset } from '../common/DgclBanaticDataset';
 import { CeremaAom2021 } from '../../../../datasets';
 import { FileTypeEnum, StateManagerInterface } from '../../../../interfaces';
 
+// This file is no longer available
+// For archive only
 export class DgclBanatic2021 extends DgclBanaticDataset {
   static producer = 'dgcl';
   static dataset = 'banatic';
