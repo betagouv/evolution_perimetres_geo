@@ -35,3 +35,44 @@ jobs:
         working-directory: etl
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Create sources list
+        run: |
+          mkdir sources
+          yarn source | sed '1,4d' > sources/list.txt
+        working-directory: etl
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: sources-list
+          path: sources/list.txt
+        working-directory: etl
+  upload_sources:
+    runs-on: ubuntu-latest
+    container: node:16.13-bullseye
+    services:
+      minio:
+        image: minio/mc
+        env:
+          MINIO_URL: http://s3:9000
+          MINIO_ACCESS_KEY: minioadmin
+          MINIO_SECRET_KEY: minioadmin
+          MINIO_REGION_NAME: fr-par
+    steps:
+      - uses: actions/checkout@v2
+      - name: upload Source list
+        uses: actions/download-artifact@v3
+        with:
+          name: sources-list
+      - name: Download missing files
+        run: >
+          mc alias set minio $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+          mkdir temp
+          IFS=' : '
+          while read hash_name url; do
+            FIND = mc find $MINIO_URL --name $hash_name
+            if [ -z "$FIND" ]
+            then
+              curl -o ./temp/$hash_name "$url"
+              mc mv ./temp/$hash_name $MINIO_URL
+            fi
+          done < sources/list.txt
