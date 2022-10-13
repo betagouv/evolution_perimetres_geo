@@ -30,6 +30,9 @@
     "test": "ava --config ava.cjs",
     "coverage": "nyc --nycrc-path ./nyc.cjs --reporter=text ava --config ava.cjs"
   },
+  "resolutions": {
+    "mapshaper/**/d3-color": "3.1.0"
+  },
   "dependencies": {
     "axios": "^0.25.0",
     "commander": "^8.3.0",
