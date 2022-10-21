@@ -55,9 +55,9 @@ jobs:
           name: sources-list
       - name: Download missing files
         env:
-          AWS_ENDPOINT: ${{ secrets.REPLACE_ME }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.REPLACE_ME }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.REPLACE_ME }}
-          AWS_BUCKET: ${{ secrets.REPLACE_ME }}
+          AWS_ENDPOINT: ${{ secrets.AWS_ENDPOINT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
         run: >
-          cat sources-list | docker-compose run -T s3tool 
+          cat sources-list | docker-compose run -e AWS_ENDPOINT AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_BUCKET -T s3tool 
