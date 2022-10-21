@@ -60,4 +60,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
         run: >
-          cat sources-list | docker-compose run -e AWS_ENDPOINT AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_BUCKET -T s3tool 
+          cat sources-list | docker-compose run -e AWS_ENDPOINT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_BUCKET -T s3tool 
