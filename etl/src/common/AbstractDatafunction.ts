@@ -11,15 +11,18 @@ import { SqlError, ValidationError } from '../errors';
 
 export abstract class AbstractDatafunction implements DatasetInterface {
   abstract readonly sql: string;
-  abstract readonly function: string;
   readonly targetTable: string = 'perimeters';
+
+  get table(): string {
+    return (this.constructor as StaticAbstractDataset).table;
+  }
   
   get targetTableWithSchema(): string {
     return `${this.targetSchema}.${this.targetTable}`;
   }
 
   get functionWithSchema(): string {
-    return `${this.targetSchema}.${this.function}`;
+    return `${this.targetSchema}.${this.table}`;
   }
 
   required: Set<StaticMigrable> = new Set();
@@ -36,7 +39,7 @@ export abstract class AbstractDatafunction implements DatasetInterface {
     if (difference.size > 0) {
       throw new ValidationError(
         this,
-        `Cant apply this dataset, element is missing (${[...difference].map((d) => d.uuid).join(', ')})`,
+        `Cant apply this function, element is missing (${[...difference].map((d) => d.uuid).join(', ')})`,
       );
     }
   }

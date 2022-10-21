@@ -1,8 +1,12 @@
+import { CreateGeoTable } from '../datastructure/000_CreateGeoTable';
+import { StaticMigrable } from 'src/interfaces';
 import { AbstractDatafunction } from '../common/AbstractDatafunction';
 
 export class CreateGetLatestByPointFunction extends AbstractDatafunction {
   static uuid = 'create_get_latest_by_point_function';
-  readonly function = 'get_latest_by_point';
+  static table = 'get_latest_by_point';
+  static year = 2022;
+  readonly required: Set<StaticMigrable> = new Set([CreateGeoTable]);
   readonly sql = `
     CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(lon float, lat float) returns table (
       year smallint,

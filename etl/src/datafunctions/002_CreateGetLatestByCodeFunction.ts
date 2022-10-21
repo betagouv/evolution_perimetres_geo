@@ -2,13 +2,13 @@ import { CreateGeoTable } from '../datastructure/000_CreateGeoTable';
 import { StaticMigrable } from 'src/interfaces';
 import { AbstractDatafunction } from '../common/AbstractDatafunction';
 
-export class CreateGetByPointFunction extends AbstractDatafunction {
-  static uuid = 'create_get_by_point_function';
-  static table = 'get_by_point';
+export class CreateGetLatestByCodeFunction extends AbstractDatafunction {
+  static uuid = 'create_get_latest_by_code_function';
+  static table = 'get_latest_by_code';
   static year = 2022;
   readonly required: Set<StaticMigrable> = new Set([CreateGeoTable]);
   readonly sql = `
-    CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(lon float, lat float, year smallint) returns table (
+    CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(code varchar) returns table (
       year smallint,
       l_arr varchar,
       arr varchar,
@@ -29,7 +29,7 @@ export class CreateGetByPointFunction extends AbstractDatafunction {
       pop int,
       surface real 
     ) as $$
-      SELECT
+      SELECT 
         year,
         l_arr,
         arr,
@@ -51,10 +51,8 @@ export class CreateGetByPointFunction extends AbstractDatafunction {
         surface
       FROM ${this.targetTableWithSchema}
       WHERE
-        geom IS NOT NULL
-        AND year = $3 
-        AND ST_WITHIN(ST_SETSRID(ST_POINT($1, $2), '4326'), geom)
-      ORDER BY year DESC, surface ASC
+        arr = $1
+      ORDER BY year DESC
       LIMIT 1
     $$ language sql;
   `;

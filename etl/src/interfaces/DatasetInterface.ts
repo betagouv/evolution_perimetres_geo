@@ -4,13 +4,13 @@ import { FileManagerInterface, StateManagerInterface } from '.';
 export interface StaticMigrable {
   readonly uuid: string;
   readonly table: string;
+  readonly year: number;
   new (connection: Pool, file: FileManagerInterface, targetSchema: string): DatasetInterface;
 }
 
 export interface StaticAbstractDataset extends StaticMigrable {
   readonly producer: string;
   readonly dataset: string;
-  readonly year: number;
 }
 
 export interface DatasetInterface {
