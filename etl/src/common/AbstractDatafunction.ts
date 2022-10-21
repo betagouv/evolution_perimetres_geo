@@ -16,7 +16,7 @@ export abstract class AbstractDatafunction implements DatasetInterface {
   get table(): string {
     return (this.constructor as StaticAbstractDataset).table;
   }
-  
+
   get targetTableWithSchema(): string {
     return `${this.targetSchema}.${this.targetTable}`;
   }

@@ -52,7 +52,11 @@ export class DatabaseStateManager implements DatabaseStateManagerInterface {
 
   async fromMemory(state: StateManagerInterface): Promise<void> {
     const data = state.get(State.Done);
-    console.debug(data)
+    const values = JSON.stringify(
+      [...data].map((d) => {
+        return { key: d.uuid, millesime: d.year };
+      }),
+    );
     const query = {
       text: `
         INSERT INTO ${this.tableWithSchema} (key,millesime)
@@ -61,7 +65,7 @@ export class DatabaseStateManager implements DatabaseStateManagerInterface {
         as t(key varchar, millesime smallint)
         ON CONFLICT DO NOTHING
       `,
-      values: [JSON.stringify([...data].map((d) => { return {key:d.uuid, millesime:d.year}}))],
+      values: [values],
     };
     await this.connection.query(query);
   }
