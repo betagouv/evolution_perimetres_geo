@@ -45,18 +45,8 @@ jobs:
         with:
           name: sources-list
           path: sources/list.txt
-        working-directory: etl
   upload_sources:
     runs-on: ubuntu-latest
-    container: node:16.13-bullseye
-    services:
-      minio:
-        image: minio/mc
-        env:
-          MINIO_URL: http://s3:9000
-          MINIO_ACCESS_KEY: minioadmin
-          MINIO_SECRET_KEY: minioadmin
-          MINIO_REGION_NAME: fr-par
     steps:
       - uses: actions/checkout@v2
       - name: upload Source list
@@ -64,15 +54,10 @@ jobs:
         with:
           name: sources-list
       - name: Download missing files
+        env:
+          AWS_ENDPOINT: ${{ secrets.REPLACE_ME }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.REPLACE_ME }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.REPLACE_ME }}
+          AWS_BUCKET: ${{ secrets.REPLACE_ME }}
         run: >
-          mc alias set minio $MINIO_URL $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
-          mkdir temp
-          IFS=' : '
-          while read hash_name url; do
-            FIND = mc find $MINIO_URL --name $hash_name
-            if [ -z "$FIND" ]
-            then
-              curl -o ./temp/$hash_name "$url"
-              mc mv ./temp/$hash_name $MINIO_URL
-            fi
-          done < sources/list.txt
+          cat sources-list | docker-compose run -T s3tool 
