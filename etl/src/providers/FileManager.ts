@@ -20,6 +20,7 @@ export class FileManager implements FileManagerInterface {
   readonly basePath: string;
   readonly downloadPath: string;
   readonly mirrorUrl: string | undefined;
+  protected isReady = false;
 
   constructor(config: FileManagerConfigInterface) {
     this.basePath = config.basePath;
@@ -42,8 +43,24 @@ export class FileManager implements FileManagerInterface {
     return `${this.mirrorUrl}/${hash(url)}`;
   }
 
+  async install(): Promise<void> {
+    if (this.isReady) {
+      return;
+    }
+
+    for (const path of [this.basePath, this.downloadPath]) {
+      try {
+        await access(path);
+      } catch {
+        await mkdir(path, { recursive: true });
+      }
+    }
+    this.isReady = true;
+  }
+
   async decompress(filepath: string, archiveType: ArchiveFileTypeEnum, fileType: FileTypeEnum): Promise<string[]> {
     try {
+      await this.install();
       await access(filepath);
       const extractPath = this.getTemporaryDirectoryPath(`${basename(filepath)}-extract`);
       try {
@@ -78,9 +95,10 @@ export class FileManager implements FileManagerInterface {
 
   async download(url: string): Promise<string> {
     const filepath = this.getTemporaryFilePath(url, true);
+    await this.install();
     try {
       await access(filepath);
-    } catch {
+    } catch (e) {
       // If file not found download it !
       try {
         const response = await axios.get<Readable>(url, { responseType: 'stream' });

@@ -26,14 +26,18 @@ export class Migrator extends EventEmitter {
   }
 
   async prepare(): Promise<void> {
-    console.info(`Connecting to database`);
+    console.info(`[db] Connecting to database`);
 
     const client = await this.pool.connect();
     await client.query(`CREATE SCHEMA IF NOT EXISTS ${this.config.targetSchema}`);
     client.release();
 
-    console.info(`Connected!`);
+    console.info(`[db] Connected!`);
     await this.dbStateManager.install();
+
+    console.info(`[fs] Ensure filesystem is ready`);
+    await this.file.install();
+    console.info(`[fs] ok`);
   }
 
   protected getInstance(ctor: StaticMigrable): DatasetInterface {
