@@ -26,7 +26,7 @@ export class DatabaseStateManager implements DatabaseStateManagerInterface {
     await this.connection.query(`
       CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (
           key varchar(128) PRIMARY KEY,
-          millesime smallint NOT NULL,
+          millesime smallint NOT NULL DEFAULT EXTRACT(YEAR FROM NOW())::smallint,
           datetime timestamp NOT NULL DEFAULT NOW()
       )
     `);

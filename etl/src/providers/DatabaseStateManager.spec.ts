@@ -11,7 +11,7 @@ interface TestContext {
 
 const test = anyTest as TestFn<TestContext>;
 
-const FakeMigrable = { uuid: 'key' } as unknown as StaticMigrable;
+const FakeMigrable = { uuid: 'key', year: 2022 } as unknown as StaticMigrable;
 
 test.before(async (t) => {
   t.context.connection = createPool();
