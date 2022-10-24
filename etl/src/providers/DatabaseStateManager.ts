@@ -26,6 +26,7 @@ export class DatabaseStateManager implements DatabaseStateManagerInterface {
     await this.connection.query(`
       CREATE TABLE IF NOT EXISTS ${this.tableWithSchema} (
           key varchar(128) PRIMARY KEY,
+          millesime smallint NOT NULL DEFAULT EXTRACT(YEAR FROM NOW())::smallint,
           datetime timestamp NOT NULL DEFAULT NOW()
       )
     `);
@@ -51,13 +52,20 @@ export class DatabaseStateManager implements DatabaseStateManagerInterface {
 
   async fromMemory(state: StateManagerInterface): Promise<void> {
     const data = state.get(State.Done);
+    const values = JSON.stringify(
+      [...data].map((d) => {
+        return { key: d.uuid, millesime: d.year };
+      }),
+    );
     const query = {
       text: `
-        INSERT INTO ${this.tableWithSchema} (key)
-        SELECT * FROM UNNEST ($1::varchar[])
+        INSERT INTO ${this.tableWithSchema} (key,millesime)
+        SELECT * FROM
+        json_to_recordset($1)
+        as t(key varchar, millesime smallint)
         ON CONFLICT DO NOTHING
       `,
-      values: [[...data].map((d) => d.uuid)],
+      values: [values],
     };
     await this.connection.query(query);
   }

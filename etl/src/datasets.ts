@@ -1,5 +1,11 @@
 import { CreateGeoTable } from './datastructure/000_CreateGeoTable';
 import { CreateComEvolutionTable } from './datastructure/001_CreateComEvolutionTable';
+import { CreateGetLatestByPointFunction } from './datafunctions/000_CreateGetLatestByPointFunction';
+import { CreateGetByPointFunction } from './datafunctions/001_CreateGetByPointFunction';
+import { CreateGetLatestByCodeFunction } from './datafunctions/002_CreateGetLatestByCodeFunction';
+import { CreateGetByCodeFunction } from './datafunctions/003_CreateGetByCodeFunction';
+import { CreateGetLatestMillesimeFunction } from './datafunctions/004_CreateGetLatestMillesimeFunction';
+import { CreateGetLatestMillesimeOrFunction } from './datafunctions/005_CreateGetLatestMillesimeOrFunction';
 import { IgnAe2019 } from './datasets/ign/admin_express/2019/IgnAe2019';
 import { IgnAe2020 } from './datasets/ign/admin_express/2020/IgnAe2020';
 import { IgnAe2021 } from './datasets/ign/admin_express/2021/IgnAe2021';
@@ -31,6 +37,12 @@ import { InseeCom2022 } from './datasets/insee/communes/2022/InseeCom2022';
 export {
   CreateGeoTable,
   CreateComEvolutionTable,
+  CreateGetLatestByPointFunction,
+  CreateGetByPointFunction,
+  CreateGetLatestByCodeFunction,
+  CreateGetByCodeFunction,
+  CreateGetLatestMillesimeFunction,
+  CreateGetLatestMillesimeOrFunction,
   IgnAe2019,
   IgnAe2020,
   IgnAe2021,
@@ -62,6 +74,12 @@ export {
 export const datasets: Set<StaticMigrable> = new Set([
   CreateGeoTable,
   CreateComEvolutionTable,
+  CreateGetLatestByPointFunction,
+  CreateGetByPointFunction,
+  CreateGetLatestByCodeFunction,
+  CreateGetByCodeFunction,
+  CreateGetLatestMillesimeFunction,
+  CreateGetLatestMillesimeOrFunction,
   IgnAe2019,
   IgnAe2020,
   IgnAe2021,
