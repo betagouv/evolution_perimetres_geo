@@ -359,7 +359,7 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
 
-"@types/node-7z@^2.1.0":
+"@types/node-7z@^2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@types/node-7z/-/node-7z-2.1.4.tgz#756bb0dd0bebd2c25e1510568002862e9b0cf24e"
   integrity sha512-SayS5Cld62m7wRsKtBJheNBYRTVmKK+wTmW16EmYf2FuRTSGHKPx/p2OqAVjeKSQss9qcCKDGG9yv7D+Pi+iNg==
