@@ -7,7 +7,7 @@ export class CeremaAom2022 extends AbstractDataset {
   static year = 2022;
   static table = 'cerema_aom_2022';
 
-  readonly url: string = 'http://www.cerema.fr/system/files/documents/2022/07/base_rt_2022_diffusion_0.ods';
+  readonly url: string = 'http://www.cerema.fr/system/files/documents/2022/09/base_rt_2022_diffusion.ods';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.None;
   readonly rows: Map<string, [string, string]> = new Map([
     ['id_reseau', ['Id réseau', 'integer']],
