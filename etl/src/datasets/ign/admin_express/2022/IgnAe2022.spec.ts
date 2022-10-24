@@ -63,7 +63,7 @@ test.serial('should load', async (t) => {
   t.is(last.rows[0].com, '97617');
   t.is(last.rows[0].pop, 13934);
   const count = await t.context.connection.query(`SELECT count(*) FROM ${t.context.dataset.tableWithSchema}`);
-  t.is(count.rows[0].count, '35010');
+  t.is(count.rows[0].count, '35000');
 });
 
 test.serial('should cleanup', async (t) => {

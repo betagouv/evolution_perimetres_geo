@@ -1,4 +1,4 @@
-FROM node:16.13.2
+FROM node:16.18-bullseye
 
 RUN apt-get update && apt-get install -y p7zip-full \
   && rm -rf /var/lib/apt/lists/*
