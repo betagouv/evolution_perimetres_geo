@@ -8,6 +8,7 @@ stdenv.mkDerivation {
         (yarn.override { nodejs = null; })
         nodejs-16_x
         p7zip
+        minio-client
     ];
 
     shellHook = ''

@@ -33,7 +33,7 @@ Maintenant, vous pouvez utiliser le programme avec la ligne de commande :
 - `-S, --schema <schema>` : Postgresql schema, prend pour valeur la variable d'environnement POSTGRES_SCHEMA ou la valeur par défaut: "public".
 
 ### Dossier de téléchargement
-- `-d, --directory <directory>` : Chemin vers le répertoire de téléchargment, prend pour valeur la variable d'environnement DOWNLOAD_DIRECTORY ou le répertoire temporaire de l'os par défaut si la variable d'environnement est manquante.
+- `-d, --directory <directory>` : Chemin vers le répertoire de téléchargment, prend pour valeur la variable d'environnement CACHE_DIRECTORY ou le répertoire temporaire de l'os par défaut si la variable d'environnement est manquante.
 
 
 ## Commande `import`

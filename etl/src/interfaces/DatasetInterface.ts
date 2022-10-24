@@ -9,6 +9,7 @@ export interface StaticMigrable {
 }
 
 export interface StaticAbstractDataset extends StaticMigrable {
+  readonly url: string;
   readonly producer: string;
   readonly dataset: string;
 }

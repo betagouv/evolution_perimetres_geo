@@ -1,5 +1,5 @@
 import os from 'os';
-import { datasets } from './datasets';
+import { datasets, datastructures } from './datasets';
 import { ConfigInterface } from './interfaces/ConfigInterface';
 
 export const config: ConfigInterface = {
@@ -15,12 +15,15 @@ export const config: ConfigInterface = {
     level: process.env.LOG_LEVEL || 'debug',
   },
   file: {
-    basePath: process.env.DOWNLOAD_DIRECTORY || os.tmpdir(),
+    basePath: process.env.CACHE_DIRECTORY || os.tmpdir(),
+    downloadPath: process.env.DOWNLOAD_DIRECTORY,
+    mirrorUrl: process.env.MIRROR_URL,
   },
   app: {
     noCleanup: false,
     targetSchema: process.env.POSTGRES_SCHEMA || 'public',
-    migrations: datasets,
+    datasets,
+    datastructures,
     sevenZipBinPath: process.env.SEVEN_ZIP_BIN_PATH,
   },
 };

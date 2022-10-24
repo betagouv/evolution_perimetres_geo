@@ -7,8 +7,8 @@ export class InseeMvtcom2021 extends AbstractDataset {
   static year = 2021;
   static table = 'insee_mvtcom_2021';
   readonly targetTable = 'com_evolution';
+  static url = 'https://www.insee.fr/fr/statistiques/fichier/5057840/mvtcommune2021-csv.zip';
 
-  readonly url: string = 'https://www.insee.fr/fr/statistiques/fichier/5057840/mvtcommune2021-csv.zip';
   readonly fileArchiveType: ArchiveFileTypeEnum = ArchiveFileTypeEnum.Zip;
   readonly rows: Map<string, [string, string]> = new Map([
     ['mod', ['0', 'smallint']],

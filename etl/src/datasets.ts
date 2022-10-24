@@ -26,11 +26,10 @@ import { CeremaAom2019 } from './datasets/cerema/aom/2019/CeremaAom2019';
 import { CeremaAom2020 } from './datasets/cerema/aom/2020/CeremaAom2020';
 import { CeremaAom2021 } from './datasets/cerema/aom/2021/CeremaAom2021';
 import { CeremaAom2022 } from './datasets/cerema/aom/2022/CeremaAom2022';
-import { DgclBanatic2021 } from './datasets/dgcl/banatic/2021/DgclBanatic2021';
 import { DgclBanatic2022 } from './datasets/dgcl/banatic/2022/DgclBanatic2022';
 import { InseeMvtcom2021 } from './datasets/insee/mvt_communaux/2021/InseeMvtcom2021';
 import { InseeMvtcom2022 } from './datasets/insee/mvt_communaux/2022/InseeMvtcom2022';
-import { StaticMigrable } from './interfaces';
+import { StaticAbstractDataset, StaticMigrable } from './interfaces';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
 import { InseeCom2022 } from './datasets/insee/communes/2022/InseeCom2022';
 
@@ -65,13 +64,12 @@ export {
   CeremaAom2020,
   CeremaAom2021,
   CeremaAom2022,
-  DgclBanatic2021,
   DgclBanatic2022,
   InseeMvtcom2021,
   InseeMvtcom2022,
 };
 
-export const datasets: Set<StaticMigrable> = new Set([
+export const datastructures: Set<StaticMigrable> = new Set([
   CreateGeoTable,
   CreateComEvolutionTable,
   CreateGetLatestByPointFunction,
@@ -80,6 +78,9 @@ export const datasets: Set<StaticMigrable> = new Set([
   CreateGetByCodeFunction,
   CreateGetLatestMillesimeFunction,
   CreateGetLatestMillesimeOrFunction,
+]);
+
+export const datasets: Set<StaticAbstractDataset> = new Set([
   IgnAe2019,
   IgnAe2020,
   IgnAe2021,
@@ -102,7 +103,6 @@ export const datasets: Set<StaticMigrable> = new Set([
   CeremaAom2020,
   CeremaAom2021,
   CeremaAom2022,
-  DgclBanatic2021,
   DgclBanatic2022,
   InseeMvtcom2021,
   InseeMvtcom2022,

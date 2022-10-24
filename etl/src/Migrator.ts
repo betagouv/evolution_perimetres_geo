@@ -8,6 +8,7 @@ import {
   StateManagerInterface,
   DatasetInterface,
   flow,
+  StaticAbstractDataset,
 } from './interfaces';
 import { createStateManager } from './helpers';
 import { EventEmitter } from 'stream';
@@ -25,14 +26,18 @@ export class Migrator extends EventEmitter {
   }
 
   async prepare(): Promise<void> {
-    console.info(`Connecting to database`);
+    console.info(`[db] Connecting to database`);
 
     const client = await this.pool.connect();
     await client.query(`CREATE SCHEMA IF NOT EXISTS ${this.config.targetSchema}`);
     client.release();
 
-    console.info(`Connected!`);
+    console.info(`[db] Connected!`);
     await this.dbStateManager.install();
+
+    console.info(`[fs] Ensure filesystem is ready`);
+    await this.file.install();
+    console.info(`[fs] ok`);
   }
 
   protected getInstance(ctor: StaticMigrable): DatasetInterface {
@@ -43,6 +48,10 @@ export class Migrator extends EventEmitter {
     return this.migrableInstances.get(ctor) as DatasetInterface;
   }
 
+  getDatasets(): Array<StaticAbstractDataset> {
+    return [...this.config.datasets];
+  }
+
   async getDone(state?: StateManagerInterface): Promise<StaticMigrable[]> {
     const done = (state ?? (await this.dbStateManager.toMemory())).get(State.Done);
     return [...done];
@@ -50,7 +59,7 @@ export class Migrator extends EventEmitter {
 
   async getTodo(state?: StateManagerInterface): Promise<StaticMigrable[]> {
     const done = (state ?? (await this.dbStateManager.toMemory())).get(State.Done);
-    return [...this.config.migrations].filter((m) => !done.has(m));
+    return [...this.config.datastructures, ...this.config.datasets].filter((m) => !done.has(m));
   }
 
   async do(migrable: DatasetInterface, migrableState: State, stateManager: StateManagerInterface): Promise<void> {

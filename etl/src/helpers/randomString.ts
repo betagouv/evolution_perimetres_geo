@@ -5,5 +5,5 @@ export function randomString(length = 16): string {
 }
 
 export function hash(data: string): string {
-  return createHash('sha256').update(data).digest('hex');
+  return createHash('md5').update(data).digest('hex');
 }

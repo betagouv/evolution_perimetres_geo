@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { access, mkdir } from 'fs/promises';
 import { Readable } from 'stream';
 import mapshaper from 'mapshaper';
@@ -18,20 +18,49 @@ import { FileManagerInterface, FileManagerConfigInterface, ArchiveFileTypeEnum, 
 
 export class FileManager implements FileManagerInterface {
   readonly basePath: string;
+  readonly downloadPath: string;
+  readonly mirrorUrl: string | undefined;
+  protected isReady = false;
+
   constructor(config: FileManagerConfigInterface) {
     this.basePath = config.basePath;
+    this.downloadPath = config.downloadPath || join(config.basePath, 'download');
+    this.mirrorUrl = config.mirrorUrl;
   }
 
   protected getTemporaryDirectoryPath(name?: string): string {
     return name ? join(this.basePath, name) : this.getTemporaryFilePath();
   }
 
-  protected getTemporaryFilePath(data?: string): string {
-    return join(this.basePath, data ? hash(data) : randomString());
+  protected getTemporaryFilePath(data?: string, isDownload = false): string {
+    return join(isDownload ? this.downloadPath : this.basePath, data ? hash(data) : randomString());
+  }
+
+  protected getMirrorUrl(url: string): string | undefined {
+    if (!this.mirrorUrl) {
+      return;
+    }
+    return `${this.mirrorUrl}/${hash(url)}`;
+  }
+
+  async install(): Promise<void> {
+    if (this.isReady) {
+      return;
+    }
+
+    for (const path of [this.basePath, this.downloadPath]) {
+      try {
+        await access(path);
+      } catch {
+        await mkdir(path, { recursive: true });
+      }
+    }
+    this.isReady = true;
   }
 
   async decompress(filepath: string, archiveType: ArchiveFileTypeEnum, fileType: FileTypeEnum): Promise<string[]> {
     try {
+      await this.install();
       await access(filepath);
       const extractPath = this.getTemporaryDirectoryPath(`${basename(filepath)}-extract`);
       try {
@@ -65,13 +94,25 @@ export class FileManager implements FileManagerInterface {
   }
 
   async download(url: string): Promise<string> {
-    const filepath = this.getTemporaryFilePath(url);
+    const filepath = this.getTemporaryFilePath(url, true);
+    await this.install();
     try {
       await access(filepath);
-    } catch {
+    } catch (e) {
       // If file not found download it !
-      const response = await axios.get<Readable>(url, { responseType: 'stream' });
-      await writeFile(response.data, filepath);
+      try {
+        const response = await axios.get<Readable>(url, { responseType: 'stream' });
+        await writeFile(response.data, filepath);
+      } catch (e) {
+        // If not found and have mirror, try download
+        const mirrorUrl = this.getMirrorUrl(url);
+        if ((e as AxiosError).isAxiosError && (e as AxiosError).code === '404' && mirrorUrl) {
+          const response = await axios.get<Readable>(mirrorUrl, { responseType: 'stream' });
+          await writeFile(response.data, filepath);
+        } else {
+          throw e;
+        }
+      }
     }
     return filepath;
   }

@@ -1,15 +1,18 @@
 import { PoolConfig } from 'pg';
-import { StaticMigrable } from '.';
+import { StaticAbstractDataset, StaticMigrable } from '.';
 
 export interface AppConfigInterface {
   targetSchema: string;
   noCleanup: boolean;
-  migrations: Set<StaticMigrable>;
+  datasets: Set<StaticAbstractDataset>;
+  datastructures: Set<StaticMigrable>;
   sevenZipBinPath?: string;
 }
 
 export interface FileManagerConfigInterface {
   basePath: string;
+  downloadPath?: string;
+  mirrorUrl?: string;
 }
 
 export interface LoggerConfigInterface {
