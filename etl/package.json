@@ -31,7 +31,8 @@
     "coverage": "nyc --nycrc-path ./nyc.cjs --reporter=text ava --config ava.cjs"
   },
   "resolutions": {
-    "mapshaper/**/d3-color": "3.1.0"
+    "mapshaper/**/d3-color": "3.1.0",
+    "mapshaper/**/@xmldom/xmldom": "0.8.3"
   },
   "dependencies": {
     "axios": "^1.1.3",
