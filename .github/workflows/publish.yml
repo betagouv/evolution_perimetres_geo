@@ -37,15 +37,16 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Create sources list
         run: |
-          mkdir sources
-          yarn start source | sed '1,4d' > sources/list.txt
+          mkdir -p /tmp/sources
+          yarn start source | sed '1,4d' > /tmp/sources/list.txt
         working-directory: etl
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: sources-list
-          path: sources/list.txt
+          path: /tmp/sources/list.txt
   upload_sources:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
