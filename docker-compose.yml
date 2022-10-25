@@ -44,8 +44,6 @@ services:
       - AWS_ACCESS_KEY_ID=admin
       - AWS_SECRET_ACCESS_KEY=admin789456123
       - AWS_BUCKET=perimeters
-    depends_on:
-      - s3
     networks:
       - back
 
