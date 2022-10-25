@@ -50,10 +50,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: upload Source list
+      - name: Dowload Source list
         uses: actions/download-artifact@v3
+        id: download
         with:
           name: sources-list
+          path: sources-list
       - name: Download missing files
         env:
           AWS_ENDPOINT: ${{ secrets.AWS_ENDPOINT }}
@@ -61,4 +63,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
         run: >
-          cat sources-list | docker-compose run -e AWS_ENDPOINT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_BUCKET -T s3tool 
+          cat ${{steps.download.outputs.download-path}}/sources-list | docker-compose run -e AWS_ENDPOINT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_BUCKET -T s3tool 
