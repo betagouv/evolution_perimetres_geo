@@ -16,7 +16,7 @@ export abstract class AbstractDataset implements DatasetInterface {
     const self = this as unknown as StaticAbstractDataset;
     return getDatasetUuid(self.producer, self.dataset, self.year);
   }
-  static forgettable = false;
+  static skipStatePersistence = false;
   abstract readonly fileArchiveType: ArchiveFileTypeEnum;
   abstract readonly fileType: FileTypeEnum;
   abstract readonly rows: Map<string, [string, string]>;

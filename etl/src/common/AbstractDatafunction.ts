@@ -10,7 +10,7 @@ import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
 
 export abstract class AbstractDatafunction implements DatasetInterface {
-  static forgettable = true;
+  static skipStatePersistence = true;
   abstract readonly sql: string;
   readonly targetTable: string = 'perimeters';
 
