@@ -5,8 +5,13 @@ mkdir -p temp
 IN_S3=$(mc ls minio/$AWS_BUCKET --json | jq '.key')
 IFS=' : '
 while read hash_name url; do
-  FIND=$(grep "$hash_name" <<< $IN_S3)
   echo "processing [$hash_name] $url"
+  if [[ $hash_name == "Done" ]];
+    then
+      echo "All files are been processed"
+      break
+  fi
+  FIND=$(grep "$hash_name" <<< $IN_S3)
   if [ -z $FIND ]
     then
         echo "not found"
