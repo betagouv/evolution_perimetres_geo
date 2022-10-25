@@ -38,7 +38,7 @@ jobs:
       - name: Create sources list
         run: |
           mkdir sources
-          yarn source | sed '1,4d' > sources/list.txt
+          yarn start source | sed '1,4d' > sources/list.txt
         working-directory: etl
       - name: Upload artifact
         uses: actions/upload-artifact@v3

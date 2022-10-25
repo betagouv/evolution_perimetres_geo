@@ -33,7 +33,7 @@ function parseInteger(value: string): number {
   return parsedValue;
 }
 
-async function getMigrator(options: Partial<Options>): Promise<Migrator> {
+function getMigrator(options: Partial<Options>): Migrator {
   const config: Partial<PartialConfigInterface> = {
     pool: {
       ...(options.url && options.url.length
@@ -66,24 +66,25 @@ async function getMigrator(options: Partial<Options>): Promise<Migrator> {
     },
   };
   const migrator = buildMigrator(config);
-  await migrator.prepare();
   return migrator;
 }
 
 async function importAction(opts: Partial<Options>) {
   const logger = new Console({ stdout: process.stdout, stderr: process.stderr });
-  const migrator = await getMigrator(opts);
+  const migrator = getMigrator(opts);
   migrator.on('start', (event: { uuid: string; state: State }) => {
     logger.info(`${event.uuid} - ${event.state}`);
   });
   migrator.on('error', (event: { uuid: string; state: State }) => {
     logger.info(`${event.uuid} - ${event.state} - Error`);
   });
+  await migrator.prepare();
   await migrator.run();
 }
 
 async function statusAction(opts: Partial<Options>) {
-  const migrator = await getMigrator(opts);
+  const migrator = getMigrator(opts);
+  await migrator.prepare();
   const done = await migrator.getDone();
   const todo = await migrator.getTodo();
   const logger = new Console({ stdout: process.stdout, stderr: process.stderr });
@@ -94,7 +95,7 @@ async function statusAction(opts: Partial<Options>) {
 }
 
 async function getSourceAction(opts: Partial<Options>) {
-  const migrator = await getMigrator(opts);
+  const migrator = getMigrator(opts);
   const datasets = migrator.getDatasets();
   const logger = new Console({ stdout: process.stdout, stderr: process.stderr });
   datasets.map((d) => logger.info(`${hash(d.url)} : ${d.url}`));
