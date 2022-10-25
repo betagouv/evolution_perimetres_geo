@@ -5,7 +5,7 @@ export interface StaticMigrable {
   readonly uuid: string;
   readonly table: string;
   readonly year: number;
-  readonly skipStatePersistence: boolean;
+  readonly skipStatePersistence?: boolean;
   new (connection: Pool, file: FileManagerInterface, targetSchema: string): DatasetInterface;
 }
 
