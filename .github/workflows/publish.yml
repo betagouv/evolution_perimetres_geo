@@ -63,4 +63,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
         run: >
-          cat ${{steps.download.outputs.download-path}} | docker-compose run -e AWS_ENDPOINT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_BUCKET -T s3tool 
+          cat ${{steps.download.outputs.download-path}}/list.txt | docker-compose run -e AWS_ENDPOINT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_BUCKET -T s3tool 
