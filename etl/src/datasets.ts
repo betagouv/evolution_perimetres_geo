@@ -6,6 +6,7 @@ import { CreateGetLatestByCodeFunction } from './datafunctions/002_CreateGetLate
 import { CreateGetByCodeFunction } from './datafunctions/003_CreateGetByCodeFunction';
 import { CreateGetLatestMillesimeFunction } from './datafunctions/004_CreateGetLatestMillesimeFunction';
 import { CreateGetLatestMillesimeOrFunction } from './datafunctions/005_CreateGetLatestMillesimeOrFunction';
+import { CreateGetClosestCountryFunction } from './datafunctions/006_CreateGetClosestCountryFunction';
 import { IgnAe2019 } from './datasets/ign/admin_express/2019/IgnAe2019';
 import { IgnAe2020 } from './datasets/ign/admin_express/2020/IgnAe2020';
 import { IgnAe2021 } from './datasets/ign/admin_express/2021/IgnAe2021';
@@ -42,6 +43,7 @@ export {
   CreateGetByCodeFunction,
   CreateGetLatestMillesimeFunction,
   CreateGetLatestMillesimeOrFunction,
+  CreateGetClosestCountryFunction,
   IgnAe2019,
   IgnAe2020,
   IgnAe2021,
@@ -78,6 +80,7 @@ export const datastructures: Set<StaticMigrable> = new Set([
   CreateGetByCodeFunction,
   CreateGetLatestMillesimeFunction,
   CreateGetLatestMillesimeOrFunction,
+  CreateGetClosestCountryFunction,
 ]);
 
 export const datasets: Set<StaticAbstractDataset> = new Set([

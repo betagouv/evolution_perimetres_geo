@@ -102,7 +102,12 @@ export class Migrator extends EventEmitter {
           if (!this.config.noCleanup) {
             await migrable.after();
           }
-          stateManager.set(migrableCtor, State.Done);
+          migrableCtor.forgettable
+            ? stateManager.set(migrableCtor, State.ForgotDone)
+            : stateManager.set(migrableCtor, State.Done);
+          break;
+        case State.ForgotDone:
+          console.debug(`${migrableCtor.uuid} : done with forgot`);
           break;
         case State.Done:
           console.debug(`${migrableCtor.uuid} : done`);

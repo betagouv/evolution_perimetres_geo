@@ -10,6 +10,7 @@ import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
 
 export abstract class AbstractDatastructure implements DatasetInterface {
+  static forgettable = false;
   abstract readonly sql: string;
   get table(): string {
     return (this.constructor as StaticAbstractDataset).table;
