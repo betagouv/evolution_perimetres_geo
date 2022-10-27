@@ -1,12 +1,9 @@
-import { CreateGeoTable } from '../datastructure/000_CreateGeoTable';
-import { StaticMigrable } from 'src/interfaces';
 import { AbstractDatafunction } from '../common/AbstractDatafunction';
 
 export class CreateGetLatestByCodeFunction extends AbstractDatafunction {
   static uuid = 'create_get_latest_by_code_function';
   static table = 'get_latest_by_code';
   static year = 2022;
-  readonly required: Set<StaticMigrable> = new Set([CreateGeoTable]);
   readonly sql = `
     CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(code varchar) returns table (
       year smallint,

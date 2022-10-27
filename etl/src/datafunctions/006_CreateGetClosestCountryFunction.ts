@@ -1,11 +1,11 @@
 import { AbstractDatafunction } from '../common/AbstractDatafunction';
 
-export class CreateGetByCodeFunction extends AbstractDatafunction {
-  static uuid = 'create_get_by_code_function';
-  static table = 'get_by_code';
+export class CreateGetClosestCountryFunction extends AbstractDatafunction {
+  static uuid = 'create_get_closest_country_function';
+  static table = 'get_closest_country';
   static year = 2022;
   readonly sql = `
-    CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(code varchar, year smallint) returns table (
+    CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(lon float, lat float, year smallint) returns table (
       year smallint,
       l_arr varchar,
       arr varchar,
@@ -26,7 +26,7 @@ export class CreateGetByCodeFunction extends AbstractDatafunction {
       pop int,
       surface real 
     ) as $$
-      SELECT 
+      SELECT
         year,
         l_arr,
         arr,
@@ -48,9 +48,13 @@ export class CreateGetByCodeFunction extends AbstractDatafunction {
         surface
       FROM ${this.targetTableWithSchema}
       WHERE
-        arr = $1 AND
-        year = $2
+        geom IS NOT NULL
+        AND country <> 'XXXXX'
+        AND year = $3 
+        AND
+        ST_Intersects(ST_Buffer(ST_Transform(ST_SetSRID(ST_Point($1, $2),'4326'),2154),1000),ST_Transform(geom,2154))
+      ORDER BY year DESC
       LIMIT 1
-    $$ language sql;
+    $$ language sql stable;
   `;
 }

@@ -23,6 +23,7 @@ export enum State {
   Loaded = 'loaded',
   Imported = 'imported',
   Done = 'done',
+  DoneSkipPersistence = 'done with skip persistence',
   Failed = 'failed',
   Unplanned = 'unplanned',
 }

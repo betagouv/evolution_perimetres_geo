@@ -1,12 +1,9 @@
-import { CreateGeoTable } from '../datastructure/000_CreateGeoTable';
-import { StaticMigrable } from 'src/interfaces';
 import { AbstractDatafunction } from '../common/AbstractDatafunction';
 
 export class CreateGetByPointFunction extends AbstractDatafunction {
   static uuid = 'create_get_by_point_function';
   static table = 'get_by_point';
   static year = 2022;
-  readonly required: Set<StaticMigrable> = new Set([CreateGeoTable]);
   readonly sql = `
     CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(lon float, lat float, year smallint) returns table (
       year smallint,

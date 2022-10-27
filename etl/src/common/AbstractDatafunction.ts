@@ -10,6 +10,7 @@ import { Pool } from 'pg';
 import { SqlError, ValidationError } from '../errors';
 
 export abstract class AbstractDatafunction implements DatasetInterface {
+  static skipStatePersistence = true;
   abstract readonly sql: string;
   readonly targetTable: string = 'perimeters';
 
@@ -44,14 +45,7 @@ export abstract class AbstractDatafunction implements DatasetInterface {
     }
   }
 
-  async before(): Promise<void> {
-    try {
-      console.debug(this.sql);
-      await this.connection.query(this.sql);
-    } catch (e) {
-      throw new SqlError(this, (e as Error).message);
-    }
-  }
+  async before(): Promise<void> {}
 
   async download(): Promise<void> {}
 
@@ -61,5 +55,12 @@ export abstract class AbstractDatafunction implements DatasetInterface {
 
   async import(): Promise<void> {}
 
-  async after(): Promise<void> {}
+  async after(): Promise<void> {
+    try {
+      console.debug(this.sql);
+      await this.connection.query(this.sql);
+    } catch (e) {
+      throw new SqlError(this, (e as Error).message);
+    }
+  }
 }

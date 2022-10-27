@@ -4,6 +4,7 @@ export class CreateGeoTable extends AbstractDatastructure {
   static uuid = 'create_geo_table';
   static table = 'perimeters';
   static year = 2019;
+
   readonly indexWithSchema = this.tableWithSchema.replace('.', '_');
   readonly sql = `
       CREATE EXTENSION IF NOT EXISTS postgis;
