@@ -34,7 +34,10 @@ export class DgclBanatic2022 extends DgclBanaticDataset {
     WHERE  a.com = t.com AND a.year = 2022;
   `;
   /* Attribution des code aom région (identique au code siren de la région) pour les communes
-  n'ayant pas pris la compétence */
+  n'ayant pas pris la compétence  !!! Attention, il y a plusieurs erreurs dans le fichier source
+  CeremaAom2022: les codes régions ont été attribués en tant que code aom mais parfois les codes ne 
+  coincident pas. Les erreurs sont corrigés en remplaçant les codes aom des valeurs nulles 
+  ou <= à 2 caractères via la requête ci-dessous */
   readonly extraImportSql = `
     UPDATE ${this.targetTableWithSchema} SET 
       aom = CASE WHEN reg = '84' THEN '200053767'
@@ -57,6 +60,7 @@ export class DgclBanatic2022 extends DgclBanaticDataset {
         WHEN reg = '06' THEN '229850003'
       END,
       l_aom = l_reg
-    WHERE aom is null AND year = 2022;
+    WHERE (length(aom) <= 2 OR aom IS NULL)
+    AND year = 2022;
   `;
 }
