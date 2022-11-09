@@ -10,6 +10,9 @@ export class DgclBanatic2021 extends DgclBanaticDataset {
   static year = 2021;
   static table = 'dgcl_banatic_2021';
   static url =
+    // Le fichier original n'est plus disponible, il a été remplacé par l'édition 2022.
+    // Suite à ce pb, une sauvegarde des fichiers des datasets a été mis en place.
+    // cf /docs/datasets.md
     // eslint-disable-next-line max-len
     'https://www.banatic.interieur.gouv.fr/V5/fichiers-en-telechargement/telecharger.php?zone=N&date=01/01/2022&format=C';
 

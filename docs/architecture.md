@@ -18,6 +18,8 @@
 │   │   ├── common
 │   │   │   ├── AbstractDataset.ts
 │   │   │   ├── AbstractDatastructure.ts
+│   │   │   ├── AbstractDatafunction.ts
+│   │   │   ├── AbstractDatatreatment.ts
 │   │   │   ├── index.ts
 │   │   │   └── Migrator.ts
 │   │   ├── config.ts
@@ -47,6 +49,8 @@
 - le répertoire `etl/src/common` contient les classes abstraites communes aux datasets
 - le répertoire `etl/src/datasets` contient les datasets organisés sous la forme `producteur_de_données/jeux_de_données/millésime`
 - le répertoire `etl/src/datastructure` contient les migrations de tables finales
+- le répertoire `etl/src/datafunctions` contient les fonctions à ajouter au schéma de la base de données
+- le répertoire `etl/src/datatreatments` contient les migrations de post-traitements sur les tables finales (ex: création de centroides pour les territoires > à la maille communale)
 - le répertoire `etl/src/errors` contient les erreurs personnalisées
 - le répertoire `etl/src/helpers` est organisé de la manière suivante :
   - à la racine les helpers génériques, notamment pour instancier les providers

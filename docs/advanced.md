@@ -5,16 +5,22 @@ Au lieu d'utiliser la ligne de commande pour éxécuter l'intégralité des migr
 ## Types de datasets
 La logique du programme est de construire des tables finales agrégeant les données de tables intermédiaires (une par source et millésime de données) qui seront supprimées (ou non) en fin de parcours.
 Chaque table est donc décrite dans une classe `dataset` qui contient les différentes propriétés et méthodes permettant les différentes étapes du traitement des données (téléchargement, creation des tables, transformation des données, etc...).
-Nous avons donc conçu l'interface `DatasetInterface` qui doit être implémenté dans chaque `dataset`:
+Nous avons donc conçu les interfaces `StaticMigrable` et `DatasetInterface` qui doivent être implémentés dans chaque `dataset`:
 ```typescript=
-interface DatasetInterface {
+interface StaticMigrable {
   // la clé utilisée pour savoir si le dataset a été joué
   static readonly uuid: string;
   // la table intermédiaire du dataset
   static readonly table: string;
+  // le millésime du dataset
+  static readonly year: number;
+  // le dataset doit-il être jouer à chaque exécution ou une seule fois  
+  static readonly skipStatePersistence?: boolean;
   // pour construire la classe, elle reçoit une connexion pool Postgresql, un file provider et un schema sql sur lequel se positionner
   static new (connection: Pool, file: FileManager, targetSchema: string): DatasetInterface;
   // permet de planifier des datasets dépendants les uns des autres
+  }
+  interface DatasetInterface {
   validate(state: StateManagerInterface): Promise<void>;
   // permet de créer les table intermédiaire
   before(): Promise<void>;
@@ -30,9 +36,12 @@ interface DatasetInterface {
   after(): Promise<void>;
 }
 ```
-Néanmoins, afin de faciliter l'implémentation, nous avons créé deux classes abstraites `AbstractDatastructure` et `AbstractDataset` afin de gérer les deux types de datasets dont nous avions besoin. Libre à vous de surcharger les différentes méthodes pour répondre à votre besoin.
+Néanmoins, afin de faciliter l'implémentation, nous avons créé 4 classes abstraites `AbstractDatastructure`, `AbstractDataset`, `AbstractDatafunction` et `AbstractDatatreatment` afin de gérer les types de datasets dont nous avions besoin. Libre à vous de surcharger les différentes méthodes pour répondre à votre besoin.
 Vous pouvez étendre `AbstractDatastructure` en créant de nouvelles classes pour créer les datasets correspondants aux tables finales.
 Vous pouvez étendre `AbstractDataset` en créant de nouvelles classes pour créer les datasets correspondants aux tables intermédiaires.
+Vous pouvez étendre `AbstractDatafunction` en créant de nouvelles classes pour créer les datasets correspondants aux fonctions que vous souhaitez ajouter à la base de données.
+Vous pouvez étendre `AbstractDatatreatment` en créant de nouvelles classes pour créer les datasets correspondants à des post-traitements utilisant les données de tables finales.
+
 
 ## Jouer tous les datasets
 ```typescript=
