@@ -1,11 +1,11 @@
-import { AbstractDatafunction } from '../../common/AbstractDatafunction';
+import { AbstractDatatreatment } from '../common/AbstractDatatreatment';
 
-export class PopulateGeoCentroid extends AbstractDatafunction {
+export class PopulateGeoCentroid extends AbstractDatatreatment {
   static uuid = 'populate_geo_centroid';
-  static year = 2020;
+  static year = 2019;
   static table = 'perimeters_centroid';
   readonly sql = `
-    INSERT INTO ${this.functionWithSchema} (
+    INSERT INTO ${this.tableWithSchema} (
       year,
       type,
       territory,

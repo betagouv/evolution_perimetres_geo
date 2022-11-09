@@ -34,7 +34,7 @@ import { InseeMvtcom2022 } from './datasets/insee/mvt_communaux/2022/InseeMvtcom
 import { StaticAbstractDataset, StaticMigrable } from './interfaces';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
 import { InseeCom2022 } from './datasets/insee/communes/2022/InseeCom2022';
-import { PopulateGeoCentroid } from './datasets/custom/PopulateGeoCentroid';
+import { PopulateGeoCentroid } from './datatreatments/PopulateGeoCentroid';
 
 export {
   CreateGeoTable,
