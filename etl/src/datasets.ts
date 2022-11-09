@@ -1,5 +1,6 @@
 import { CreateGeoTable } from './datastructure/000_CreateGeoTable';
 import { CreateComEvolutionTable } from './datastructure/001_CreateComEvolutionTable';
+import { CreateGeoCentroidTable } from './datastructure/002_CreateGeoCentroidTable';
 import { CreateGetLatestByPointFunction } from './datafunctions/000_CreateGetLatestByPointFunction';
 import { CreateGetByPointFunction } from './datafunctions/001_CreateGetByPointFunction';
 import { CreateGetLatestByCodeFunction } from './datafunctions/002_CreateGetLatestByCodeFunction';
@@ -33,10 +34,12 @@ import { InseeMvtcom2022 } from './datasets/insee/mvt_communaux/2022/InseeMvtcom
 import { StaticAbstractDataset, StaticMigrable } from './interfaces';
 import { InseeCom2021 } from './datasets/insee/communes/2021/InseeCom2021';
 import { InseeCom2022 } from './datasets/insee/communes/2022/InseeCom2022';
+import { PopulateGeoCentroid } from './datasets/custom/PopulateGeoCentroid';
 
 export {
   CreateGeoTable,
   CreateComEvolutionTable,
+  CreateGeoCentroidTable,
   CreateGetLatestByPointFunction,
   CreateGetByPointFunction,
   CreateGetLatestByCodeFunction,
@@ -69,11 +72,13 @@ export {
   DgclBanatic2022,
   InseeMvtcom2021,
   InseeMvtcom2022,
+  PopulateGeoCentroid,
 };
 
 export const datastructures: Set<StaticMigrable> = new Set([
   CreateGeoTable,
   CreateComEvolutionTable,
+  CreateGeoCentroidTable,
   CreateGetLatestByPointFunction,
   CreateGetByPointFunction,
   CreateGetLatestByCodeFunction,
@@ -81,6 +86,7 @@ export const datastructures: Set<StaticMigrable> = new Set([
   CreateGetLatestMillesimeFunction,
   CreateGetLatestMillesimeOrFunction,
   CreateGetClosestCountryFunction,
+  PopulateGeoCentroid,
 ]);
 
 export const datasets: Set<StaticAbstractDataset> = new Set([
