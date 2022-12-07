@@ -5,7 +5,7 @@ export class CreateGetClosestCountryFunction extends AbstractDatafunction {
   static table = 'get_closest_country';
   static year = 2022;
   readonly sql = `
-    CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(lon float, lat float, year smallint) returns table (
+    CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(lon float, lat float) returns table (
       year smallint,
       l_arr varchar,
       arr varchar,
@@ -50,7 +50,6 @@ export class CreateGetClosestCountryFunction extends AbstractDatafunction {
       WHERE
         geom IS NOT NULL
         AND country <> 'XXXXX'
-        AND year = $3 
         AND
         ST_Intersects(ST_Buffer(ST_Transform(ST_SetSRID(ST_Point($1, $2),'4326'),2154),1000),ST_Transform(geom,2154))
       ORDER BY year DESC
