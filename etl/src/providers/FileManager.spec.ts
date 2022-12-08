@@ -91,5 +91,13 @@ test.serial('should fallback to miror if any error code with download ressource'
 
   // Assert
   sinon.assert.calledTwice(t.context.axiosStub);
+  t.true(t.context.axiosStub.getCall(0).calledWithExactly(t.context.RESSOURCE_URL, { responseType: 'stream' }));
+  t.true(
+    t.context.axiosStub
+      .getCall(1)
+      .calledWithExactly(`${t.context.fileManager.mirrorUrl}/${hash(t.context.RESSOURCE_URL)}`, {
+        responseType: 'stream',
+      }),
+  );
   t.deepEqual(readFileSync(filepath, 'utf8'), FILE_CONTENT_STRING);
 });
