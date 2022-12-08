@@ -1,3 +1,5 @@
 .env
 db/*
 yarn-error.log
+
+.vscode
