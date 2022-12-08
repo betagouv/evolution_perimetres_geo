@@ -43,7 +43,10 @@ test.beforeEach((t) => {
   t.context.fileManager = new FileManager({
     basePath: t.context.GEO_PERIMETER_TMP_DIR,
     downloadPath: `${t.context.GEO_PERIMETER_TMP_DIR}/download`,
+    mirrorUrl: 'https://s3.domain.fr/bucket',
   });
+
+  t.context.axiosStub.reset();
 
   t.context.READABLE_STREAM = new Readable();
   t.context.READABLE_STREAM.push(FILE_CONTENT_STRING);
@@ -55,7 +58,6 @@ test.serial('should return ressource file if available', async (t) => {
   const existingFilepath = join(t.context.fileManager.downloadPath, hash(t.context.RESSOURCE_URL));
   await mkdir(t.context.fileManager.downloadPath, { recursive: true });
   await writeFile(t.context.READABLE_STREAM, existingFilepath);
-  console.error(existingFilepath);
 
   // Act
   const filepath = await t.context.fileManager.download(t.context.RESSOURCE_URL);
@@ -77,9 +79,11 @@ test.serial('should download ressource url if not on fs', async (t) => {
   t.deepEqual(readFileSync(filepath, 'utf8'), FILE_CONTENT_STRING);
 });
 
-test.skip('should fallback to miror if any error code with download ressource', async (t) => {
+test.serial('should fallback to miror if any error code with download ressource', async (t) => {
   // Arrange
-  t.context.axiosStub.onCall(0).rejects(() => new AxiosError('Invalid URL', '403'));
+  t.context.axiosStub.onCall(0).callsFake(() => {
+    throw new AxiosError('Invalid URL', '403');
+  });
   t.context.axiosStub.onCall(1).resolves({ data: t.context.READABLE_STREAM });
 
   // Act

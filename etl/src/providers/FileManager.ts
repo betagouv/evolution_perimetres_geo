@@ -106,7 +106,7 @@ export class FileManager implements FileManagerInterface {
       } catch (e) {
         // If not found and have mirror, try download
         const mirrorUrl = this.getMirrorUrl(url);
-        if ((e as AxiosError).isAxiosError && (e as AxiosError).code === '404' && mirrorUrl) {
+        if ((e as AxiosError).isAxiosError && mirrorUrl) {
           const response = await axios.get<Readable>(mirrorUrl, { responseType: 'stream' });
           await writeFile(response.data, filepath);
         } else {
