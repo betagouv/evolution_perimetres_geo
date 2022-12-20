@@ -16,6 +16,7 @@ export class CreateGeoCentroidTable extends AbstractDatastructure {
     );
     CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_id_index ON ${this.tableWithSchema} USING btree (id);
     CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_geom_index ON ${this.tableWithSchema} USING gist (geom);
+    ALTER TABLE ${this.tableWithSchema} DROP CONSTRAINT IF EXISTS ${this.table}_unique_key;
     ALTER TABLE ${this.tableWithSchema} ADD CONSTRAINT ${this.table}_unique_key UNIQUE (year,territory,type);
   `;
 }
