@@ -12,11 +12,10 @@ export class CreateGeoCentroidTable extends AbstractDatastructure {
       territory varchar NOT NULL,
       l_territory varchar NOT NULL,
       type varchar NOT NULL,
-      geom geometry(POINT,4326) NOT NULL
+      geom geometry(POINT,4326) NOT NULL,
+      CONSTRAINT ${this.table}_unique_key UNIQUE (year,territory,type)
     );
     CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_id_index ON ${this.tableWithSchema} USING btree (id);
     CREATE INDEX IF NOT EXISTS ${this.indexWithSchema}_geom_index ON ${this.tableWithSchema} USING gist (geom);
-    ALTER TABLE ${this.tableWithSchema} DROP CONSTRAINT IF EXISTS ${this.table}_unique_key;
-    ALTER TABLE ${this.tableWithSchema} ADD CONSTRAINT ${this.table}_unique_key UNIQUE (year,territory,type);
   `;
 }
