@@ -53,7 +53,11 @@ export class MemoryStateManager implements StateManagerInterface {
       if (index !== -1) {
         this.migrableOrder.splice(index, 1);
       }
-      this.migrableOrder.splice(beforeIndex > -1 ? beforeIndex : index, 0, mig);
+      this.migrableOrder.splice(
+        beforeIndex > -1 ? beforeIndex : index > -1 ? index : this.migrableOrder.length,
+        0,
+        mig,
+      );
     }
   }
 
