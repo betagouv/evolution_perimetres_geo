@@ -97,24 +97,36 @@ export class FileManager implements FileManagerInterface {
     const filepath = this.getTemporaryFilePath(url, true);
     await this.install();
     try {
+      // Try accessing file
       await access(filepath);
     } catch (e) {
-      // If file not found download it !
+      // If file not found, download it on miror
       try {
-        const response = await axios.get<Readable>(url, { responseType: 'stream' });
-        await writeFile(response.data, filepath);
-      } catch (e) {
-        // If not found and have mirror, try download
         const mirrorUrl = this.getMirrorUrl(url);
-        if ((e as AxiosError).isAxiosError && mirrorUrl) {
-          const response = await axios.get<Readable>(mirrorUrl, { responseType: 'stream' });
-          await writeFile(response.data, filepath);
-        } else {
+        if(!mirrorUrl) {
+          throw e
+        }
+        await this.dowloadMiror(mirrorUrl, filepath);
+      } catch (e) {
+        // If file not found in mirror on no mirror URL, download source
+        try {
+          await this.dowloadSource(url, filepath);
+        } catch (e) {
           throw e;
         }
       }
     }
     return filepath;
+  }
+
+  private async dowloadMiror(mirrorUrl: string, filepath: string): Promise<void> {
+    const response = await axios.get<Readable>(mirrorUrl, { responseType: 'stream' });
+    await writeFile(response.data, filepath);
+  }
+
+  private async dowloadSource(url: string, filepath: string): Promise<void> {
+    const response = await axios.get<Readable>(url, { responseType: 'stream' });
+    await writeFile(response.data, filepath);
   }
 
   async transform(
