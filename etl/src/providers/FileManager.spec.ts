@@ -75,9 +75,13 @@ test.serial('should download mirrored ressource url if not on fs', async (t) => 
   const filepath = await t.context.fileManager.download(t.context.RESSOURCE_URL);
 
   // Assert
-  sinon.assert.calledOnceWithExactly(t.context.axiosStub, `${t.context.fileManager.mirrorUrl}/${hash(t.context.RESSOURCE_URL)}`, {
-    responseType: 'stream',
-  });
+  sinon.assert.calledOnceWithExactly(
+    t.context.axiosStub,
+    `${t.context.fileManager.mirrorUrl}/${hash(t.context.RESSOURCE_URL)}`,
+    {
+      responseType: 'stream',
+    },
+  );
   t.deepEqual(readFileSync(filepath, 'utf8'), FILE_CONTENT_STRING);
 });
 
@@ -95,7 +99,7 @@ test.serial('shoud fallback to source if no mirror', async (t) => {
   // Assert
   sinon.assert.calledOnceWithExactly(t.context.axiosStub, t.context.RESSOURCE_URL, { responseType: 'stream' });
   t.deepEqual(readFileSync(filepath, 'utf8'), FILE_CONTENT_STRING);
-})
+});
 
 test.serial('should fallback to source if any error code with mirrored ressource', async (t) => {
   // Arrange
@@ -109,14 +113,14 @@ test.serial('should fallback to source if any error code with mirrored ressource
 
   // Assert
   sinon.assert.calledTwice(t.context.axiosStub);
-  t.true(t.context.axiosStub.getCall(0).calledWithExactly(`${t.context.fileManager.mirrorUrl}/${hash(t.context.RESSOURCE_URL)}`, {
-    responseType: 'stream',
-  }));
   t.true(
     t.context.axiosStub
-      .getCall(1)
-      .calledWithExactly(t.context.RESSOURCE_URL, { responseType: 'stream' }),
+      .getCall(0)
+      .calledWithExactly(`${t.context.fileManager.mirrorUrl}/${hash(t.context.RESSOURCE_URL)}`, {
+        responseType: 'stream',
+      }),
   );
+  t.true(t.context.axiosStub.getCall(1).calledWithExactly(t.context.RESSOURCE_URL, { responseType: 'stream' }));
 
   t.deepEqual(readFileSync(filepath, 'utf8'), FILE_CONTENT_STRING);
 });

@@ -5,8 +5,13 @@ import { basename, join } from 'path';
 import { Readable } from 'stream';
 import {
   getAllFiles,
-  getFileExtensions, hash,
-  randomString, un7zFile, ungzFile, unzipFile, writeFile
+  getFileExtensions,
+  hash,
+  randomString,
+  un7zFile,
+  ungzFile,
+  unzipFile,
+  writeFile,
 } from '../helpers';
 
 import { ArchiveFileTypeEnum, FileManagerConfigInterface, FileManagerInterface, FileTypeEnum } from '../interfaces';
@@ -98,8 +103,8 @@ export class FileManager implements FileManagerInterface {
       // If file not found, download it on miror
       try {
         const mirrorUrl = this.getMirrorUrl(url);
-        if(!mirrorUrl) {
-          throw e
+        if (!mirrorUrl) {
+          throw e;
         }
         await this.dowloadMiror(mirrorUrl, filepath);
       } catch (e) {
