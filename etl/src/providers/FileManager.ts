@@ -1,20 +1,15 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { access, mkdir } from 'fs/promises';
-import { Readable } from 'stream';
 import mapshaper from 'mapshaper';
 import { basename, join } from 'path';
+import { Readable } from 'stream';
 import {
-  writeFile,
-  hash,
-  randomString,
-  unzipFile,
-  ungzFile,
-  un7zFile,
   getAllFiles,
-  getFileExtensions,
+  getFileExtensions, hash,
+  randomString, un7zFile, ungzFile, unzipFile, writeFile
 } from '../helpers';
 
-import { FileManagerInterface, FileManagerConfigInterface, ArchiveFileTypeEnum, FileTypeEnum } from '../interfaces';
+import { ArchiveFileTypeEnum, FileManagerConfigInterface, FileManagerInterface, FileTypeEnum } from '../interfaces';
 
 export class FileManager implements FileManagerInterface {
   readonly basePath: string;
