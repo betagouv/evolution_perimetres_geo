@@ -59,7 +59,11 @@ export class Migrator extends EventEmitter {
 
   async getTodo(state?: StateManagerInterface): Promise<StaticMigrable[]> {
     const done = (state ?? (await this.dbStateManager.toMemory())).get(State.Done);
-    return [...this.config.datastructures, ...this.config.datasets].filter((m) => !done.has(m));
+    const todos = [...this.config.datastructures, ...this.config.datasets].filter((m) => !done.has(m));
+    if (!todos.filter((m) => !!!m.skipStatePersistence).length) {
+      return [];
+    }
+    return todos;
   }
 
   async do(migrable: DatasetInterface, migrableState: State, stateManager: StateManagerInterface): Promise<void> {
