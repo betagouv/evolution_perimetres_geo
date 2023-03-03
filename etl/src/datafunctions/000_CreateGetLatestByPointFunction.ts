@@ -50,7 +50,7 @@ export class CreateGetLatestByPointFunction extends AbstractDatafunction {
       WHERE
         geom IS NOT NULL 
         AND ST_WITHIN(ST_SETSRID(ST_POINT($1, $2), '4326'), geom)
-      ORDER BY surface ASC, year DESC
+      ORDER BY year DESC, surface ASC
       LIMIT 1
     $$ language sql;
   `;
