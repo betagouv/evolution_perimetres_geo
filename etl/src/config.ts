@@ -8,10 +8,13 @@ function tlsSetup(key: string, baseEnvKey: string): { [k: string]: string } {
   const asPathEnvName = `${baseEnvKey}_PATH`;
 
   let cert: string;
+  let envContent: string;
   if (asVarEnvName in process.env) {
-    cert = process.env[asVarEnvName].toString().replace(/\\n/g, '\n');
+    envContent = process.env[asVarEnvName] || '';
+    cert = envContent.toString().replace(/\\n/g, '\n');
   } else if (asPathEnvName in process.env) {
-    cert = readFileSync(process.env[asPathEnvName], 'utf-8');
+    envContent = process.env[asPathEnvName] || '';
+    cert = readFileSync(envContent.toString(), 'utf-8');
   } else {
     return {};
   }
@@ -19,9 +22,9 @@ function tlsSetup(key: string, baseEnvKey: string): { [k: string]: string } {
 }
 
 const postgresTls = {
-  ...tlsSetup('ca', 'APP_POSTGRES_CA'),
-  ...tlsSetup('cert', 'APP_POSTGRES_CERT'),
-  ...tlsSetup('key', 'APP_POSTGRES_KEY'),
+  ...tlsSetup('ca', 'POSTGRES_CA'),
+  ...tlsSetup('cert', 'POSTGRES_CERT'),
+  ...tlsSetup('key', 'POSTGRES_KEY'),
 };
 
 export const config: ConfigInterface = {
@@ -31,7 +34,7 @@ export const config: ConfigInterface = {
     password: process.env.POSTGRES_PASSWORD || 'postgres',
     database: process.env.POSTGRES_DB || 'local',
     host: process.env.POSTGRES_HOST || '127.0.0.1',
-    port: process.env.POSTGRES_PORT ? parseInt(process.env.POSTGRES_PORT, 10) : 5432,
+    port: process.env.POSTGRES_PORT ? parseInt(process.env.POSTGRES_PORT, 10) : 64103,
     ...(Object.keys(postgresTls).length ? { ssl: postgresTls } : {}),
   },
   logger: {
