@@ -34,7 +34,7 @@ export const config: ConfigInterface = {
     password: process.env.POSTGRES_PASSWORD || 'postgres',
     database: process.env.POSTGRES_DB || 'local',
     host: process.env.POSTGRES_HOST || '127.0.0.1',
-    port: process.env.POSTGRES_PORT ? parseInt(process.env.POSTGRES_PORT, 10) : 64103,
+    port: process.env.POSTGRES_PORT ? parseInt(process.env.POSTGRES_PORT, 10) : 5432,
     ...(Object.keys(postgresTls).length ? { ssl: postgresTls } : {}),
   },
   logger: {
