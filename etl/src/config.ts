@@ -1,6 +1,28 @@
 import os from 'os';
+import { readFileSync } from 'fs';
 import { datasets, datastructures } from './datasets';
 import { ConfigInterface } from './interfaces/ConfigInterface';
+
+function tlsSetup(key: string, baseEnvKey: string): { [k: string]: string } {
+  const asVarEnvName = baseEnvKey;
+  const asPathEnvName = `${baseEnvKey}_PATH`;
+
+  let cert: string;
+  if (asVarEnvName in process.env) {
+    cert = process.env[asVarEnvName].toString().replace(/\\n/g, '\n');
+  } else if (asPathEnvName in process.env) {
+    cert = readFileSync(process.env[asPathEnvName], 'utf-8');
+  } else {
+    return {};
+  }
+  return { [key]: cert };
+}
+
+const postgresTls = {
+  ...tlsSetup('ca', 'APP_POSTGRES_CA'),
+  ...tlsSetup('cert', 'APP_POSTGRES_CERT'),
+  ...tlsSetup('key', 'APP_POSTGRES_KEY'),
+};
 
 export const config: ConfigInterface = {
   pool: {
@@ -10,6 +32,7 @@ export const config: ConfigInterface = {
     database: process.env.POSTGRES_DB || 'local',
     host: process.env.POSTGRES_HOST || '127.0.0.1',
     port: process.env.POSTGRES_PORT ? parseInt(process.env.POSTGRES_PORT, 10) : 5432,
+    ...(Object.keys(postgresTls).length ? { ssl: postgresTls } : {}),
   },
   logger: {
     level: process.env.LOG_LEVEL || 'debug',
