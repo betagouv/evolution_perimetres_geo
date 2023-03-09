@@ -9,7 +9,7 @@ export class DgclBanatic2022 extends DgclBanaticDataset {
   static table = 'dgcl_banatic_2022';
   static url =
     // eslint-disable-next-line max-len
-    'https://www.banatic.interieur.gouv.fr/V5/fichiers-en-telechargement/telecharger.php?zone=N&date=01/07/2022&format=C';
+    'https://www.banatic.interieur.gouv.fr/V5/fichiers-en-telechargement/telecharger.php?zone=N&date=01/01/2022&format=C';
 
   fileType: FileTypeEnum = FileTypeEnum.Xls;
   sheetOptions = {
