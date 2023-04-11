@@ -57,7 +57,6 @@ export abstract class AbstractDatatreatment implements DatasetInterface {
 
   async after(): Promise<void> {
     try {
-      console.debug(this.sql);
       await this.connection.query(this.sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
