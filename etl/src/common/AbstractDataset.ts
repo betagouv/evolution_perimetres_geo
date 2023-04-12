@@ -87,7 +87,6 @@ export abstract class AbstractDataset implements DatasetInterface {
         : this.beforeSqlPath
         ? await loadFileAsString(this.beforeSqlPath)
         : generatedSql;
-      console.debug(sql);
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
