@@ -28,9 +28,10 @@ jobs:
           --health-retries 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
       - name: Cache Node.js modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/.npm
@@ -38,12 +39,15 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
+
       - name: Install dependencies
         run: apt-get update && apt-get install -y p7zip-full && yarn --frozen-lockfile
         working-directory: etl
+
       - name: Lint
         run: yarn lint
         working-directory: etl
+
       - name: Test
         run: yarn test
         working-directory: etl
