@@ -39,7 +39,7 @@
     "node-7z": "^3.0.0",
     "pg": "^8.8.0",
     "stream-json": "^1.7.4",
-    "xlsx": "^0.18.5"
+    "xlsx": "file:vendor/xlsx-0.19.3.tgz"
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.10",
