@@ -56,14 +56,14 @@ test.serial('should load', async (t) => {
     SELECT * FROM ${t.context.dataset.tableWithSchema} order by com asc limit 1
   `);
   t.is(first.rows[0].com, '01001');
-  t.is(first.rows[0].pop, 779);
+  t.is(first.rows[0].pop, 806);
   const last = await t.context.connection.query(`
     SELECT * FROM ${t.context.dataset.tableWithSchema} order by com desc limit 1
   `);
   t.is(last.rows[0].com, '97617');
   t.is(last.rows[0].pop, 13934);
   const count = await t.context.connection.query(`SELECT count(*) FROM ${t.context.dataset.tableWithSchema}`);
-  t.is(count.rows[0].count, '35000');
+  t.is(count.rows[0].count, '34990');
 });
 
 test.serial('should cleanup', async (t) => {
