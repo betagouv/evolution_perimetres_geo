@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { access, mkdir } from 'fs/promises';
 import { Readable } from 'stream';
 import mapshaper from 'mapshaper';
@@ -106,7 +106,7 @@ export class FileManager implements FileManagerInterface {
       } catch (e) {
         // If not found and have mirror, try download
         const mirrorUrl = this.getMirrorUrl(url);
-        if ((e as AxiosError).isAxiosError && mirrorUrl) {
+        if (mirrorUrl) {
           const response = await axios.get<Readable>(mirrorUrl, { responseType: 'stream' });
           await writeFile(response.data, filepath);
         } else {

@@ -39,7 +39,7 @@ export class CeremaAom2023 extends AbstractDataset {
   readonly tableIndex = 'com';
   readonly importSql = `
     UPDATE ${this.targetTableWithSchema} AS a SET
-      aom = t.siren_aom::integer,
+      aom = CASE WHEN t.siren_aom ~ '^[0-9]*$' THEN t.siren_aom::integer ELSE NULL END,
       l_aom = t.nom_aom,
       reseau = t.id_reseau::integer,
       l_reseau = t.nom_reseau
