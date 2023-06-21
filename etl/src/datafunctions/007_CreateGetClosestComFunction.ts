@@ -25,7 +25,8 @@ export class CreateGetClosestComFunction extends AbstractDatafunction {
       l_reseau varchar,
       reseau int,
       pop int,
-      surface real 
+      surface real,
+      distance float 
     ) as $$
       SELECT
         year,
@@ -52,6 +53,7 @@ export class CreateGetClosestComFunction extends AbstractDatafunction {
       WHERE
         geom IS NOT NULL
         AND arr <> 'XXXXX'
+        AND country = 'XXXXX'
         AND
         ST_Intersects(ST_Buffer(ST_Transform(ST_SetSRID(ST_Point($1, $2),'4326'),2154),$3),ST_Transform(geom,2154))
       ORDER BY year DESC, distance ASC
