@@ -12,9 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     container: node:16.18-bullseye
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
       - name: Cache Node.js modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ~/.npm
@@ -22,12 +23,15 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
+
       - name: Install dependencies
         run: apt-get update && apt-get install -y p7zip-full && yarn --frozen-lockfile
         working-directory: etl
+
       - name: Build
         run: yarn build
         working-directory: etl
+
       - name: Publish
         run: >
           yarn config set version-git-tag false &&
@@ -35,11 +39,13 @@ jobs:
         working-directory: etl
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create sources list
         run: |
           mkdir -p /tmp/sources
           yarn start source | sed '1,4d' > /tmp/sources/list.txt
         working-directory: etl
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -49,7 +55,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Dowload Source list
         uses: actions/download-artifact@v3
         id: download
