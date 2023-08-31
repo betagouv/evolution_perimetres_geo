@@ -1,11 +1,11 @@
 import { AbstractDatafunction } from '../common/AbstractDatafunction';
 
-export class CreateGetClosestCountryFunction extends AbstractDatafunction {
-  static uuid = 'create_get_closest_country_function';
-  static table = 'get_closest_country';
+export class CreateGetClosestComFunction extends AbstractDatafunction {
+  static uuid = 'create_get_closest_com_function';
+  static table = 'get_closest_com';
   static year = 2022;
   readonly sql = `
-    CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(lon float, lat float, buffer integer default 10000) 
+    CREATE OR REPLACE FUNCTION ${this.functionWithSchema}(lon float, lat float, buffer integer default 1000) 
     returns table (
       year smallint,
       l_arr varchar,
@@ -52,8 +52,8 @@ export class CreateGetClosestCountryFunction extends AbstractDatafunction {
       FROM ${this.targetTableWithSchema}
       WHERE
         geom IS NOT NULL
-        AND country <> 'XXXXX'
-        AND com IS NULL
+        AND arr <> 'XXXXX'
+        AND country = 'XXXXX'
         AND
         ST_Intersects(ST_Buffer(ST_Transform(ST_SetSRID(ST_Point($1, $2),'4326'),2154),$3),ST_Transform(geom,2154))
       ORDER BY year DESC, distance ASC
