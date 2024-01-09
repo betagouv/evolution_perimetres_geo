@@ -122,7 +122,6 @@ export abstract class AbstractDataset implements DatasetInterface {
           const results = await cursor.next();
           done = !!results.done;
           if (results.value) {
-            console.debug(`Batch ${i}`);
             const query = {
               text: `
                         INSERT INTO ${this.tableWithSchema} (

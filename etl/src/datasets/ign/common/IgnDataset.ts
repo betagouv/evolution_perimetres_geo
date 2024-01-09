@@ -84,7 +84,6 @@ export abstract class IgnDataset extends AbstractDataset {
             done = !!results.done;
             if (results.value) {
               const values = [JSON.stringify(results.value.map((r) => r.value))];
-              console.debug(`Batch ${i}`);
               switch (key) {
                 case 'geom':
                   await connection.query({
