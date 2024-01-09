@@ -71,7 +71,6 @@ export abstract class IgnDataset extends AbstractDataset {
   async load(): Promise<void> {
     const connection = await this.connection.connect();
     await connection.query('BEGIN TRANSACTION');
-    let i = 1;
     try {
       for (const { file, key } of this.transformedFiles) {
         if (file && file.length) {
@@ -84,7 +83,6 @@ export abstract class IgnDataset extends AbstractDataset {
             done = !!results.done;
             if (results.value) {
               const values = [JSON.stringify(results.value.map((r) => r.value))];
-              console.debug(`Batch ${i}`);
               switch (key) {
                 case 'geom':
                   await connection.query({
@@ -139,7 +137,6 @@ export abstract class IgnDataset extends AbstractDataset {
                   break;
               }
             }
-            i += 1;
           } while (!done);
         }
       }

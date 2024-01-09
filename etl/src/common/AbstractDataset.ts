@@ -85,8 +85,8 @@ export abstract class AbstractDataset implements DatasetInterface {
       const sql = this.beforeSql
         ? this.beforeSql
         : this.beforeSqlPath
-        ? await loadFileAsString(this.beforeSqlPath)
-        : generatedSql;
+          ? await loadFileAsString(this.beforeSqlPath)
+          : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
@@ -113,7 +113,6 @@ export abstract class AbstractDataset implements DatasetInterface {
   async load(): Promise<void> {
     const connection = await this.connection.connect();
     await connection.query('BEGIN TRANSACTION');
-    let i = 1;
     try {
       for (const filepath of this.filepaths) {
         const cursor = streamData(filepath, this.fileType, this.sheetOptions);
@@ -122,7 +121,6 @@ export abstract class AbstractDataset implements DatasetInterface {
           const results = await cursor.next();
           done = !!results.done;
           if (results.value) {
-            console.debug(`Batch ${i}`);
             const query = {
               text: `
                         INSERT INTO ${this.tableWithSchema} (
@@ -139,7 +137,6 @@ export abstract class AbstractDataset implements DatasetInterface {
             };
             await connection.query(query);
           }
-          i += 1;
         } while (!done);
       }
       await connection.query('COMMIT');
@@ -165,8 +162,8 @@ export abstract class AbstractDataset implements DatasetInterface {
       const sql = this.afterSql
         ? this.afterSql
         : this.afterSqlPath
-        ? await loadFileAsString(this.afterSqlPath)
-        : generatedSql;
+          ? await loadFileAsString(this.afterSqlPath)
+          : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
