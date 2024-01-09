@@ -13,7 +13,10 @@ export class DatabaseStateManager implements DatabaseStateManagerInterface {
   readonly migrations: Map<string, StaticMigrable>;
   readonly targetSchema: string;
 
-  constructor(protected connection: Pool, config: AppConfigInterface) {
+  constructor(
+    protected connection: Pool,
+    config: AppConfigInterface,
+  ) {
     this.targetSchema = config.targetSchema;
     this.migrations = new Map([...config.datastructures, ...config.datasets].map((m) => [m.uuid, m]));
   }

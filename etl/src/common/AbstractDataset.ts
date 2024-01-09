@@ -85,8 +85,8 @@ export abstract class AbstractDataset implements DatasetInterface {
       const sql = this.beforeSql
         ? this.beforeSql
         : this.beforeSqlPath
-        ? await loadFileAsString(this.beforeSqlPath)
-        : generatedSql;
+          ? await loadFileAsString(this.beforeSqlPath)
+          : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
@@ -165,8 +165,8 @@ export abstract class AbstractDataset implements DatasetInterface {
       const sql = this.afterSql
         ? this.afterSql
         : this.afterSqlPath
-        ? await loadFileAsString(this.afterSqlPath)
-        : generatedSql;
+          ? await loadFileAsString(this.afterSqlPath)
+          : generatedSql;
       await this.connection.query(sql);
     } catch (e) {
       throw new SqlError(this, (e as Error).message);
