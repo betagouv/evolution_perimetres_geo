@@ -71,7 +71,6 @@ export abstract class IgnDataset extends AbstractDataset {
   async load(): Promise<void> {
     const connection = await this.connection.connect();
     await connection.query('BEGIN TRANSACTION');
-    let i = 1;
     try {
       for (const { file, key } of this.transformedFiles) {
         if (file && file.length) {
@@ -138,7 +137,6 @@ export abstract class IgnDataset extends AbstractDataset {
                   break;
               }
             }
-            i += 1;
           } while (!done);
         }
       }
